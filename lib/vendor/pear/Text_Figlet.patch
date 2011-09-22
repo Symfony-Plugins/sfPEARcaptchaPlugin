@@ -1,0 +1,158 @@
+Index: Text/Figlet.php
+===================================================================
+--- Text/Figlet.php	(wersja 33062)
++++ Text/Figlet.php	(kopia robocza)
+@@ -5,24 +5,7 @@
+ *
+ * Project home page (Russian): http://bolknote.ru/files/figlet/
+ *
+-* PHP Version 4
+-*
+-* @category Text
+-* @package  Text_Figlet
+-* @author   Evgeny Stepanischev <imbolk@gmail.com>
+-* @author   Christian Weiske <cweiske@php.net>
+-* @license  http://www.php.net/license PHP License
+-* @version  CVS: $Id$
+-* @link     http://pear.php.net/package/Text_Figlet
+-*/
+-require_once 'PEAR.php';
+-
+-/**
+-* ASCII art text creation
+-*
+-* Project home page (Russian): http://bolknote.ru/files/figlet/
+-*
+-* PHP Version 4
++* PHP Version 5
+ *
+ * @category Text
+ * @package  Text_Figlet
+@@ -40,7 +23,7 @@
+      *
+      * @access protected
+      */
+-    var $height;
++    protected $height;
+ 
+     /**
+      * Letter baseline
+@@ -49,7 +32,7 @@
+      *
+      * @access protected
+      */
+-    var $oldlayout;
++    protected $oldlayout;
+ 
+     /**
+      * Flag - RTL (right to left) or LTR (left to right) text direction
+@@ -58,7 +41,7 @@
+      *
+      * @access protected
+      */
+-    var $rtol;
++    protected $rtol;
+ 
+     /**
+      * Information about special 'hardblank' character
+@@ -67,7 +50,7 @@
+      *
+      * @access protected
+      */
+-    var $hardblank;
++    protected $hardblank;
+ 
+     /**
+      * Is used for keeping font
+@@ -76,7 +59,7 @@
+      *
+      * @access protected
+      */
+-    var $font;
++    protected $font;
+ 
+     /**
+      * Flag is true if smushing occured in letters printing cycle
+@@ -85,7 +68,7 @@
+      *
+      * @access protected
+      */
+-    var $smush_flag;
++    protected $smush_flag;
+ 
+     /**
+      * Comment lines buffer
+@@ -95,7 +78,7 @@
+      * @access public
+      */
+ 
+-    var $font_comment;
++    public $font_comment;
+ 
+ 
+     /**
+@@ -109,20 +92,14 @@
+      * @access public
+      * @return mixed PEAR_Error or true for success
+      */
+-    function loadFont($filename, $loadgerman = true)
++    public function loadFont($filename, $loadgerman = true)
+     {
+         $this->font = array();
+         if (!file_exists($filename)) {
+             //if it does not exist, try the Text_Figlet data directory
+-            include_once 'PEAR/Config.php';
+-
+-            $config  = PEAR_Config::singleton();
+-            $fontdir = $config->get('data_dir') . '/Text_Figlet/fonts/';
++			$fontdir = dirname(__FILE__) . '/../../../../data/Text_Figlet/fonts/';
+ 
+-            //only for filenames without path separators
+-            if (strpos($filename, '/') === false
+-                && file_exists($fontdir . $filename)
+-            ) {
++            if (file_exists($fontdir . $filename)) {
+                 $filename = $fontdir . $filename;
+             } else {
+                 return PEAR::raiseError('Figlet font file "' 
+@@ -278,7 +255,7 @@
+     * @access public
+     * @return string contains
+     */
+-    function lineEcho($str, $inhtml = false)
++    public function lineEcho($str, $inhtml = false)
+     {
+         $out = array();
+ 
+@@ -399,7 +376,7 @@
+     * @return string
+     * @access private
+     */
+-    function _rep($r)
++    private function _rep($r)
+     {
+         if ($this->oldlayout & 1 && $r[1] == $r[2]) {
+             $this->smush_flag = 1;
+@@ -466,7 +443,7 @@
+     * @return mixed lines of the character or false if foef occured
+     * @access private
+     */
+-    function _char(&$fp)
++    private function _char(&$fp)
+     {
+         $out = array();
+ 
+@@ -498,7 +475,7 @@
+     * @return boolean always return true
+     * @access private
+     */
+-    function _skip(&$fp)
++    private function _skip(&$fp)
+     {
+         for ($i = 0; $i<$this->height && !feof($fp); $i++) {
+             fgets($fp, 2048);
+@@ -507,4 +484,3 @@
+         return true;
+     }
+ }
+-?>
