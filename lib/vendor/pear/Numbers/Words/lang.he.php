@@ -2,7 +2,7 @@
 /**
  * Numbers_Words
  *
- * PHP version 4
+ * PHP version 5
  *
  * Copyright (c) 1997-2006 The PHP Group
  *
@@ -25,25 +25,13 @@
 /**
  * Class for translating numbers into Hebrew.
  *
- * @author Hadar Porat
- * @package Numbers_Words
- */
-
-/**
- * Include needed files
- */
-require_once "Numbers/Words.php";
-
-/**
- * Class for translating numbers into Hebrew.
- *
  * @category Numbers
  * @package  Numbers_Words
  * @author   Hadar Porat <hpman28@gmail.com>
  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
  * @link     http://pear.php.net/package/Numbers_Words
  */
-class Numbers_Words_he extends Numbers_Words
+class Numbers_Words_he
 {
 
     // {{{ properties
@@ -53,28 +41,28 @@ class Numbers_Words_he extends Numbers_Words
      * @var string
      * @access public
      */
-    var $locale = 'he';
+    public $locale = 'he';
 
     /**
      * Language name in English
      * @var string
      * @access public
      */
-    var $lang = 'Hebrew';
+    public $lang = 'Hebrew';
 
     /**
      * Native language name
      * @var string
      * @access public
      */
-    var $lang_native = 'עברית';
+    public $lang_native = 'עברית';
     
     /**
      * The word for the minus sign
      * @var string
      * @access private
      */
-    var $_minus = 'minus'; // minus sign
+    private $_minus = 'minus'; // minus sign
     
     /**
      * The sufixes for exponents (singular and plural)
@@ -85,7 +73,7 @@ class Numbers_Words_he extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_exponent = array(
+    private $_exponent = array(
         0 => array(''),
         3 => array('אלפים'),
         6 => array('מיליון'),
@@ -207,22 +195,22 @@ class Numbers_Words_he extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_digits = array(
+    private $_digits = array(
         0 => 'אפס', 'אחד', 'שניים', 'שלושה', 'ארבעה',
         'חמישה', 'שישה', 'שבעה', 'שמונה', 'תשעה'
     );
     
-    var $_digits_ten = array(
+    private $_digits_ten = array(
         2 => 'עשרים', 'שלושים', 'ארבעים', 'חמישים',
         'שישים', 'שבעים', 'שמונים', 'תשעים'
     );
     
-    var $_digits_female = array(
+    private $_digits_female = array(
         0 => 'אפס', 'אחת', 'שתיים', 'שלוש', 'ארבע',
         'חמש', 'שש', 'שבע', 'שמונה', 'תשע'
     );     
     
-    var $digits_hundreds = array(
+    private $digits_hundreds = array(
         0 => '', 'מאה', 'שני-מאות', 'שלוש-מאות', 'ארבע-מאות',
         'חמש-מאות', 'שש-מאות', 'שבע-מאות', 'שמונה-מאות', 'תשע-מאות'
     );         
@@ -232,11 +220,11 @@ class Numbers_Words_he extends Numbers_Words
      * @var string
      * @access private
      */
-    var $_sep = ' ';
+    private $_sep = ' ';
 
-    var $_sep_hundred = '-';
+    private $_sep_hundred = '-';
 
-    var $_sep_ten = ' ו';
+    private $_sep_ten = ' ו';
 
     /**
      * The currency names (based on the below links,
@@ -248,7 +236,7 @@ class Numbers_Words_he extends Numbers_Words
      * @link http://www.shoestring.co.kr/world/p.visa/change.htm Currency names in English
      * @access private
      */
-    var $_currency_names = array(
+    private $_currency_names = array(
       'ALL' => array(array('lek'), array('qindarka')),
       'AUD' => array(array('Australian dollar'), array('cent')),
       'BAM' => array(array('convertible marka'), array('fenig')),
@@ -293,7 +281,7 @@ class Numbers_Words_he extends Numbers_Words
      * @var string
      * @access public
      */
-    var $def_currency = 'NIS';
+    public $def_currency = 'NIS';
 
     // }}}
     // {{{ toWords()
@@ -314,7 +302,7 @@ class Numbers_Words_he extends Numbers_Words
      * @author Piotr Klaban <makler@man.torun.pl>
      * @since  PHP 4.2.3
      */
-    function toWords($num, $power = 0, $powsuffix = '')
+    public function toWords($num, $power = 0, $powsuffix = '')
     {
         $ret = '';        
       
@@ -478,7 +466,7 @@ class Numbers_Words_he extends Numbers_Words
      * @author Piotr Klaban <makler@man.torun.pl>
      * @since  Numbers_Words 0.4
      */
-    function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
+    public function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
     {
         $int_curr = strtoupper($int_curr);
         if (!isset($this->_currency_names[$int_curr])) {
@@ -521,5 +509,3 @@ class Numbers_Words_he extends Numbers_Words
     // }}}
 
 }
-
-?>

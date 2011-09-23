@@ -2,7 +2,7 @@
 /**
  * Numbers_Words
  *
- * PHP version 4
+ * PHP version 5
  *
  * Copyright (c) 1997-2006 The PHP Group
  *
@@ -25,18 +25,6 @@
 
 /**
  * Class for translating numbers into Argentinian Spanish.
- *
- * @author Martin Marrese
- * @package Numbers_Words
- */
-
-/**
- * Include needed files
- */
-require_once "Numbers/Words.php";
-
-/**
- * Class for translating numbers into Argentinian Spanish.
  * It supports up to decallones (10^6).
  * It doesn't support spanish tonic accents (acentos).
  *
@@ -47,7 +35,7 @@ require_once "Numbers/Words.php";
  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
  * @link     http://pear.php.net/package/Numbers_Words
  */
-class Numbers_Words_es_AR extends Numbers_Words
+class Numbers_Words_es_AR
 {
     // {{{ properties
 
@@ -56,54 +44,54 @@ class Numbers_Words_es_AR extends Numbers_Words
      * @var string
      * @access public
      */
-    var $locale = 'es_AR';
+    public $locale = 'es_AR';
 
     /**
      * Language name in English
      * @var string
      * @access public
      */
-    var $lang = 'Spanish';
+    public $lang = 'Spanish';
 
     /**
      * Native language name
      * @var string
      * @access public
      */
-    var $lang_native = 'Español';
+    public $lang_native = 'EspaÃ±ol';
 
     /**
      * The word for the minus sign
      * @var string
      * @access private
      */
-    var $_minus = 'menos';
+    private $_minus = 'menos';
 
     /**
      * The sufixes for exponents (singular and plural)
      * @var array
      * @access private
      */
-    var $_exponent = array(
+    private $_exponent = array(
         0 => array('',''),
         3 => array('mil','mil'),
-        6 => array('millón','millones'),
-       12 => array('billón','billones'),
-       18 => array('trilón','trillones'),
-       24 => array('cuatrillón','cuatrillones'),
-       30 => array('quintillón','quintillones'),
-       36 => array('sextillón','sextillones'),
-       42 => array('septillón','septillones'),
-       48 => array('octallón','octallones'),
-       54 => array('nonallón','nonallones'),
-       60 => array('decallón','decallones'),
+        6 => array('millÃ³n','millones'),
+       12 => array('billÃ³n','billones'),
+       18 => array('trilÃ³n','trillones'),
+       24 => array('cuatrillÃ³n','cuatrillones'),
+       30 => array('quintillÃ³n','quintillones'),
+       36 => array('sextillÃ³n','sextillones'),
+       42 => array('septillÃ³n','septillones'),
+       48 => array('octallÃ³n','octallones'),
+       54 => array('nonallÃ³n','nonallones'),
+       60 => array('decallÃ³n','decallones'),
         );
     /**
      * The array containing the digits (indexed by the digits themselves).
      * @var array
      * @access private
      */
-    var $_digits = array(
+    private $_digits = array(
         0 => 'cero', 'uno', 'dos', 'tres', 'cuatro',
         'cinco', 'seis', 'siete', 'ocho', 'nueve'
         );
@@ -112,7 +100,7 @@ class Numbers_Words_es_AR extends Numbers_Words
      * @var string
      * @access private
      */
-    var $_sep = ' ';
+    private $_sep = ' ';
 
     /**
      * The currency names (based on the below links,
@@ -124,7 +112,7 @@ class Numbers_Words_es_AR extends Numbers_Words
      * @link http://www.shoestring.co.kr/world/p.visa/change.htm Currency names in English
      * @access private
      */
-    var $_currency_names = array(
+    private $_currency_names = array(
       'ALL' => array(array('lek'), array('qindarka')),
       'AUD' => array(array('Australian dollar'), array('cent')),
       'ARS' => array(array('Peso'), array ('centavo')),
@@ -144,7 +132,7 @@ class Numbers_Words_es_AR extends Numbers_Words
       'HRK' => array(array('Croatian kuna'), array('lipa')),
       'HUF' => array(array('forint'), array('filler')),
       'ILS' => array(array('new sheqel','new sheqels'), array('agora','agorot')),
-      'ISK' => array(array('Icelandic króna'), array('aurar')),
+      'ISK' => array(array('Icelandic krÃ³na'), array('aurar')),
       'JPY' => array(array('yen'), array('sen')),
       'LTL' => array(array('litas'), array('cent')),
       'LVL' => array(array('lat'), array('sentim')),
@@ -157,7 +145,7 @@ class Numbers_Words_es_AR extends Numbers_Words
       'SEK' => array(array('Swedish krona'), array('oere')),
       'SIT' => array(array('Tolar'), array('stotinia')),
       'SKK' => array(array('Slovak koruna'), array()),
-      'TRL' => array(array('lira'), array('kuruþ')),
+      'TRL' => array(array('lira'), array('kuruÃ¾')),
       'UAH' => array(array('hryvna'), array('cent')),
       'USD' => array(array('dollar'), array('cent')),
       'YUM' => array(array('dinars'), array('para')),
@@ -169,7 +157,7 @@ class Numbers_Words_es_AR extends Numbers_Words
      * @var string
      * @access public
      */
-    var $def_currency = 'ARS'; // Argentinian Peso
+    public $def_currency = 'ARS'; // Argentinian Peso
 
     // }}}
     // {{{ toWords()
@@ -188,7 +176,7 @@ class Numbers_Words_es_AR extends Numbers_Words
      * @access private
      * @author Martin Marrese
      */
-    function toWords($num, $power = 0)
+    public function toWords($num, $power = 0)
     {
         // The return string;
         $ret = '';
@@ -306,7 +294,7 @@ class Numbers_Words_es_AR extends Numbers_Words
                 $ret .= $this->_sep . 'veinte';
             } else {
                 if (($power > 0) and ($d == 1)) {
-                    $ret .= $this->_sep . 'veintiún';
+                    $ret .= $this->_sep . 'veintiÃºn';
                 } else {
                     $ret .= $this->_sep . 'veinti' . $this->_digits[$d];
                 }
@@ -417,7 +405,7 @@ class Numbers_Words_es_AR extends Numbers_Words
      * @access public
      * @author Martin Marrese
      */
-    function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
+    public function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
     {
         $int_curr = strtoupper($int_curr);
         if (!isset($this->_currency_names[$int_curr])) {
@@ -466,4 +454,3 @@ class Numbers_Words_es_AR extends Numbers_Words
 
 
 }
-?>

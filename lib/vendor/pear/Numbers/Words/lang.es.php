@@ -2,7 +2,7 @@
 /**
  * Numbers_Words
  *
- * PHP version 4
+ * PHP version 5
  *
  * Copyright (c) 1997-2006 The PHP Group
  *
@@ -24,18 +24,6 @@
 
 /**
  * Class for translating numbers into Spanish (Castellano).
- *
- * @author Xavier Noguer
- * @package Numbers_Words
- */
-
-/**
- * Include needed files
- */
-require_once "Numbers/Words.php";
-
-/**
- * Class for translating numbers into Spanish (Castellano).
  * It supports up to decallones (10^6).
  * It doesn't support spanish tonic accents (acentos).
  *
@@ -45,7 +33,7 @@ require_once "Numbers/Words.php";
  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
  * @link     http://pear.php.net/package/Numbers_Words
  */
-class Numbers_Words_es extends Numbers_Words
+class Numbers_Words_es
 {
     // {{{ properties
 
@@ -54,54 +42,54 @@ class Numbers_Words_es extends Numbers_Words
      * @var string
      * @access public
      */
-    var $locale = 'es';
+    public $locale = 'es';
 
     /**
      * Language name in English
      * @var string
      * @access public
      */
-    var $lang = 'Spanish';
+    public $lang = 'Spanish';
 
     /**
      * Native language name
      * @var string
      * @access public
      */
-    var $lang_native = 'Espa駉l';
+    public $lang_native = 'Espa帽ol';
 
     /**
      * The word for the minus sign
      * @var string
      * @access private
      */
-    var $_minus = 'menos';
+    private $_minus = 'menos';
 
     /**
      * The sufixes for exponents (singular and plural)
      * @var array
      * @access private
      */
-    var $_exponent = array(
+    private $_exponent = array(
         0 => array('',''),
         3 => array('mil','mil'),
-        6 => array('mill髇','millones'),
-       12 => array('bill髇','billones'),
-       18 => array('tril髇','trillones'),
-       24 => array('cuatrill髇','cuatrillones'),
-       30 => array('quintill髇','quintillones'),
-       36 => array('sextill髇','sextillones'),
-       42 => array('septill髇','septillones'),
-       48 => array('octall髇','octallones'),
-       54 => array('nonall髇','nonallones'),
-       60 => array('decall髇','decallones'),
+        6 => array('mill贸n','millones'),
+       12 => array('bill贸n','billones'),
+       18 => array('tril贸n','trillones'),
+       24 => array('cuatrill贸n','cuatrillones'),
+       30 => array('quintill贸n','quintillones'),
+       36 => array('sextill贸n','sextillones'),
+       42 => array('septill贸n','septillones'),
+       48 => array('octall贸n','octallones'),
+       54 => array('nonall贸n','nonallones'),
+       60 => array('decall贸n','decallones'),
         );
     /**
      * The array containing the digits (indexed by the digits themselves).
      * @var array
      * @access private
      */
-    var $_digits = array(
+    private $_digits = array(
         0 => 'cero', 'uno', 'dos', 'tres', 'cuatro',
         'cinco', 'seis', 'siete', 'ocho', 'nueve'
         );
@@ -110,7 +98,7 @@ class Numbers_Words_es extends Numbers_Words
      * @var string
      * @access private
      */
-    var $_sep = ' ';
+    private $_sep = ' ';
     // }}}
     // {{{ toWords()
     /**
@@ -129,7 +117,7 @@ class Numbers_Words_es extends Numbers_Words
      * @author Xavier Noguer
      * @since  PHP 4.2.3
      */
-    function toWords($num, $power = 0)
+    public function toWords($num, $power = 0)
     {
         // The return string;
         $ret = '';
@@ -242,7 +230,7 @@ class Numbers_Words_es extends Numbers_Words
                 $ret .= $this->_sep . 'veinte';
             } else {
                 if (($power > 0) and ($d == 1)) {
-                    $ret .= $this->_sep . 'veinti鷑';
+                    $ret .= $this->_sep . 'veinti煤n';
                 } else {
                     $ret .= $this->_sep . 'veinti' . $this->_digits[$d];
                 }
@@ -329,4 +317,3 @@ class Numbers_Words_es extends Numbers_Words
     }
     // }}}
 }
-?>

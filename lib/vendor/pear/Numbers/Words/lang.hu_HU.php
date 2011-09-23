@@ -2,7 +2,7 @@
 /**
  * Numbers_Words
  *
- * PHP version 4
+ * PHP version 5
  *
  * Copyright (c) 1997-2006 The PHP Group
  *
@@ -29,25 +29,13 @@
 /**
  * Class for translating numbers into Hungarian.
  *
- * @author Nils Homp
- * @package Numbers_Words
- */
-
-/**
- * Include needed files
- */
-require_once "Numbers/Words.php";
-
-/**
- * Class for translating numbers into Hungarian.
- *
  * @category Numbers
  * @package  Numbers_Words
  * @author   Nils Homp
  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
  * @link     http://pear.php.net/package/Numbers_Words
  */
-class Numbers_Words_hu_HU extends Numbers_Words
+class Numbers_Words_hu_HU
 {
 
     // {{{ properties
@@ -57,28 +45,28 @@ class Numbers_Words_hu_HU extends Numbers_Words
      * @var string
      * @access public
      */
-    var $locale = 'hu_HU';
+    public $locale = 'hu_HU';
 
     /**
      * Language name in English
      * @var string
      * @access public
      */
-    var $lang = 'Hungarian';
+    public $lang = 'Hungarian';
 
     /**
      * Native language name
      * @var string
      * @access public
      */
-    var $lang_native = 'Magyar';
+    public $lang_native = 'Magyar';
     
     /**
      * The word for the minus sign
      * @var string
      * @access private
      */
-    var $_minus = 'Minusz'; // minus sign
+    private $_minus = 'Minusz'; // minus sign
     
     /**
      * The sufixes for exponents (singular and plural)
@@ -87,30 +75,30 @@ class Numbers_Words_hu_HU extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_exponent = array(
+    private $_exponent = array(
         0 => array(''),
         3 => array('ezer'),
-        6 => array('milliÛ'),
-        9 => array('milli·rd'),
-       12 => array('billiÛ'),
-       15 => array('billi·rd'),
-       18 => array('trilliÛ'),
-       21 => array('trilli·rd'),
-       24 => array('kvadrilliÛ'),
-       27 => array('kvadrilli·rd'),
-       30 => array('kvintilliÛ'),
-       33 => array('kvintilli·rd'),
-       36 => array('szextilliÛ'),
-       39 => array('szextilli·rd'),
-       42 => array('szeptilliÛ'),
-       45 => array('szeptilli·rd'),
-       48 => array('oktilliÛ'),
-       51 => array('oktilli·rd'),
-       54 => array('nonilliÛ'),
-       57 => array('nonilli·rd'),
-       60 => array('decilliÛ'),
-       63 => array('decilli·rd'),
-       600 => array('centilliÛ')
+        6 => array('milli√≥'),
+        9 => array('milli√°rd'),
+       12 => array('billi√≥'),
+       15 => array('billi√°rd'),
+       18 => array('trilli√≥'),
+       21 => array('trilli√°rd'),
+       24 => array('kvadrilli√≥'),
+       27 => array('kvadrilli√°rd'),
+       30 => array('kvintilli√≥'),
+       33 => array('kvintilli√°rd'),
+       36 => array('szextilli√≥'),
+       39 => array('szextilli√°rd'),
+       42 => array('szeptilli√≥'),
+       45 => array('szeptilli√°rd'),
+       48 => array('oktilli√≥'),
+       51 => array('oktilli√°rd'),
+       54 => array('nonilli√≥'),
+       57 => array('nonilli√°rd'),
+       60 => array('decilli√≥'),
+       63 => array('decilli√°rd'),
+       600 => array('centilli√≥')
         );
 
     /**
@@ -118,9 +106,9 @@ class Numbers_Words_hu_HU extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_digits = array(
-        0 => 'nulla', 'egy', 'kettı', 'h·rom', 'nÈgy',
-        'ˆt', 'hat', 'hÈt', 'nyolc', 'kilenc'
+    private $_digits = array(
+        0 => 'nulla', 'egy', 'kett≈ë', 'h√°rom', 'n√©gy',
+        '√∂t', 'hat', 'h√©t', 'nyolc', 'kilenc'
     );
 
     /**
@@ -128,7 +116,7 @@ class Numbers_Words_hu_HU extends Numbers_Words
      * @var string
      * @access private
      */
-    var $_sep = '';
+    private $_sep = '';
 
     /**
      * The currency names (based on the below links,
@@ -140,7 +128,7 @@ class Numbers_Words_hu_HU extends Numbers_Words
      * @link http://www.shoestring.co.kr/world/p.visa/change.htm Currency names in English
      * @access private
      */
-    var $_currency_names = array(
+    private $_currency_names = array(
       'ALL' => array(array('lek'), array('qindarka')),
       'AUD' => array(array('Australian dollar'), array('cent')),
       'BAM' => array(array('convertible marka'), array('fenig')),
@@ -159,7 +147,7 @@ class Numbers_Words_hu_HU extends Numbers_Words
       'HRK' => array(array('Croatian kuna'), array('lipa')),
       'HUF' => array(array('forint'), array('filler')),
       'ILS' => array(array('new sheqel','new sheqels'), array('agora','agorot')),
-      'ISK' => array(array('Icelandic krÛna'), array('aurar')),
+      'ISK' => array(array('Icelandic kr√≥na'), array('aurar')),
       'JPY' => array(array('yen'), array('sen')),
       'LTL' => array(array('litas'), array('cent')),
       'LVL' => array(array('lat'), array('sentim')),
@@ -172,7 +160,7 @@ class Numbers_Words_hu_HU extends Numbers_Words
       'SEK' => array(array('Swedish krona'), array('oere')),
       'SIT' => array(array('Tolar'), array('stotinia')),
       'SKK' => array(array('Slovak koruna'), array()),
-      'TRL' => array(array('lira'), array('kuru˛')),
+      'TRL' => array(array('lira'), array('kuru≈£')),
       'UAH' => array(array('hryvna'), array('cent')),
       'USD' => array(array('dollar'), array('cent')),
       'YUM' => array(array('dinars'), array('para')),
@@ -184,7 +172,7 @@ class Numbers_Words_hu_HU extends Numbers_Words
      * @var string
      * @access public
      */
-    var $def_currency = 'HUF'; // forint
+    public $def_currency = 'HUF'; // forint
 
     // }}}
     // {{{ toWords()
@@ -206,7 +194,7 @@ class Numbers_Words_hu_HU extends Numbers_Words
      * @author Nils Homp
      * @since  PHP 4.2.3
      */
-    function toWords($num, $power = 0, $powsuffix = '') 
+    public function toWords($num, $power = 0, $powsuffix = '') 
     {
         $ret = '';        
         
@@ -269,7 +257,7 @@ class Numbers_Words_hu_HU extends Numbers_Words
         }
     
         if ($h) {
-            $ret .= $this->_sep . $this->_digits[$h] . $this->_sep . 'sz·z';
+            $ret .= $this->_sep . $this->_digits[$h] . $this->_sep . 'sz√°z';
         }
 
         // ten, twenty etc.
@@ -294,7 +282,7 @@ class Numbers_Words_hu_HU extends Numbers_Words
         case 2:
             switch ($d) {
             case 0:
-                $ret .= $this->_sep . 'h˙sz';
+                $ret .= $this->_sep . 'h√∫sz';
                 break;   
             case 1: 
             case 2:
@@ -305,14 +293,14 @@ class Numbers_Words_hu_HU extends Numbers_Words
             case 7:
             case 8:
             case 9:
-                $ret .= $this->_sep . 'h˙szon';
+                $ret .= $this->_sep . 'h√∫szon';
                 break;
             }
             break;
         case 1:
             switch ($d) {
             case 0:
-                $ret .= $this->_sep . 'tÌz';
+                $ret .= $this->_sep . 't√≠z';
                 break;   
             case 1: 
             case 2:
@@ -372,7 +360,7 @@ class Numbers_Words_hu_HU extends Numbers_Words
      * @author Piotr Klaban <makler@man.torun.pl>
      * @since  Numbers_Words 0.4
      */
-    function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
+    public function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
     {
         $int_curr = strtoupper($int_curr);
         if (!isset($this->_currency_names[$int_curr])) {
@@ -414,5 +402,3 @@ class Numbers_Words_hu_HU extends Numbers_Words
     // }}}
 
 }
-
-?>

@@ -2,7 +2,7 @@
 /**
  * Numbers_Words
  *
- * PHP version 4
+ * PHP version 5
  *
  * Copyright (c) 1997-2006 The PHP Group
  *
@@ -23,18 +23,6 @@
  */
 
 /**
- *
- * Class for translating numbers into German.
- * @author Piotr Klaban
- * @package Numbers_Words
- */
-
-/**
- * Include needed files
- */
-require_once "Numbers/Words.php";
-
-/**
  * Class for translating numbers into German.
  *
  * @category Numbers
@@ -43,7 +31,7 @@ require_once "Numbers/Words.php";
  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
  * @link     http://pear.php.net/package/Numbers_Words
  */
-class Numbers_Words_de extends Numbers_Words
+class Numbers_Words_de
 {
 
     // {{{ properties
@@ -53,28 +41,28 @@ class Numbers_Words_de extends Numbers_Words
      * @var string
      * @access public
      */
-    var $locale = 'de';
+    public $locale = 'de';
 
     /**
      * Language name in English
      * @var string
      * @access public
      */
-    var $lang = 'German';
+    public $lang = 'German';
 
     /**
      * Native language name
      * @var string
      * @access public
      */
-    var $lang_native = 'Deutsch';
+    public $lang_native = 'Deutsch';
 
     /**
      * The word for the minus sign
      * @var string
      * @access private
      */
-    var $_minus = 'Minus'; // minus sign
+    private $_minus = 'Minus'; // minus sign
 
     /**
      * The sufixes for exponents (singular and plural)
@@ -84,7 +72,7 @@ class Numbers_Words_de extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_exponent = array(
+    private $_exponent = array(
         0 => array(''),
         3 => array('tausend','tausend'),
         6 => array('Million','Millionen'),
@@ -118,9 +106,9 @@ class Numbers_Words_de extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_digits = array(
+    private $_digits = array(
         0 => 'null', 'ein', 'zwei', 'drei', 'vier',
-        'fünf', 'sechs', 'sieben', 'acht', 'neun'
+        'fÃ¼nf', 'sechs', 'sieben', 'acht', 'neun'
     );
 
     /**
@@ -128,14 +116,14 @@ class Numbers_Words_de extends Numbers_Words
      * @var string
      * @access private
      */
-    var $_sep = '';
+    private $_sep = '';
 
     /**
      * The exponent word separator
      * @var string
      * @access private
      */
-    var $_sep2 = ' ';
+    private $_sep2 = ' ';
 
     // }}}
     // {{{ toWords()
@@ -157,7 +145,7 @@ class Numbers_Words_de extends Numbers_Words
      * @author Piotr Klaban <makler@man.torun.pl>
      * @since  PHP 4.2.3
      */
-    function toWords($num, $power = 0, $powsuffix = '')
+    public function toWords($num, $power = 0, $powsuffix = '')
     {
         $ret = '';
 
@@ -261,7 +249,7 @@ class Numbers_Words_de extends Numbers_Words
             break;
 
         case 3:
-            $ret .= $this->_sep . 'dreißig';
+            $ret .= $this->_sep . 'dreiÃŸig';
             break;
 
         case 2:
@@ -279,7 +267,7 @@ class Numbers_Words_de extends Numbers_Words
                 break;
 
             case 2:
-                $ret .= $this->_sep . 'zwölf';
+                $ret .= $this->_sep . 'zwÃ¶lf';
                 break;
 
             case 3:
@@ -327,5 +315,3 @@ class Numbers_Words_de extends Numbers_Words
     }
     // }}}
 }
-
-?>

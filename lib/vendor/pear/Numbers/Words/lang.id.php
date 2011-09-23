@@ -2,7 +2,7 @@
 /**
  * Numbers_Words
  *
- * PHP version 4
+ * PHP version 5
  *
  * Copyright (c) 1997-2006 The PHP Group
  *
@@ -23,9 +23,6 @@
  * @link     http://pear.php.net/package/Numbers_Words
  */
 
-require_once "PEAR.php";
-require_once "Numbers/Words.php";
-
 /**
 * Class for translating numbers into Indonesian.
  *
@@ -36,7 +33,7 @@ require_once "Numbers/Words.php";
  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
  * @link     http://pear.php.net/package/Numbers_Words
  */
-class Numbers_Words_id extends Numbers_Words
+class Numbers_Words_id
 {
 
     // {{{ properties
@@ -46,28 +43,28 @@ class Numbers_Words_id extends Numbers_Words
      * @var string
      * @access public
      */
-    var $locale = 'id';
+    public $locale = 'id';
 
     /**
      * Language name in English
      * @var string
      * @access public
      */
-    var $lang = 'Indonesia Language';
+    public $lang = 'Indonesia Language';
 
     /**
      * Native language name
      * @var string
      * @access public
      */
-    var $lang_native = 'Bahasa Indonesia';
+    public $lang_native = 'Bahasa Indonesia';
 
     /**
      * The word for the minus sign
      * @var string
      * @access private
      */
-    var $_minus = 'minus'; // minus sign
+    private $_minus = 'minus'; // minus sign
 
     /**
      * The sufixes for exponents (singular and plural)
@@ -76,7 +73,7 @@ class Numbers_Words_id extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_exponent = array(
+    private $_exponent = array(
         0 => array(''),
         3 => array('ribu'),
         6 => array('juta'),
@@ -108,7 +105,7 @@ class Numbers_Words_id extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_digits = array(
+    private $_digits = array(
         0 => 'nol', 'satu', 'dua', 'tiga', 'empat',
         'lima', 'enam', 'tujuh', 'delapan', 'sembilan'
     );
@@ -118,7 +115,7 @@ class Numbers_Words_id extends Numbers_Words
      * @var string
      * @access private
      */
-    var $_sep = ' ';
+    private $_sep = ' ';
 
     // }}}
     // {{{ toWords()
@@ -140,7 +137,7 @@ class Numbers_Words_id extends Numbers_Words
      * @author Ernas M. Jamil
      * @since  PHP 4.2.3
      */
-    function toWords($num, $power = 0, $powsuffix = '')
+    public function toWords($num, $power = 0, $powsuffix = '')
     {
         $ret = '';
 
@@ -293,5 +290,3 @@ class Numbers_Words_id extends Numbers_Words
     }
     // }}}
 }
-
-?>

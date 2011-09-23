@@ -2,7 +2,7 @@
 /**
  * Numbers_Words
  *
- * PHP version 4
+ * PHP version 5
  *
  * Copyright (c) 1997-2006 The PHP Group
  *
@@ -25,25 +25,13 @@
 /**
  * Class for translating numbers into Danish.
  *
- * @author Jesper Veggerby <pear.nosey@veggerby.dk>
- * @package Numbers_Words
- */
-
-/**
- * Include needed files
- */
-require_once "Numbers/Words.php";
-
-/**
- * Class for translating numbers into Danish.
- *
  * @category Numbers
  * @package  Numbers_Words
  * @author   Jesper Veggerby <pear.nosey@veggerby.dk>
  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
  * @link     http://pear.php.net/package/Numbers_Words
  */
-class Numbers_Words_dk extends Numbers_Words
+class Numbers_Words_dk
 {
 
     // {{{ properties
@@ -53,28 +41,28 @@ class Numbers_Words_dk extends Numbers_Words
      * @var string
      * @access public
      */
-    var $locale = 'dk';
+    public $locale = 'dk';
 
     /**
      * Language name in English
      * @var string
      * @access public
      */
-    var $lang = 'Danish';
+    public $lang = 'Danish';
 
     /**
      * Native language name
      * @var string
      * @access public
      */
-    var $lang_native = 'Dansk';
+    public $lang_native = 'Dansk';
 
     /**
      * The word for the minus sign
      * @var string
      * @access private
      */
-    var $_minus = 'minus'; // minus sign
+    private $_minus = 'minus'; // minus sign
 
     /**
      * The sufixes for exponents (singular and plural).
@@ -82,7 +70,7 @@ class Numbers_Words_dk extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_exponent = array(
+    private $_exponent = array(
         0 => array(''),
         3 => array('tusind','tusinde'),
         6 => array('million','millioner'),
@@ -107,7 +95,7 @@ class Numbers_Words_dk extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_digits = array(
+    private $_digits = array(
         0 => 'nul', 'en', 'to', 'tre', 'fire',
         'fem', 'seks', 'syv', 'otte', 'ni'
     );
@@ -117,7 +105,7 @@ class Numbers_Words_dk extends Numbers_Words
      * @var string
      * @access private
      */
-    var $_sep = ' ';
+    private $_sep = ' ';
 
     /**
      * The currency names (based on the below links,
@@ -127,20 +115,20 @@ class Numbers_Words_dk extends Numbers_Words
      * @link http://da.wikipedia.org/wiki/Valuta
      * @access private
      */
-    var $_currency_names = array(
+    private $_currency_names = array(
       'AUD' => array(array('australsk dollar', 'australske dollars'), array('cent')),
       'CAD' => array(array('canadisk dollar', 'canadisk dollars'), array('cent')),
       'CHF' => array(array('schweitzer franc'), array('rappen')),
       'CYP' => array(array('cypriotisk pund', 'cypriotiske pund'), array('cent')),
       'CZK' => array(array('tjekkisk koruna'), array('halerz')),
-      'DKK' => array(array('krone', 'kroner'), array('øre')),
+      'DKK' => array(array('krone', 'kroner'), array('Ã¸re')),
       'EUR' => array(array('euro'), array('euro-cent')),
       'GBP' => array(array('pund'), array('pence')),
       'HKD' => array(array('Hong Kong dollar', 'Hong Kong dollars'), array('cent')),
       'JPY' => array(array('yen'), array('sen')),
-      'NOK' => array(array('norsk krone', 'norske kroner'), array('øre')),
+      'NOK' => array(array('norsk krone', 'norske kroner'), array('Ã¸re')),
       'PLN' => array(array('zloty', 'zlotys'), array('grosz')),
-      'SEK' => array(array('svensk krone', 'svenske kroner'), array('øre')),
+      'SEK' => array(array('svensk krone', 'svenske kroner'), array('Ã¸re')),
       'USD' => array(array('dollar', 'dollars'), array('cent'))
     );
 
@@ -149,7 +137,7 @@ class Numbers_Words_dk extends Numbers_Words
      * @var string
      * @access public
      */
-    var $def_currency = 'DKK'; // Danish krone
+    public $def_currency = 'DKK'; // Danish krone
 
     // }}}
     // {{{ toWords()
@@ -171,7 +159,7 @@ class Numbers_Words_dk extends Numbers_Words
      * @author Jesper Veggerby <pear.nosey@veggerby.dk>
      * @since  PHP 4.2.3
      */
-    function toWords($num, $power = 0, $powsuffix = '')
+    public function toWords($num, $power = 0, $powsuffix = '')
     {
         $ret = '';
 
@@ -376,7 +364,7 @@ class Numbers_Words_dk extends Numbers_Words
      * @author Jesper Veggerby <pear.nosey@veggerby.dk>
      * @since  Numbers_Words 0.4
      */
-    function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
+    public function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
     {
         $int_curr = strtoupper($int_curr);
         if (!isset($this->_currency_names[$int_curr])) {
@@ -425,5 +413,3 @@ class Numbers_Words_dk extends Numbers_Words
 
 
 }
-
-?>

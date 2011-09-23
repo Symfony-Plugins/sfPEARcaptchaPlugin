@@ -2,7 +2,7 @@
 /**
  * Numbers_Words
  *
- * PHP version 4
+ * PHP version 5
  *
  * Copyright (c) 1997-2006 The PHP Group
  *
@@ -23,11 +23,6 @@
  */
 
 /**
- * Include needed files
- */
-require_once "Numbers/Words.php";
-
-/**
  * Class for translating numbers into French.
  *
  * @category Numbers
@@ -36,7 +31,7 @@ require_once "Numbers/Words.php";
  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
  * @link     http://pear.php.net/package/Numbers_Words
  */
-class Numbers_Words_fr extends Numbers_Words
+class Numbers_Words_fr
 {
 
     // {{{ properties
@@ -46,28 +41,28 @@ class Numbers_Words_fr extends Numbers_Words
      * @var string
      * @access public
      */
-    var $locale = 'fr';
+    public $locale = 'fr';
 
     /**
      * Language name in English.
      * @var string
      * @access public
      */
-    var $lang = 'French';
+    public $lang = 'French';
 
     /**
      * Native language name.
      * @var string
      * @access public
      */
-    var $lang_native = 'Français';
+    public $lang_native = 'FranÃ§ais';
 
     /**
      * The words for some numbers.
      * @var string
      * @access private
      */
-    var $_misc_numbers = array(
+    private $_misc_numbers = array(
         10=>'dix',      // 10
             'onze',     // 11
             'douze',    // 12
@@ -89,63 +84,63 @@ class Numbers_Words_fr extends Numbers_Words
      * @var string
      * @access private
      */
-    var $_digits = array(1=>"un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf");
+    private $_digits = array(1=>"un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf");
 
     /**
      * The word for zero.
      * @var string
      * @access private
      */
-    var $_zero = 'zéro';
+    private $_zero = 'zÃ©ro';
 
     /**
      * The word for infinity.
      * @var string
      * @access private
      */
-    var $_infinity = 'infini';
+    private $_infinity = 'infini';
 
     /**
      * The word for the "and" language construct.
      * @var string
      * @access private
      */
-    var $_and = 'et';
+    private $_and = 'et';
     
     /**
      * The word separator.
      * @var string
      * @access private
      */
-    var $_sep = ' ';
+    private $_sep = ' ';
 
     /**
      * The dash liaison.
      * @var string
      * @access private
      */
-    var $_dash = '-';
+    private $_dash = '-';
 
     /**
      * The word for the minus sign.
      * @var string
      * @access private
      */
-    var $_minus = 'moins'; // minus sign
+    private $_minus = 'moins'; // minus sign
 
     /**
      * The plural suffix (except for hundred).
      * @var string
      * @access private
      */
-    var $_plural = 's'; // plural suffix
+    private $_plural = 's'; // plural suffix
 
     /**
      * The suffixes for exponents (singular).
      * @var array
      * @access private
      */
-    var $_exponent = array(
+    private $_exponent = array(
         0 => '',
         3 => 'mille',
         6 => 'million',
@@ -264,7 +259,7 @@ class Numbers_Words_fr extends Numbers_Words
      * @author Kouber Saparev <kouber@php.net>
      * @since  PHP 4.2.3
      */
-    function _splitNumber($num)
+    private function _splitNumber($num)
     {
         if (is_string($num)) {
             $ret    = array();
@@ -299,7 +294,7 @@ class Numbers_Words_fr extends Numbers_Words
      * @access private
      * @author Kouber Saparev <kouber@php.net>
      */
-    function _showDigitsGroup($num, $last = false)
+    private function _showDigitsGroup($num, $last = false)
     {
         $ret = '';
         
@@ -396,7 +391,7 @@ class Numbers_Words_fr extends Numbers_Words
      * @access public
      * @author Kouber Saparev <kouber@php.net>
      */
-    function toWords($num = 0)
+    public function toWords($num = 0)
     {
         $ret = '';
 
@@ -445,4 +440,3 @@ class Numbers_Words_fr extends Numbers_Words
     }
     // }}}
 }
-?>

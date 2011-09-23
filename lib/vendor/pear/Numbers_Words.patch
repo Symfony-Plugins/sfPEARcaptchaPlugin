@@ -1,0 +1,4732 @@
+Index: Numbers/Words.php
+===================================================================
+--- Numbers/Words.php	(wersja 33074)
++++ Numbers/Words.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -53,21 +53,18 @@
+      * @since  PHP 4.2.3
+      * @return string  The corresponding word representation
+      */
+-    function toWords($num, $locale = 'en_US')
++    public static function toWords($num, $locale = 'en_US')
+     {
+-
+-        include_once "Numbers/Words/lang.${locale}.php";
+-
+         $classname = "Numbers_Words_${locale}";
+ 
+         if (!class_exists($classname)) {
+-            return Numbers_Words::raiseError("Unable to include the Numbers/Words/lang.${locale}.php file");
++            return PEAR::raiseError("Unable to include the Numbers/Words/lang.${locale}.php file");
+         }
+ 
+         $methods = get_class_methods($classname);
+ 
+         if (!in_array('toWords', $methods) && !in_array('towords', $methods)) {
+-            return Numbers_Words::raiseError("Unable to find toWords method in '$classname' class");
++            return PEAR::raiseError("Unable to find toWords method in '$classname' class");
+         }
+ 
+         @$obj = new $classname;
+@@ -102,22 +99,20 @@
+      * @since  PHP 4.2.3
+      * @return string
+      */
+-    function toCurrency($num, $locale = 'en_US', $int_curr = '')
++    public static function toCurrency($num, $locale = 'en_US', $int_curr = '')
+     {
+         $ret = $num;
+ 
+-        @include_once "Numbers/Words/lang.${locale}.php";
+-
+         $classname = "Numbers_Words_${locale}";
+ 
+         if (!class_exists($classname)) {
+-            return Numbers_Words::raiseError("Unable to include the Numbers/Words/lang.${locale}.php file");
++            return PEAR::raiseError("Unable to include the Numbers/Words/lang.${locale}.php file");
+         }
+ 
+         $methods = get_class_methods($classname);
+ 
+         if (!in_array('toCurrencyWords', $methods) && !in_array('tocurrencywords', $methods)) {
+-            return Numbers_Words::raiseError("Unable to find toCurrencyWords method in '$classname' class");
++            return PEAR::raiseError("Unable to find toCurrencyWords method in '$classname' class");
+         }
+ 
+         @$obj = new $classname;
+@@ -147,8 +142,6 @@
+             
+             if ($round_digit >= 5) {
+                 // round up without losing precision
+-                include_once "Math/BigInteger.php";
+-
+                 $int = new Math_BigInteger(join($currency));
+                 $int = $int->add(new Math_BigInteger(1));
+                 $int_str = $int->toString();
+@@ -183,7 +176,7 @@
+      * @static
+      * @return mixed[]
+      */
+-    function getLocales($locale = null)
++    public static function getLocales($locale = null)
+     {
+         $ret = array();
+         if (isset($locale) && is_string($locale)) {
+@@ -210,24 +203,6 @@
+         return $ret;
+     }
+     // }}}
+-
+-    // {{{ raiseError()
+-    /**
+-     * Trigger a PEAR error
+-     *
+-     * To improve performances, the PEAR.php file is included dynamically.
+-     *
+-     * @param string $msg error message
+-     *
+-     * @return PEAR_Error
+-     */
+-    function raiseError($msg)
+-    {
+-        include_once 'PEAR.php';
+-        return PEAR::raiseError($msg);
+-    }
+-    // }}}
+ }
+ 
+ // }}}
+-?>
+Index: Numbers/Words/lang.nl.php
+===================================================================
+--- Numbers/Words/lang.nl.php	(wersja 33074)
++++ Numbers/Words/lang.nl.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -23,19 +23,6 @@
+  */
+ 
+ /**
+- *
+- * Class for translating numbers into Dutch.
+- * @author Piotr Klaban
+- * @author WHAM van Dinter (for Dutch Translations)
+- * @package Numbers_Words
+- */
+-
+-/**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+-/**
+  * Class for translating numbers into Dutch.
+  *
+  * @category Numbers
+@@ -45,7 +32,7 @@
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_nl extends Numbers_Words
++class Numbers_Words_nl
+ {
+ 
+     // {{{ properties
+@@ -55,28 +42,28 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'nl';
++    public $locale = 'nl';
+ 
+     /**
+      * Language name in English
+      * @var string
+      * @access public
+      */
+-    var $lang = 'Dutch';
++    public $lang = 'Dutch';
+ 
+     /**
+      * Native language name
+      * @var string
+      * @access public
+      */
+-    var $lang_native = 'Nederlands';
++    public $lang_native = 'Nederlands';
+ 
+     /**
+      * The word for the minus sign
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'Minus'; // minus sign
++    private $_minus = 'Minus'; // minus sign
+ 
+     /**
+      * The sufixes for exponents (singular and plural)
+@@ -85,7 +72,7 @@
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         0 => array(''),
+         3 => array('Duizend','Duizend'),
+         6 => array('Miljoen','Miljoen'),
+@@ -125,7 +112,7 @@
+      * @var array
+      * @access private
+      */
+-    var $_digits = array(
++    private $_digits = array(
+         0 => 'nul', 'een', 'twee', 'drie', 'vier',
+         'vijf', 'zes', 'zeven', 'acht', 'negen'
+     );
+@@ -135,14 +122,14 @@
+      * @var string
+      * @access private
+      */
+-    var $_sep = '';
++    private $_sep = '';
+ 
+     /**
+      * The exponent word separator
+      * @var string
+      * @access private
+      */
+-    var $_sep2 = '-';
++    private $_sep2 = '-';
+ 
+     // }}}
+     // {{{ toWords()
+@@ -165,7 +152,7 @@
+      * @author WHAM van Dinter <willem@fkkc.nl>
+      * @since  PHP 4.2.3
+      */
+-    function toWords($num, $power = 0, $powsuffix = '')
++    public function toWords($num, $power = 0, $powsuffix = '')
+     {
+         $ret = '';
+ 
+@@ -331,5 +318,3 @@
+     }
+     // }}}
+ }
+-
+-?>
+Index: Numbers/Words/lang.en_US.php
+===================================================================
+--- Numbers/Words/lang.en_US.php	(wersja 33074)
++++ Numbers/Words/lang.en_US.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -25,25 +25,13 @@
+ /**
+  * Class for translating numbers into American English.
+  *
+- * @author Piotr Klaban
+- * @package Numbers_Words
+- */
+-
+-/**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+-/**
+- * Class for translating numbers into American English.
+- *
+  * @category Numbers
+  * @package  Numbers_Words
+  * @author   Piotr Klaban <makler@man.torun.pl>
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_en_US extends Numbers_Words
++class Numbers_Words_en_US
+ {
+ 
+     // {{{ properties
+@@ -53,28 +41,28 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'en_US';
++    public $locale = 'en_US';
+ 
+     /**
+      * Language name in English
+      * @var string
+      * @access public
+      */
+-    var $lang = 'American English';
++    public $lang = 'American English';
+ 
+     /**
+      * Native language name
+      * @var string
+      * @access public
+      */
+-    var $lang_native = 'American English';
++    public $lang_native = 'American English';
+ 
+     /**
+      * The word for the minus sign
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'minus'; // minus sign
++    private $_minus = 'minus'; // minus sign
+ 
+     /**
+      * The sufixes for exponents (singular and plural)
+@@ -85,7 +73,7 @@
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         0 => array(''),
+         3 => array('thousand'),
+         6 => array('million'),
+@@ -207,7 +195,7 @@
+      * @var array
+      * @access private
+      */
+-    var $_digits = array(
++    private $_digits = array(
+         0 => 'zero', 'one', 'two', 'three', 'four',
+         'five', 'six', 'seven', 'eight', 'nine'
+     );
+@@ -217,7 +205,7 @@
+      * @var string
+      * @access private
+      */
+-    var $_sep = ' ';
++    private $_sep = ' ';
+ 
+     /**
+      * The currency names (based on the below links,
+@@ -229,7 +217,7 @@
+      * @link http://www.shoestring.co.kr/world/p.visa/change.htm Currency names in English
+      * @access private
+      */
+-    var $_currency_names = array(
++    private $_currency_names = array(
+       'ALL' => array(array('lek'), array('qindarka')),
+       'AUD' => array(array('Australian dollar'), array('cent')),
+       'BAM' => array(array('convertible marka'), array('fenig')),
+@@ -248,7 +236,7 @@
+       'HRK' => array(array('Croatian kuna'), array('lipa')),
+       'HUF' => array(array('forint'), array('filler')),
+       'ILS' => array(array('new sheqel','new sheqels'), array('agora','agorot')),
+-      'ISK' => array(array('Icelandic krÛna'), array('aurar')),
++      'ISK' => array(array('Icelandic kr√≥na'), array('aurar')),
+       'JPY' => array(array('yen'), array('sen')),
+       'LTL' => array(array('litas'), array('cent')),
+       'LVL' => array(array('lat'), array('sentim')),
+@@ -261,7 +249,7 @@
+       'SEK' => array(array('Swedish krona'), array('oere')),
+       'SIT' => array(array('Tolar'), array('stotinia')),
+       'SKK' => array(array('Slovak koruna'), array()),
+-      'TRL' => array(array('lira'), array('kuru˛')),
++      'TRL' => array(array('lira'), array('kuru√æ')),
+       'UAH' => array(array('hryvna'), array('cent')),
+       'USD' => array(array('dollar'), array('cent')),
+       'YUM' => array(array('dinars'), array('para')),
+@@ -273,7 +261,7 @@
+      * @var string
+      * @access public
+      */
+-    var $def_currency = 'USD'; // American dollar
++    public $def_currency = 'USD'; // American dollar
+ 
+     // }}}
+     // {{{ toWords()
+@@ -295,7 +283,7 @@
+      * @author Piotr Klaban <makler@man.torun.pl>
+      * @since  PHP 4.2.3
+      */
+-    function toWords($num, $power = 0, $powsuffix = '')
++    public function toWords($num, $power = 0, $powsuffix = '')
+     {
+         $ret = '';
+ 
+@@ -480,7 +468,7 @@
+      * @author Piotr Klaban <makler@man.torun.pl>
+      * @since  Numbers_Words 0.4
+      */
+-    function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
++    public function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
+     {
+         $int_curr = strtoupper($int_curr);
+         if (!isset($this->_currency_names[$int_curr])) {
+@@ -522,5 +510,3 @@
+     // }}}
+ 
+ }
+-
+-?>
+Index: Numbers/Words/lang.en_GB.php
+===================================================================
+--- Numbers/Words/lang.en_GB.php	(wersja 33074)
++++ Numbers/Words/lang.en_GB.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -25,25 +25,13 @@
+ /**
+  * Class for translating numbers into British English.
+  *
+- * @author Piotr Klaban
+- * @package Numbers_Words
+- */
+-
+-/**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+-/**
+- * Class for translating numbers into British English.
+- *
+  * @category Numbers
+  * @package  Numbers_Words
+  * @author   Piotr Klaban <makler@man.torun.pl>
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_en_GB extends Numbers_Words
++class Numbers_Words_en_GB
+ {
+ 
+     // {{{ properties
+@@ -53,28 +41,28 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'en_GB';
++    public $locale = 'en_GB';
+ 
+     /**
+      * Language name in English
+      * @var string
+      * @access public
+      */
+-    var $lang = 'British English';
++    public $lang = 'British English';
+ 
+     /**
+      * Native language name
+      * @var string
+      * @access public
+      */
+-    var $lang_native = 'British English';
++    public $lang_native = 'British English';
+ 
+     /**
+      * The word for the minus sign
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'minus'; // minus sign
++    private $_minus = 'minus'; // minus sign
+ 
+     /**
+      * The sufixes for exponents (singular and plural)
+@@ -83,7 +71,7 @@
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         0 => array(''),
+         3 => array('thousand'),
+         6 => array('million'),
+@@ -115,7 +103,7 @@
+      * @var array
+      * @access private
+      */
+-    var $_digits = array(
++    private $_digits = array(
+         0 => 'zero', 'one', 'two', 'three', 'four',
+         'five', 'six', 'seven', 'eight', 'nine'
+     );
+@@ -125,7 +113,7 @@
+      * @var string
+      * @access private
+      */
+-    var $_sep = ' ';
++    private $_sep = ' ';
+ 
+     /**
+      * The currency names (based on the below links,
+@@ -137,7 +125,7 @@
+      * @link http://www.shoestring.co.kr/world/p.visa/change.htm Currency names in English
+      * @access private
+      */
+-    var $_currency_names = array(
++    private $_currency_names = array(
+       'ALL' => array(array('lek'), array('qindarka')),
+       'AUD' => array(array('Australian dollar'), array('cent')),
+       'BAM' => array(array('convertible marka'), array('fenig')),
+@@ -156,7 +144,7 @@
+       'HRK' => array(array('Croatian kuna'), array('lipa')),
+       'HUF' => array(array('forint'), array('filler')),
+       'ILS' => array(array('new sheqel','new sheqels'), array('agora','agorot')),
+-      'ISK' => array(array('Icelandic krÛna'), array('aurar')),
++      'ISK' => array(array('Icelandic kr√≥na'), array('aurar')),
+       'JPY' => array(array('yen'), array('sen')),
+       'LTL' => array(array('litas'), array('cent')),
+       'LVL' => array(array('lat'), array('sentim')),
+@@ -169,7 +157,7 @@
+       'SEK' => array(array('Swedish krona'), array('oere')),
+       'SIT' => array(array('Tolar'), array('stotinia')),
+       'SKK' => array(array('Slovak koruna'), array()),
+-      'TRL' => array(array('lira'), array('kuru˛')),
++      'TRL' => array(array('lira'), array('kuru√æ')),
+       'UAH' => array(array('hryvna'), array('cent')),
+       'USD' => array(array('dollar'), array('cent')),
+       'YUM' => array(array('dinars'), array('para')),
+@@ -181,7 +169,7 @@
+      * @var string
+      * @access public
+      */
+-    var $def_currency = 'GBP'; // English pound
++    public $def_currency = 'GBP'; // English pound
+ 
+     // }}}
+     // {{{ toWords()
+@@ -203,7 +191,7 @@
+      * @author Piotr Klaban <makler@man.torun.pl>
+      * @since  PHP 4.2.3
+      */
+-    function toWords($num, $power = 0, $powsuffix = '')
++    public function toWords($num, $power = 0, $powsuffix = '')
+     {
+         $ret = '';
+ 
+@@ -388,7 +376,7 @@
+      * @author Piotr Klaban <makler@man.torun.pl>
+      * @since  Numbers_Words 0.13.1
+      */
+-    function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
++    public function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
+     {
+         $int_curr = strtoupper($int_curr);
+         if (!isset($this->_currency_names[$int_curr])) {
+@@ -431,5 +419,3 @@
+ 
+ 
+ }
+-
+-?>
+Index: Numbers/Words/lang.pl.php
+===================================================================
+--- Numbers/Words/lang.pl.php	(wersja 33074)
++++ Numbers/Words/lang.pl.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -25,25 +25,13 @@
+ /**
+  * Class for translating numbers into Polish.
+  *
+- * @author Piotr Klaban
+- * @package Numbers_Words
+- */
+-
+-/**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+-/**
+- * Class for translating numbers into Polish.
+- *
+  * @category Numbers
+  * @package  Numbers_Words
+  * @author   Piotr Klaban <makler@man.torun.pl>
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_pl extends Numbers_Words
++class Numbers_Words_pl
+ {
+ 
+     // {{{ properties
+@@ -53,28 +41,28 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'pl';
++    public $locale = 'pl';
+ 
+     /**
+      * Language name in English
+      * @var string
+      * @access public
+      */
+-    var $lang = 'Polish';
++    public $lang = 'Polish';
+ 
+     /**
+      * Native language name
+      * @var string
+      * @access public
+      */
+-    var $lang_native = 'polski';
++    public $lang_native = 'polski';
+ 
+     /**
+      * The word for the minus sign
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'minus'; // minus sign
++    private $_minus = 'minus'; // minus sign
+ 
+     /**
+      * The sufixes for exponents (singular and plural)
+@@ -84,51 +72,51 @@
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
+-       // potÍga dziesi±tki => liczba pojedyncza, podwÛjna, mnoga
++    private $_exponent = array(
++       // potƒôga dziesiƒÖtki => liczba pojedyncza, podw√≥jna, mnoga
+         0 => array('','',''),
+-        3 => array('tysi±c','tysi±ce','tysiÍcy'),
+-        6 => array('milion','miliony','milionÛw'),
+-        9 => array('miliard','miliardy','miliardÛw'),
+-       12 => array('bilion','biliony','bilionÛw'),
+-       15 => array('biliard','biliardy','biliardÛw'),
+-       18 => array('trylion','tryliony','trylionÛw'),
+-       21 => array('tryliard','tryliardy','tryliardÛw'),
+-       24 => array('kwadrylion','kwadryliony','kwadrylionÛw'),
+-       27 => array('kwadryliard','kwadryliardy','kwadryliardÛw'),
+-       30 => array('kwintylion','kwintyliony','kwintylionÛw'),
+-       33 => array('kwintyliiard','kwintyliardy','kwintyliardÛw'),
+-       36 => array('sekstylion','sekstyliony','sekstylionÛw'),
+-       39 => array('sekstyliard','sekstyliardy','sekstyliardÛw'),
+-       42 => array('septylion','septyliony','septylionÛw'),
+-       45 => array('septyliard','septyliardy','septyliardÛw'),
+-       48 => array('oktylion','oktyliony','oktylionÛw'),
+-       51 => array('oktyliard','oktyliardy','oktyliardÛw'),
+-       54 => array('nonylion','nonyliony','nonylionÛw'),
+-       57 => array('nonyliard','nonyliardy','nonyliardÛw'),
+-       60 => array('decylion','decyliony','decylionÛw'),
+-       63 => array('decyliard','decyliardy','decyliardÛw'),
+-      100 => array('centylion','centyliony','centylionÛw'),
+-      103 => array('centyliard','centyliardy','centyliardÛw'),
++        3 => array('tysiƒÖc','tysiƒÖce','tysiƒôcy'),
++        6 => array('milion','miliony','milion√≥w'),
++        9 => array('miliard','miliardy','miliard√≥w'),
++       12 => array('bilion','biliony','bilion√≥w'),
++       15 => array('biliard','biliardy','biliard√≥w'),
++       18 => array('trylion','tryliony','trylion√≥w'),
++       21 => array('tryliard','tryliardy','tryliard√≥w'),
++       24 => array('kwadrylion','kwadryliony','kwadrylion√≥w'),
++       27 => array('kwadryliard','kwadryliardy','kwadryliard√≥w'),
++       30 => array('kwintylion','kwintyliony','kwintylion√≥w'),
++       33 => array('kwintyliiard','kwintyliardy','kwintyliard√≥w'),
++       36 => array('sekstylion','sekstyliony','sekstylion√≥w'),
++       39 => array('sekstyliard','sekstyliardy','sekstyliard√≥w'),
++       42 => array('septylion','septyliony','septylion√≥w'),
++       45 => array('septyliard','septyliardy','septyliard√≥w'),
++       48 => array('oktylion','oktyliony','oktylion√≥w'),
++       51 => array('oktyliard','oktyliardy','oktyliard√≥w'),
++       54 => array('nonylion','nonyliony','nonylion√≥w'),
++       57 => array('nonyliard','nonyliardy','nonyliard√≥w'),
++       60 => array('decylion','decyliony','decylion√≥w'),
++       63 => array('decyliard','decyliardy','decyliard√≥w'),
++      100 => array('centylion','centyliony','centylion√≥w'),
++      103 => array('centyliard','centyliardy','centyliard√≥w'),
+       120 => array('wicylion','wicylion','wicylion'),
+-      123 => array('wicyliard','wicyliardy','wicyliardÛw'),
++      123 => array('wicyliard','wicyliardy','wicyliard√≥w'),
+       180 => array('trycylion','trycylion','trycylion'),
+-      183 => array('trycyliard','trycyliardy','trycyliardÛw'),
++      183 => array('trycyliard','trycyliardy','trycyliard√≥w'),
+       240 => array('kwadragilion','kwadragilion','kwadragilion'),
+-      243 => array('kwadragiliard','kwadragiliardy','kwadragiliardÛw'),
++      243 => array('kwadragiliard','kwadragiliardy','kwadragiliard√≥w'),
+       300 => array('kwinkwagilion','kwinkwagilion','kwinkwagilion'),
+-      303 => array('kwinkwagiliard','kwinkwagiliardy','kwinkwagiliardÛw'),
++      303 => array('kwinkwagiliard','kwinkwagiliardy','kwinkwagiliard√≥w'),
+       360 => array('seskwilion','seskwilion','seskwilion'),
+-      363 => array('seskwiliard','seskwiliardy','seskwiliardÛw'),
++      363 => array('seskwiliard','seskwiliardy','seskwiliard√≥w'),
+       420 => array('septagilion','septagilion','septagilion'),
+-      423 => array('septagiliard','septagiliardy','septagiliardÛw'),
++      423 => array('septagiliard','septagiliardy','septagiliard√≥w'),
+       480 => array('oktogilion','oktogilion','oktogilion'),
+-      483 => array('oktogiliard','oktogiliardy','oktogiliardÛw'),
++      483 => array('oktogiliard','oktogiliardy','oktogiliard√≥w'),
+       540 => array('nonagilion','nonagilion','nonagilion'),
+-      543 => array('nonagiliard','nonagiliardy','nonagiliardÛw'),
+-      600 => array('centylion','centyliony','centylionÛw'),
+-      603 => array('centyliard','centyliardy','centyliardÛw'),
+-      6000018 => array('milinilitrylion','milinilitryliony','milinilitrylionÛw')
++      543 => array('nonagiliard','nonagiliardy','nonagiliard√≥w'),
++      600 => array('centylion','centyliony','centylion√≥w'),
++      603 => array('centyliard','centyliardy','centyliard√≥w'),
++      6000018 => array('milinilitrylion','milinilitryliony','milinilitrylion√≥w')
+         );
+ 
+     /**
+@@ -136,9 +124,9 @@
+      * @var array
+      * @access private
+      */
+-    var $_digits = array(
++    private $_digits = array(
+         0 => 'zero', 'jeden', 'dwa', 'trzy', 'cztery',
+-        'piÍÊ', 'sze∂Ê', 'siedem', 'osiem', 'dziewiÍÊ'
++        'piƒôƒá', 'sze≈õƒá', 'siedem', 'osiem', 'dziewiƒôƒá'
+     );
+ 
+     /**
+@@ -146,7 +134,7 @@
+      * @var string
+      * @access private
+      */
+-    var $_sep = ' ';
++    private $_sep = ' ';
+ 
+     /**
+      * The currency names (based on the below links,
+@@ -158,43 +146,43 @@
+      * @link http://pieniadz.hoga.pl/waluty_objasnienia.asp Currency service
+      * @access private
+      */
+-    var $_currency_names = array(
+-      'ALL' => array(array('lek','leki','lekÛw'), array('quindarka','quindarki','quindarek')),
+-      'AUD' => array(array('dolar australijski', 'dolary australijskie', 'dolarÛw australijskich'), array('cent', 'centy', 'centÛw')),
+-      'BAM' => array(array('marka','marki','marek'), array('fenig','fenigi','fenigÛw')),
++    private $_currency_names = array(
++      'ALL' => array(array('lek','leki','lek√≥w'), array('quindarka','quindarki','quindarek')),
++      'AUD' => array(array('dolar australijski', 'dolary australijskie', 'dolar√≥w australijskich'), array('cent', 'centy', 'cent√≥w')),
++      'BAM' => array(array('marka','marki','marek'), array('fenig','fenigi','fenig√≥w')),
+       'BGN' => array(array('lew','lewy','lew'), array('stotinka','stotinki','stotinek')),
+-      'BRL' => array(array('real','reale','realÛw'), array('centavos','centavos','centavos')),
++      'BRL' => array(array('real','reale','real√≥w'), array('centavos','centavos','centavos')),
+       'BYR' => array(array('rubel','ruble','rubli'), array('kopiejka','kopiejki','kopiejek')),
+-      'CAD' => array(array('dolar kanadyjski', 'dolary kanadyjskie', 'dolarÛw kanadyjskich'), array('cent', 'centy', 'centÛw')),
+-      'CHF' => array(array('frank szwajcarski','franki szwajcarskie','frankÛw szwajcarskich'), array('rapp','rappy','rappÛw')),
+-      'CYP' => array(array('funt cypryjski','funty cypryjskie','funtÛw cypryjskich'), array('cent', 'centy', 'centÛw')),
++      'CAD' => array(array('dolar kanadyjski', 'dolary kanadyjskie', 'dolar√≥w kanadyjskich'), array('cent', 'centy', 'cent√≥w')),
++      'CHF' => array(array('frank szwajcarski','franki szwajcarskie','frank√≥w szwajcarskich'), array('rapp','rappy','rapp√≥w')),
++      'CYP' => array(array('funt cypryjski','funty cypryjskie','funt√≥w cypryjskich'), array('cent', 'centy', 'cent√≥w')),
+       'CZK' => array(array('korona czeska','korony czeskie','koron czeskich'), array('halerz','halerze','halerzy')),
+-      'DKK' => array(array('korona duÒska','korony duÒskie','koron duÒskich'), array('ore','ore','ore')),
+-      'EEK' => array(array('korona estoÒska','korony estoÒskie','koron estoÒskich'), array('senti','senti','senti')),
+-      'EUR' => array(array('euro', 'euro', 'euro'), array('eurocent', 'eurocenty', 'eurocentÛw')),
+-      'GBP' => array(array('funt szterling','funty szterlingi','funtÛw szterlingÛw'), array('pens','pensy','pensÛw')),
+-      'HKD' => array(array('dolar Hongkongu','dolary Hongkongu','dolarÛw Hongkongu'), array('cent', 'centy', 'centÛw')),
++      'DKK' => array(array('korona du≈Ñska','korony du≈Ñskie','koron du≈Ñskich'), array('ore','ore','ore')),
++      'EEK' => array(array('korona esto≈Ñska','korony esto≈Ñskie','koron esto≈Ñskich'), array('senti','senti','senti')),
++      'EUR' => array(array('euro', 'euro', 'euro'), array('eurocent', 'eurocenty', 'eurocent√≥w')),
++      'GBP' => array(array('funt szterling','funty szterlingi','funt√≥w szterling√≥w'), array('pens','pensy','pens√≥w')),
++      'HKD' => array(array('dolar Hongkongu','dolary Hongkongu','dolar√≥w Hongkongu'), array('cent', 'centy', 'cent√≥w')),
+       'HRK' => array(array('kuna','kuny','kun'), array('lipa','lipy','lip')),
+-      'HUF' => array(array('forint','forinty','forintÛw'), array('filler','fillery','fillerÛw')),
++      'HUF' => array(array('forint','forinty','forint√≥w'), array('filler','fillery','filler√≥w')),
+       'ILS' => array(array('nowy szekel','nowe szekele','nowych szekeli'), array('agora','agory','agorot')),
+       'ISK' => array(array('korona islandzka','korony islandzkie','koron islandzkich'), array('aurar','aurar','aurar')),
+-      'JPY' => array(array('jen','jeny','jenÛw'), array('sen','seny','senÛw')),
+-      'LTL' => array(array('lit','lity','litÛw'), array('cent', 'centy', 'centÛw')),
+-      'LVL' => array(array('≥at','≥aty','≥atÛw'), array('sentim','sentimy','sentimÛw')),
+-      'MKD' => array(array('denar','denary','denarÛw'), array('deni','deni','deni')),
+-      'MTL' => array(array('lira maltaÒska','liry maltaÒskie','lir maltaÒskich'), array('centym','centymy','centymÛw')),
++      'JPY' => array(array('jen','jeny','jen√≥w'), array('sen','seny','sen√≥w')),
++      'LTL' => array(array('lit','lity','lit√≥w'), array('cent', 'centy', 'cent√≥w')),
++      'LVL' => array(array('≈Çat','≈Çaty','≈Çat√≥w'), array('sentim','sentimy','sentim√≥w')),
++      'MKD' => array(array('denar','denary','denar√≥w'), array('deni','deni','deni')),
++      'MTL' => array(array('lira malta≈Ñska','liry malta≈Ñskie','lir malta≈Ñskich'), array('centym','centymy','centym√≥w')),
+       'NOK' => array(array('korona norweska','korony norweskie','koron norweskich'), array('oere','oere','oere')),
+-      'PLN' => array(array('z≥oty', 'z≥ote', 'z≥otych'), array('grosz', 'grosze', 'groszy')),
++      'PLN' => array(array('z≈Çoty', 'z≈Çote', 'z≈Çotych'), array('grosz', 'grosze', 'groszy')),
+       'ROL' => array(array('lej','leje','lei'), array('bani','bani','bani')),
+       'RUB' => array(array('rubel','ruble','rubli'), array('kopiejka','kopiejki','kopiejek')),
+       'SEK' => array(array('korona szwedzka','korony szwedzkie','koron szweckich'), array('oere','oere','oere')),
+-      'SIT' => array(array('tolar','tolary','tolarÛw'), array('stotinia','stotinie','stotini')),
+-      'SKK' => array(array('korona s≥owacka','korony s≥owackie','koron s≥owackich'), array('halerz','halerze','halerzy')),
++      'SIT' => array(array('tolar','tolary','tolar√≥w'), array('stotinia','stotinie','stotini')),
++      'SKK' => array(array('korona s≈Çowacka','korony s≈Çowackie','koron s≈Çowackich'), array('halerz','halerze','halerzy')),
+       'TRL' => array(array('lira turecka','liry tureckie','lir tureckich'), array('kurusza','kurysze','kuruszy')),
+-      'UAH' => array(array('hrywna','hrywna','hrywna'), array('cent', 'centy', 'centÛw')),
+-      'USD' => array(array('dolar','dolary','dolarÛw'), array('cent', 'centy', 'centÛw')),
+-      'YUM' => array(array('dinar','dinary','dinarÛw'), array('para','para','para')),
+-      'ZAR' => array(array('rand','randy','randÛw'), array('cent', 'centy', 'centÛw'))
++      'UAH' => array(array('hrywna','hrywna','hrywna'), array('cent', 'centy', 'cent√≥w')),
++      'USD' => array(array('dolar','dolary','dolar√≥w'), array('cent', 'centy', 'cent√≥w')),
++      'YUM' => array(array('dinar','dinary','dinar√≥w'), array('para','para','para')),
++      'ZAR' => array(array('rand','randy','rand√≥w'), array('cent', 'centy', 'cent√≥w'))
+     );
+ 
+     /**
+@@ -202,7 +190,7 @@
+      * @var string
+      * @access public
+      */
+-    var $def_currency = 'PLN'; // Polish zloty
++    public $def_currency = 'PLN'; // Polish zloty
+ 
+     // }}}
+     // {{{ toWords()
+@@ -224,7 +212,7 @@
+      * @author Piotr Klaban <makler@man.torun.pl>
+      * @since  PHP 4.2.3
+      */
+-    function toWords($num, $power = 0, $powsuffix = '')
++    public function toWords($num, $power = 0, $powsuffix = '')
+     {
+         $ret = '';
+ 
+@@ -288,7 +276,7 @@
+ 
+         switch ($h) {
+         case 9:
+-            $ret .= $this->_sep . 'dziewiÍÊset';
++            $ret .= $this->_sep . 'dziewiƒôƒáset';
+             break;
+ 
+         case 8:
+@@ -300,11 +288,11 @@
+             break;
+ 
+         case 6:
+-            $ret .= $this->_sep . 'sze∂Êset';
++            $ret .= $this->_sep . 'sze≈õƒáset';
+             break;
+ 
+         case 5:
+-            $ret .= $this->_sep . 'piÍÊset';
++            $ret .= $this->_sep . 'piƒôƒáset';
+             break;
+ 
+         case 4:
+@@ -316,7 +304,7 @@
+             break;
+ 
+         case 2:
+-            $ret .= $this->_sep . 'dwie∂cie';
++            $ret .= $this->_sep . 'dwie≈õcie';
+             break;
+ 
+         case 1:
+@@ -330,52 +318,52 @@
+         case 7:
+         case 6:
+         case 5:
+-            $ret .= $this->_sep . $this->_digits[$t] . 'dziesi±t';
++            $ret .= $this->_sep . $this->_digits[$t] . 'dziesiƒÖt';
+             break;
+ 
+         case 4:
+-            $ret .= $this->_sep . 'czterdzie∂ci';
++            $ret .= $this->_sep . 'czterdzie≈õci';
+             break;
+ 
+         case 3:
+-            $ret .= $this->_sep . 'trzydzie∂ci';
++            $ret .= $this->_sep . 'trzydzie≈õci';
+             break;
+ 
+         case 2:
+-            $ret .= $this->_sep . 'dwadzie∂cia';
++            $ret .= $this->_sep . 'dwadzie≈õcia';
+             break;
+ 
+         case 1:
+             switch ($d) {
+             case 0:
+-                $ret .= $this->_sep . 'dziesiÍÊ';
++                $ret .= $this->_sep . 'dziesiƒôƒá';
+                 break;
+ 
+             case 1:
+-                $ret .= $this->_sep . 'jedena∂cie';
++                $ret .= $this->_sep . 'jedena≈õcie';
+                 break;
+ 
+             case 2:
+             case 3:
+             case 7:
+             case 8:
+-                $ret .= $this->_sep . $this->_digits[$d] . 'na∂cie';
++                $ret .= $this->_sep . $this->_digits[$d] . 'na≈õcie';
+                 break;
+ 
+             case 4:
+-                $ret .= $this->_sep . 'czterna∂cie';
++                $ret .= $this->_sep . 'czterna≈õcie';
+                 break;
+ 
+             case 5:
+-                $ret .= $this->_sep . 'piÍtna∂cie';
++                $ret .= $this->_sep . 'piƒôtna≈õcie';
+                 break;
+ 
+             case 6:
+-                $ret .= $this->_sep . 'szesna∂cie';
++                $ret .= $this->_sep . 'szesna≈õcie';
+                 break;
+ 
+             case 9:
+-                $ret .= $this->_sep . 'dziewiÍtna∂cie';
++                $ret .= $this->_sep . 'dziewiƒôtna≈õcie';
+                 break;
+             }
+             break;
+@@ -451,7 +439,7 @@
+      * @author Piotr Klaban <makler@man.torun.pl>
+      * @since  Numbers_Words 0.4
+      */
+-    function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
++    public function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
+     {
+         $int_curr = strtoupper($int_curr);
+         if (!isset($this->_currency_names[$int_curr])) {
+@@ -492,7 +480,7 @@
+      * @author Piotr Klaban <makler@man.torun.pl>
+      * @since  Numbers_Words 0.4
+      */
+-    function _get_numlevel($num)
++    private function _get_numlevel($num)
+     {
+         if (strlen($num) > 3) {
+             $num = substr($num, -3);
+@@ -541,5 +529,3 @@
+     }
+     // }}}
+ }
+-
+-?>
+Index: Numbers/Words/lang.fr_BE.php
+===================================================================
+--- Numbers/Words/lang.fr_BE.php	(wersja 33074)
++++ Numbers/Words/lang.fr_BE.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -24,11 +24,6 @@
+  */
+ 
+ /**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+-/**
+  * Class for translating numbers into French (Belgium).
+  *
+  * @category Numbers
+@@ -38,7 +33,7 @@
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_fr_BE extends Numbers_Words
++class Numbers_Words_fr_BE
+ {
+ 
+     // {{{ properties
+@@ -48,28 +43,28 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'fr';
++    public $locale = 'fr';
+ 
+     /**
+      * Language name in English.
+      * @var string
+      * @access public
+      */
+-    var $lang = 'French';
++    public $lang = 'French';
+ 
+     /**
+      * Native language name.
+      * @var string
+      * @access public
+      */
+-    var $lang_native = 'FranÁais';
++    public $lang_native = 'Fran√ßais';
+ 
+     /**
+      * The words for some numbers.
+      * @var string
+      * @access private
+      */
+-    var $_misc_numbers = array(
++    private $_misc_numbers = array(
+         10=>'dix',      // 10
+             'onze',     // 11
+             'douze',    // 12
+@@ -93,63 +88,63 @@
+      * @var string
+      * @access private
+      */
+-    var $_digits = array(1=>"un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf");
++    private $_digits = array(1=>"un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf");
+ 
+     /**
+      * The word for zero.
+      * @var string
+      * @access private
+      */
+-    var $_zero = 'zÈro';
++    private $_zero = 'z√©ro';
+ 
+     /**
+      * The word for infinity.
+      * @var string
+      * @access private
+      */
+-    var $_infinity = 'infini';
++    private $_infinity = 'infini';
+ 
+     /**
+      * The word for the "and" language construct.
+      * @var string
+      * @access private
+      */
+-    var $_and = 'et';
++    private $_and = 'et';
+ 
+     /**
+      * The word separator.
+      * @var string
+      * @access private
+      */
+-    var $_sep = ' ';
++    private $_sep = ' ';
+ 
+     /**
+      * The dash liaison.
+      * @var string
+      * @access private
+      */
+-    var $_dash = '-';
++    private $_dash = '-';
+ 
+     /**
+      * The word for the minus sign.
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'moins'; // minus sign
++    private $_minus = 'moins'; // minus sign
+ 
+     /**
+      * The plural suffix (except for hundred).
+      * @var string
+      * @access private
+      */
+-    var $_plural = 's'; // plural suffix
++    private $_plural = 's'; // plural suffix
+ 
+     /**
+      * The suffixes for exponents (singular).
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         0 => '',
+         3 => 'mille',
+         6 => 'million',
+@@ -268,7 +263,7 @@
+      * @author Kouber Saparev <kouber@php.net>
+      * @since  PHP 4.2.3
+      */
+-    function _splitNumber($num)
++    private function _splitNumber($num)
+     {
+         if (is_string($num)) {
+             $ret    = array();
+@@ -303,7 +298,7 @@
+      * @access private
+      * @author Kouber Saparev <kouber@php.net>
+      */
+-    function _showDigitsGroup($num, $last = false)
++    private function _showDigitsGroup($num, $last = false)
+     {
+         $ret = '';
+ 
+@@ -382,7 +377,7 @@
+      * @access public
+      * @author Kouber Saparev <kouber@php.net>
+      */
+-    function toWords($num = 0)
++    public function toWords($num = 0)
+     {
+         $ret = '';
+ 
+@@ -431,4 +426,3 @@
+     }
+     // }}}
+ }
+-?>
+Index: Numbers/Words/lang.lt.php
+===================================================================
+--- Numbers/Words/lang.lt.php	(wersja 33074)
++++ Numbers/Words/lang.lt.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -25,25 +25,13 @@
+ /**
+  * Class for translating numbers into Lithuanian.
+  *
+- * @author Laurynas Butkus
+- * @package Numbers_Words
+- */
+-
+-/**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+-/**
+- * Class for translating numbers into Lithuanian.
+- *
+  * @category Numbers
+  * @package  Numbers_Words
+  * @author   Laurynas Butkus <lauris@night.lt>
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_lt extends Numbers_Words
++class Numbers_Words_lt
+ {
+ 
+     // {{{ properties
+@@ -53,42 +41,42 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'lt';
++    public $locale = 'lt';
+ 
+     /**
+      * Language name in English
+      * @var string
+      * @access public
+      */
+-    var $lang = 'Lithuanian';
++    public $lang = 'Lithuanian';
+ 
+     /**
+      * Native language name
+      * @var string
+      * @access public
+      */
+-    var $lang_native = 'lietuvikai';
++    public $lang_native = 'lietuviƒëkai';
+ 
+     /**
+      * The word for the minus sign
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'minus'; // minus sign
++    private $_minus = 'minus'; // minus sign
+ 
+     /**
+      * The sufixes for exponents (singular and plural)
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         0 => array(''),
+-        3 => array('t˚kstantis','t˚kstanËiai','t˚kstanËi¯'),
+-        6 => array('milijonas','milijonai','milijon¯'),
+-        9 => array('bilijonas','bilijonai','bilijon¯'),
+-       12 => array('trilijonas','trilijonai','trilijon¯'),
+-       15 => array('kvadrilijonas','kvadrilijonai','kvadrilijon¯'),
+-       18 => array('kvintilijonas','kvintilijonai','kvintilijon¯')
++        3 => array('t√ªkstantis','t√ªkstanƒçiai','t√ªkstanƒçi√∏'),
++        6 => array('milijonas','milijonai','milijon√∏'),
++        9 => array('bilijonas','bilijonai','bilijon√∏'),
++       12 => array('trilijonas','trilijonai','trilijon√∏'),
++       15 => array('kvadrilijonas','kvadrilijonai','kvadrilijon√∏'),
++       18 => array('kvintilijonas','kvintilijonai','kvintilijon√∏')
+         );
+ 
+     /**
+@@ -96,9 +84,9 @@
+      * @var array
+      * @access private
+      */
+-    var $_digits = array(
++    private $_digits = array(
+         0 => 'nulis', 'vienas', 'du', 'trys', 'keturi',
+-        'penki', 'ei', 'septyni', 'atuoni', 'devyni'
++        'penki', 'ƒëeƒëi', 'septyni', 'aƒëtuoni', 'devyni'
+     );
+ 
+     /**
+@@ -106,14 +94,14 @@
+      * @var string
+      * @access private
+      */
+-    var $_sep = ' ';
++    private $_sep = ' ';
+ 
+     /**
+      * The default currency name
+      * @var string
+      * @access public
+      */
+-    var $def_currency = 'LTL';
++    public $def_currency = 'LTL';
+ 
+     // }}}
+     // {{{ toWords()
+@@ -135,7 +123,7 @@
+      * @author Laurynas Butkus <lauris@night.lt>
+      * @since  PHP 4.2.3
+      */
+-    function toWords($num, $power = 0, $powsuffix = '')
++    public function toWords($num, $power = 0, $powsuffix = '')
+     {
+         $ret = '';
+ 
+@@ -198,49 +186,49 @@
+         }
+ 
+         if ( $h > 1 ) {
+-            $ret .= $this->_sep . $this->_digits[$h] . $this->_sep . 'imtai';
++            $ret .= $this->_sep . $this->_digits[$h] . $this->_sep . 'ƒëimtai';
+         } elseif ( $h ) {
+-            $ret .= $this->_sep . 'imtas';
++            $ret .= $this->_sep . 'ƒëimtas';
+         }
+ 
+         // ten, twenty etc.
+         switch ($t) {
+         case 9:
+-            $ret .= $this->_sep . 'devyniasdeimt';
++            $ret .= $this->_sep . 'devyniasdeƒëimt';
+             break;
+ 
+         case 8:
+-            $ret .= $this->_sep . 'atuoniasdeimt';
++            $ret .= $this->_sep . 'aƒëtuoniasdeƒëimt';
+             break;
+ 
+         case 7:
+-            $ret .= $this->_sep . 'septyniasdeimt';
++            $ret .= $this->_sep . 'septyniasdeƒëimt';
+             break;
+ 
+         case 6:
+-            $ret .= $this->_sep . 'eiasdeimt';
++            $ret .= $this->_sep . 'ƒëeƒëiasdeƒëimt';
+             break;
+ 
+         case 5:
+-            $ret .= $this->_sep . 'penkiasdeimt';
++            $ret .= $this->_sep . 'penkiasdeƒëimt';
+             break;
+ 
+         case 4:
+-            $ret .= $this->_sep . 'keturiasdeimt';
++            $ret .= $this->_sep . 'keturiasdeƒëimt';
+             break;
+ 
+         case 3:
+-            $ret .= $this->_sep . 'trisdeimt';
++            $ret .= $this->_sep . 'trisdeƒëimt';
+             break;
+ 
+         case 2:
+-            $ret .= $this->_sep . 'dvideimt';
++            $ret .= $this->_sep . 'dvideƒëimt';
+             break;
+ 
+         case 1:
+             switch ($d) {
+             case 0:
+-                $ret .= $this->_sep . 'deimt';
++                $ret .= $this->_sep . 'deƒëimt';
+                 break;
+ 
+             case 1:
+@@ -264,7 +252,7 @@
+                 break;
+ 
+             case 6:
+-                $ret .= $this->_sep . 'eiolika';
++                $ret .= $this->_sep . 'ƒëeƒëiolika';
+                 break;
+ 
+             case 7:
+@@ -272,7 +260,7 @@
+                 break;
+ 
+             case 8:
+-                $ret .= $this->_sep . 'atuoniolika';
++                $ret .= $this->_sep . 'aƒëtuoniolika';
+                 break;
+ 
+             case 9:
+@@ -319,5 +307,3 @@
+     // }}}
+ 
+ }
+-
+-?>
+Index: Numbers/Words/lang.en_100.php
+===================================================================
+--- Numbers/Words/lang.en_100.php	(wersja 33074)
++++ Numbers/Words/lang.en_100.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -25,25 +25,13 @@
+ /**
+  * Class for translating numbers into Donald Knuth system, in English language.
+  *
+- * @author Piotr Klaban
+- * @package Numbers_Words
+- */
+-
+-/**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+-/**
+- * Class for translating numbers into Donald Knuth system, in English language.
+- *
+  * @category Numbers
+  * @package  Numbers_Words
+  * @author   Piotr Klaban <makler@man.torun.pl>
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_en_100 extends Numbers_Words
++class Numbers_Words_en_100
+ {
+ 
+     // {{{ properties
+@@ -53,28 +41,28 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'en_100';
++    public $locale = 'en_100';
+ 
+     /**
+      * Language name in English
+      * @var string
+      * @access public
+      */
+-    var $lang = 'English (Donald Knuth system)';
++    public $lang = 'English (Donald Knuth system)';
+ 
+     /**
+      * Native language name
+      * @var string
+      * @access public
+      */
+-    var $lang_native = 'English (Donald Knuth system)';
++    public $lang_native = 'English (Donald Knuth system)';
+ 
+     /**
+      * The word for the minus sign
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'minus'; // minus sign
++    private $_minus = 'minus'; // minus sign
+ 
+     /**
+      * The sufixes for exponents (singular and plural)
+@@ -84,7 +72,7 @@
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         0 => array(''),
+         2 => array('hundred'),
+         4 => array('myriad'),
+@@ -115,7 +103,7 @@
+      * @var array
+      * @access private
+      */
+-    var $_digits = array(
++    private $_digits = array(
+         0 => 'zero', 'one', 'two', 'three', 'four',
+         'five', 'six', 'seven', 'eight', 'nine'
+     );
+@@ -125,7 +113,7 @@
+      * @var string
+      * @access private
+      */
+-    var $_sep = ' ';
++    private $_sep = ' ';
+     // }}}
+     // {{{ toWords()
+ 
+@@ -146,7 +134,7 @@
+      * @author Piotr Klaban <makler@man.torun.pl>
+      * @since  PHP 4.2.3
+      */
+-    function toWords($num, $power = 0, $powsuffix = '')
++    public function toWords($num, $power = 0, $powsuffix = '')
+     {
+         $ret = '';
+ 
+@@ -312,5 +300,3 @@
+     }
+     // }}}
+ }
+-
+-?>
+Index: Numbers/Words/lang.ru.php
+===================================================================
+--- Numbers/Words/lang.ru.php	(wersja 33074)
++++ Numbers/Words/lang.ru.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -26,18 +26,6 @@
+ /**
+  * Class for translating numbers into Russian.
+  *
+- * @author Andrey Demenev
+- * @package Numbers_Words
+- */
+-
+-/**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+-/**
+- * Class for translating numbers into Russian.
+- *
+  * @category Numbers
+  * @package  Numbers_Words
+  * @author   Piotr Klaban <makler@man.torun.pl>
+@@ -45,7 +33,7 @@
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_ru extends Numbers_Words
++class Numbers_Words_ru
+ {
+ 
+     // {{{ properties
+@@ -55,28 +43,28 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'ru';
++    public $locale = 'ru';
+ 
+     /**
+      * Language name in English
+      * @var string
+      * @access public
+      */
+-    var $lang = 'Russian';
++    public $lang = 'Russian';
+ 
+     /**
+      * Native language name
+      * @var string
+      * @access public
+      */
+-    var $lang_native = '–ÛÒÒÍËÈ';
++    public $lang_native = '–∞—ì—ë—ë—ä—à—â';
+     
+     /**
+      * The word for the minus sign
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'ÏËÌÛÒ'; // minus sign
++    private $_minus = '—å—à—ç—ì—ë'; // minus sign
+     
+     /**
+      * The sufixes for exponents (singular)
+@@ -87,108 +75,108 @@
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         0 => '',
+-        6 => 'ÏËÎÎËÓÌ',
+-        9 => 'ÏËÎÎË‡‰',
+-       12 => 'ÚËÎÎËÓÌ',
+-       15 => 'Í‚‡‰ËÎÎËÓÌ',
+-       18 => 'Í‚ËÌÚËÎÎËÓÌ',
+-       21 => 'ÒÂÍÒÚËÎÎËÓÌ',
+-       24 => 'ÒÂÔÚËÎÎËÓÌ',
+-       27 => 'ÓÍÚËÎÎËÓÌ',
+-       30 => 'ÌÓÌËÎÎËÓÌ',
+-       33 => '‰ÂˆËÎÎËÓÌ',
+-       36 => 'ÛÌ‰ÂˆËÎÎËÓÌ',
+-       39 => '‰ÛÓ‰ÂˆËÎÎËÓÌ',
+-       42 => 'ÚÂ‰ÂˆËÎÎËÓÌ',
+-       45 => 'Í‚‡ÚÛÓ‰ÂˆËÎÎËÓÌ',
+-       48 => 'Í‚ËÌ‰ÂˆËÎÎËÓÌ',
+-       51 => 'ÒÂÍÒ‰ÂˆËÎÎËÓÌ',
+-       54 => 'ÒÂÔÚÂÌ‰ÂˆËÎÎËÓÌ',
+-       57 => 'ÓÍÚÓ‰ÂˆËÎÎËÓÌ',
+-       60 => 'ÌÓ‚ÂÏ‰ÂˆËÎÎËÓÌ',
+-       63 => '‚Ë„ËÌÚËÎÎËÓÌ',
+-       66 => 'ÛÌ‚Ë„ËÌÚËÎÎËÓÌ',
+-       69 => '‰ÛÓ‚Ë„ËÌÚËÎÎËÓÌ',
+-       72 => 'ÚÂ‚Ë„ËÌÚËÎÎËÓÌ',
+-       75 => 'Í‚‡ÚÛÓ‚Ë„ËÌÚËÎÎËÓÌ',
+-       78 => 'Í‚ËÌ‚Ë„ËÌÚËÎÎËÓÌ',
+-       81 => 'ÒÂÍÒ‚Ë„ËÌÚËÎÎËÓÌ',
+-       84 => 'ÒÂÔÚÂÌ‚Ë„ËÌÚËÎÎËÓÌ',
+-       87 => 'ÓÍÚÓ‚Ë„ËÌÚËÎÎËÓÌ',
+-       90 => 'ÌÓ‚ÂÏ‚Ë„ËÌÚËÎÎËÓÌ',
+-       93 => 'ÚË„ËÌÚËÎÎËÓÌ',
+-       96 => 'ÛÌÚË„ËÌÚËÎÎËÓÌ',
+-       99 => '‰ÛÓÚË„ËÌÚËÎÎËÓÌ',
+-       102 => 'ÚÂÚË„ËÌÚËÎÎËÓÌ',
+-       105 => 'Í‚‡ÚÓÚË„ËÌÚËÎÎËÓÌ',
+-       108 => 'Í‚ËÌÚË„ËÌÚËÎÎËÓÌ',
+-       111 => 'ÒÂÍÒÚË„ËÌÚËÎÎËÓÌ',
+-       114 => 'ÒÂÔÚÂÌÚË„ËÌÚËÎÎËÓÌ',
+-       117 => 'ÓÍÚÓÚË„ËÌÚËÎÎËÓÌ',
+-       120 => 'ÌÓ‚ÂÏÚË„ËÌÚËÎÎËÓÌ',
+-       123 => 'Í‚‡‰‡„ËÌÚËÎÎËÓÌ',
+-       126 => 'ÛÌÍ‚‡‰‡„ËÌÚËÎÎËÓÌ',
+-       129 => '‰ÛÓÍ‚‡‰‡„ËÌÚËÎÎËÓÌ',
+-       132 => 'ÚÂÍ‚‡‰‡„ËÌÚËÎÎËÓÌ',
+-       135 => 'Í‚‡ÚÓÍ‚‡‰‡„ËÌÚËÎÎËÓÌ',
+-       138 => 'Í‚ËÌÍ‚‡‰‡„ËÌÚËÎÎËÓÌ',
+-       141 => 'ÒÂÍÒÍ‚‡‰‡„ËÌÚËÎÎËÓÌ',
+-       144 => 'ÒÂÔÚÂÌÍ‚‡‰‡„ËÌÚËÎÎËÓÌ',
+-       147 => 'ÓÍÚÓÍ‚‡‰‡„ËÌÚËÎÎËÓÌ',
+-       150 => 'ÌÓ‚ÂÏÍ‚‡‰‡„ËÌÚËÎÎËÓÌ',
+-       153 => 'Í‚ËÌÍ‚‡„ËÌÚËÎÎËÓÌ',
+-       156 => 'ÛÌÍ‚ËÌÍ‡„ËÌÚËÎÎËÓÌ',
+-       159 => '‰ÛÓÍ‚ËÌÍ‡„ËÌÚËÎÎËÓÌ',
+-       162 => 'ÚÂÍ‚ËÌÍ‡„ËÌÚËÎÎËÓÌ',
+-       165 => 'Í‚‡ÚÓÍ‚ËÌÍ‡„ËÌÚËÎÎËÓÌ',
+-       168 => 'Í‚ËÌÍ‚ËÌÍ‡„ËÌÚËÎÎËÓÌ',
+-       171 => 'ÒÂÍÒÍ‚ËÌÍ‡„ËÌÚËÎÎËÓÌ',
+-       174 => 'ÒÂÔÚÂÌÍ‚ËÌÍ‡„ËÌÚËÎÎËÓÌ',
+-       177 => 'ÓÍÚÓÍ‚ËÌÍ‡„ËÌÚËÎÎËÓÌ',
+-       180 => 'ÌÓ‚ÂÏÍ‚ËÌÍ‡„ËÌÚËÎÎËÓÌ',
+-       183 => 'ÒÂÍÒ‡„ËÌÚËÎÎËÓÌ',
+-       186 => 'ÛÌÒÂÍÒ‡„ËÌÚËÎÎËÓÌ',
+-       189 => '‰ÛÓÒÂÍÒ‡„ËÌÚËÎÎËÓÌ',
+-       192 => 'ÚÂÒÂÍÒ‡„ËÌÚËÎÎËÓÌ',
+-       195 => 'Í‚‡ÚÓÒÂÍÒ‡„ËÌÚËÎÎËÓÌ',
+-       198 => 'Í‚ËÌÒÂÍÒ‡„ËÌÚËÎÎËÓÌ',
+-       201 => 'ÒÂÍÒÒÂÍÒ‡„ËÌÚËÎÎËÓÌ',
+-       204 => 'ÒÂÔÚÂÌÒÂÍÒ‡„ËÌÚËÎÎËÓÌ',
+-       207 => 'ÓÍÚÓÒÂÍÒ‡„ËÌÚËÎÎËÓÌ',
+-       210 => 'ÌÓ‚ÂÏÒÂÍÒ‡„ËÌÚËÎÎËÓÌ',
+-       213 => 'ÒÂÔÚ‡„ËÌÚËÎÎËÓÌ',
+-       216 => 'ÛÌÒÂÔÚ‡„ËÌÚËÎÎËÓÌ',
+-       219 => '‰ÛÓÒÂÔÚ‡„ËÌÚËÎÎËÓÌ',
+-       222 => 'ÚÂÒÂÔÚ‡„ËÌÚËÎÎËÓÌ',
+-       225 => 'Í‚‡ÚÓÒÂÔÚ‡„ËÌÚËÎÎËÓÌ',
+-       228 => 'Í‚ËÌÒÂÔÚ‡„ËÌÚËÎÎËÓÌ',
+-       231 => 'ÒÂÍÒÒÂÔÚ‡„ËÌÚËÎÎËÓÌ',
+-       234 => 'ÒÂÔÚÂÌÒÂÔÚ‡„ËÌÚËÎÎËÓÌ',
+-       237 => 'ÓÍÚÓÒÂÔÚ‡„ËÌÚËÎÎËÓÌ',
+-       240 => 'ÌÓ‚ÂÏÒÂÔÚ‡„ËÌÚËÎÎËÓÌ',
+-       243 => 'ÓÍÚÓ„ËÌÚËÎÎËÓÌ',
+-       246 => 'ÛÌÓÍÚÓ„ËÌÚËÎÎËÓÌ',
+-       249 => '‰ÛÓÓÍÚÓ„ËÌÚËÎÎËÓÌ',
+-       252 => 'ÚÂÓÍÚÓ„ËÌÚËÎÎËÓÌ',
+-       255 => 'Í‚‡ÚÓÓÍÚÓ„ËÌÚËÎÎËÓÌ',
+-       258 => 'Í‚ËÌÓÍÚÓ„ËÌÚËÎÎËÓÌ',
+-       261 => 'ÒÂÍÒÓÍÚÓ„ËÌÚËÎÎËÓÌ',
+-       264 => 'ÒÂÔÚÓÍÚÓ„ËÌÚËÎÎËÓÌ',
+-       267 => 'ÓÍÚÓÓÍÚÓ„ËÌÚËÎÎËÓÌ',
+-       270 => 'ÌÓ‚ÂÏÓÍÚÓ„ËÌÚËÎÎËÓÌ',
+-       273 => 'ÌÓÌ‡„ËÌÚËÎÎËÓÌ',
+-       276 => 'ÛÌÌÓÌ‡„ËÌÚËÎÎËÓÌ',
+-       279 => '‰ÛÓÌÓÌ‡„ËÌÚËÎÎËÓÌ',
+-       282 => 'ÚÂÌÓÌ‡„ËÌÚËÎÎËÓÌ',
+-       285 => 'Í‚‡ÚÓÌÓÌ‡„ËÌÚËÎÎËÓÌ',
+-       288 => 'Í‚ËÌÌÓÌ‡„ËÌÚËÎÎËÓÌ',
+-       291 => 'ÒÂÍÒÌÓÌ‡„ËÌÚËÎÎËÓÌ',
+-       294 => 'ÒÂÔÚÂÌÌÓÌ‡„ËÌÚËÎÎËÓÌ',
+-       297 => 'ÓÍÚÓÌÓÌ‡„ËÌÚËÎÎËÓÌ',
+-       300 => 'ÌÓ‚ÂÏÌÓÌ‡„ËÌÚËÎÎËÓÌ',
+-       303 => 'ˆÂÌÚËÎÎËÓÌ'
++        6 => '—å—à—ã—ã—à—é—ç',
++        9 => '—å—à—ã—ã—à—Ä‚Ññ—Ñ',
++       12 => '—í‚Ññ—à—ã—ã—à—é—ç',
++       15 => '—ä—Ç—Ä—Ñ‚Ññ—à—ã—ã—à—é—ç',
++       18 => '—ä—Ç—à—ç—í—à—ã—ã—à—é—ç',
++       21 => '—ë—Ö—ä—ë—í—à—ã—ã—à—é—ç',
++       24 => '—ë—Ö—è—í—à—ã—ã—à—é—ç',
++       27 => '—é—ä—í—à—ã—ã—à—é—ç',
++       30 => '—ç—é—ç—à—ã—ã—à—é—ç',
++       33 => '—Ñ—Ö—ñ—à—ã—ã—à—é—ç',
++       36 => '—ì—ç—Ñ—Ö—ñ—à—ã—ã—à—é—ç',
++       39 => '—Ñ—ì—é—Ñ—Ö—ñ—à—ã—ã—à—é—ç',
++       42 => '—í‚Ññ—Ö—Ñ—Ö—ñ—à—ã—ã—à—é—ç',
++       45 => '—ä—Ç—Ä—í—ì—é‚Ññ—Ñ—Ö—ñ—à—ã—ã—à—é—ç',
++       48 => '—ä—Ç—à—ç—Ñ—Ö—ñ—à—ã—ã—à—é—ç',
++       51 => '—ë—Ö—ä—ë—Ñ—Ö—ñ—à—ã—ã—à—é—ç',
++       54 => '—ë—Ö—è—í—Ö—ç—Ñ—Ö—ñ—à—ã—ã—à—é—ç',
++       57 => '—é—ä—í—é—Ñ—Ö—ñ—à—ã—ã—à—é—ç',
++       60 => '—ç—é—Ç—Ö—å—Ñ—Ö—ñ—à—ã—ã—à—é—ç',
++       63 => '—Ç—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       66 => '—ì—ç—Ç—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       69 => '—Ñ—ì—é—Ç—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       72 => '—í‚Ññ—Ö—Ç—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       75 => '—ä—Ç—Ä—í—ì—é‚Ññ—Ç—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       78 => '—ä—Ç—à—ç—Ç—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       81 => '—ë—Ö—ä—ë—Ç—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       84 => '—ë—Ö—è—í—Ö—ç—Ç—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       87 => '—é—ä—í—é—Ç—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       90 => '—ç—é—Ç—Ö—å—Ç—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       93 => '—í‚Ññ—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       96 => '—ì—ç—í‚Ññ—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       99 => '—Ñ—ì—é—í‚Ññ—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       102 => '—í‚Ññ—Ö—í‚Ññ—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       105 => '—ä—Ç—Ä—í—é‚Ññ—í‚Ññ—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       108 => '—ä—Ç—à—ç—í‚Ññ—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       111 => '—ë—Ö—ä—ë—í‚Ññ—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       114 => '—ë—Ö—è—í—Ö—ç—í‚Ññ—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       117 => '—é—ä—í—é—í‚Ññ—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       120 => '—ç—é—Ç—Ö—å—í‚Ññ—à—É—à—ç—í—à—ã—ã—à—é—ç',
++       123 => '—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       126 => '—ì—ç—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       129 => '—Ñ—ì—é—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       132 => '—í‚Ññ—Ö—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       135 => '—ä—Ç—Ä—í—é‚Ññ—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       138 => '—ä—Ç—à—ç—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       141 => '—ë—Ö—ä—ë—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       144 => '—ë—Ö—è—í—Ö—ç—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       147 => '—é—ä—í—é—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       150 => '—ç—é—Ç—Ö—å—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       153 => '—ä—Ç—à—ç—ä—Ç—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       156 => '—ì—ç—ä—Ç—à—ç—ä—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       159 => '—Ñ—ì—é—ä—Ç—à—ç—ä—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       162 => '—í‚Ññ—Ö—ä—Ç—à—ç—ä—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       165 => '—ä—Ç—Ä—í—é‚Ññ—ä—Ç—à—ç—ä—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       168 => '—ä—Ç—à—ç—ä—Ç—à—ç—ä—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       171 => '—ë—Ö—ä—ë—ä—Ç—à—ç—ä—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       174 => '—ë—Ö—è—í—Ö—ç—ä—Ç—à—ç—ä—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       177 => '—é—ä—í—é—ä—Ç—à—ç—ä—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       180 => '—ç—é—Ç—Ö—å—ä—Ç—à—ç—ä—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       183 => '—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       186 => '—ì—ç—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       189 => '—Ñ—ì—é—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       192 => '—í‚Ññ—Ö—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       195 => '—ä—Ç—Ä—í—é‚Ññ—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       198 => '—ä—Ç—à—ç—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       201 => '—ë—Ö—ä—ë—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       204 => '—ë—Ö—è—í—Ö—ç—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       207 => '—é—ä—í—é—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       210 => '—ç—é—Ç—Ö—å—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       213 => '—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       216 => '—ì—ç—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       219 => '—Ñ—ì—é—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       222 => '—í‚Ññ—Ö—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       225 => '—ä—Ç—Ä—í—é‚Ññ—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       228 => '—ä—Ç—à—ç—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       231 => '—ë—Ö—ä—ë—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       234 => '—ë—Ö—è—í—Ö—ç—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       237 => '—é—ä—í—é—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       240 => '—ç—é—Ç—Ö—å—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       243 => '—é—ä—í—é—É—à—ç—í—à—ã—ã—à—é—ç',
++       246 => '—ì—ç—é—ä—í—é—É—à—ç—í—à—ã—ã—à—é—ç',
++       249 => '—Ñ—ì—é—é—ä—í—é—É—à—ç—í—à—ã—ã—à—é—ç',
++       252 => '—í‚Ññ—Ö—é—ä—í—é—É—à—ç—í—à—ã—ã—à—é—ç',
++       255 => '—ä—Ç—Ä—í—é‚Ññ—é—ä—í—é—É—à—ç—í—à—ã—ã—à—é—ç',
++       258 => '—ä—Ç—à—ç—é—ä—í—é—É—à—ç—í—à—ã—ã—à—é—ç',
++       261 => '—ë—Ö—ä—ë—é—ä—í—é—É—à—ç—í—à—ã—ã—à—é—ç',
++       264 => '—ë—Ö—è—í—é—ä—í—é—É—à—ç—í—à—ã—ã—à—é—ç',
++       267 => '—é—ä—í—é—é—ä—í—é—É—à—ç—í—à—ã—ã—à—é—ç',
++       270 => '—ç—é—Ç—Ö—å—é—ä—í—é—É—à—ç—í—à—ã—ã—à—é—ç',
++       273 => '—ç—é—ç—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       276 => '—ì—ç—ç—é—ç—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       279 => '—Ñ—ì—é—ç—é—ç—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       282 => '—í‚Ññ—Ö—ç—é—ç—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       285 => '—ä—Ç—Ä—í—é‚Ññ—ç—é—ç—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       288 => '—ä—Ç—à—ç—ç—é—ç—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       291 => '—ë—Ö—ä—ë—ç—é—ç—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       294 => '—ë—Ö—è—í—Ö—ç—ç—é—ç—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       297 => '—é—ä—í—é—ç—é—ç—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       300 => '—ç—é—Ç—Ö—å—ç—é—ç—Ä—É—à—ç—í—à—ã—ã—à—é—ç',
++       303 => '—ñ—Ö—ç—í—à—ã—ã—à—é—ç'
+         );
+ 
+     /**
+@@ -196,16 +184,16 @@
+      * @var array
+      * @access private
+      */
+-    var $_teens = array(
+-        11=>'Ó‰ËÌÌ‡‰ˆ‡Ú¸',
+-        12=>'‰‚ÂÌ‡‰ˆ‡Ú¸',
+-        13=>'ÚËÌ‡‰ˆ‡Ú¸',
+-        14=>'˜ÂÚ˚Ì‡‰ˆ‡Ú¸',
+-        15=>'ÔˇÚÌ‡‰ˆ‡Ú¸',
+-        16=>'¯ÂÒÚÌ‡‰ˆ‡Ú¸',
+-        17=>'ÒÂÏÌ‡‰ˆ‡Ú¸',
+-        18=>'‚ÓÒÂÏÌ‡‰ˆ‡Ú¸',
+-        19=>'‰Â‚ˇÚÌ‡‰ˆ‡Ú¸'
++    private $_teens = array(
++        11=>'—é—Ñ—à—ç—ç—Ä—Ñ—ñ—Ä—í—ú',
++        12=>'—Ñ—Ç—Ö—ç—Ä—Ñ—ñ—Ä—í—ú',
++        13=>'—í‚Ññ—à—ç—Ä—Ñ—ñ—Ä—í—ú',
++        14=>'—ó—Ö—í—õ‚Ññ—ç—Ä—Ñ—ñ—Ä—í—ú',
++        15=>'—è—ü—í—ç—Ä—Ñ—ñ—Ä—í—ú',
++        16=>'—ò—Ö—ë—í—ç—Ä—Ñ—ñ—Ä—í—ú',
++        17=>'—ë—Ö—å—ç—Ä—Ñ—ñ—Ä—í—ú',
++        18=>'—Ç—é—ë—Ö—å—ç—Ä—Ñ—ñ—Ä—í—ú',
++        19=>'—Ñ—Ö—Ç—ü—í—ç—Ä—Ñ—ñ—Ä—í—ú'
+         );
+ 
+     /**
+@@ -213,15 +201,15 @@
+      * @var array
+      * @access private
+      */
+-    var $_tens = array(
+-        2=>'‰‚‡‰ˆ‡Ú¸',
+-        3=>'ÚË‰ˆ‡Ú¸',
+-        4=>'ÒÓÓÍ',
+-        5=>'ÔˇÚ¸‰ÂÒˇÚ',
+-        6=>'¯ÂÒÚ¸‰ÂÒˇÚ',
+-        7=>'ÒÂÏ¸‰ÂÒˇÚ',
+-        8=>'‚ÓÒÂÏ¸‰ÂÒˇÚ',
+-        9=>'‰Â‚ˇÌÓÒÚÓ'
++    private $_tens = array(
++        2=>'—Ñ—Ç—Ä—Ñ—ñ—Ä—í—ú',
++        3=>'—í‚Ññ—à—Ñ—ñ—Ä—í—ú',
++        4=>'—ë—é‚Ññ—é—ä',
++        5=>'—è—ü—í—ú—Ñ—Ö—ë—ü—í',
++        6=>'—ò—Ö—ë—í—ú—Ñ—Ö—ë—ü—í',
++        7=>'—ë—Ö—å—ú—Ñ—Ö—ë—ü—í',
++        8=>'—Ç—é—ë—Ö—å—ú—Ñ—Ö—ë—ü—í',
++        9=>'—Ñ—Ö—Ç—ü—ç—é—ë—í—é'
+         );
+ 
+     /**
+@@ -229,16 +217,16 @@
+      * @var array
+      * @access private
+      */
+-    var $_hundreds = array(
+-        1=>'ÒÚÓ',
+-        2=>'‰‚ÂÒÚË',
+-        3=>'ÚËÒÚ‡',
+-        4=>'˜ÂÚ˚ÂÒÚ‡',
+-        5=>'ÔˇÚ¸ÒÓÚ',
+-        6=>'¯ÂÒÚ¸ÒÓÚ',
+-        7=>'ÒÂÏ¸ÒÓÚ',
+-        8=>'‚ÓÒÂÏ¸ÒÓÚ',
+-        9=>'‰Â‚ˇÚ¸ÒÓÚ'
++    private $_hundreds = array(
++        1=>'—ë—í—é',
++        2=>'—Ñ—Ç—Ö—ë—í—à',
++        3=>'—í‚Ññ—à—ë—í—Ä',
++        4=>'—ó—Ö—í—õ‚Ññ—Ö—ë—í—Ä',
++        5=>'—è—ü—í—ú—ë—é—í',
++        6=>'—ò—Ö—ë—í—ú—ë—é—í',
++        7=>'—ë—Ö—å—ú—ë—é—í',
++        8=>'—Ç—é—ë—Ö—å—ú—ë—é—í',
++        9=>'—Ñ—Ö—Ç—ü—í—ú—ë—é—í'
+         );
+ 
+     /**
+@@ -247,10 +235,10 @@
+      * @var array
+      * @access private
+      */
+-    var $_digits = array(
+-        array('ÌÓÎ¸', 'Ó‰ÌÓ', '‰‚‡', 'ÚË', '˜ÂÚ˚Â', 'ÔˇÚ¸', '¯ÂÒÚ¸', 'ÒÂÏ¸', '‚ÓÒÂÏ¸', '‰Â‚ˇÚ¸'),
+-        array('ÌÓÎ¸', 'Ó‰ËÌ', '‰‚‡', 'ÚË', '˜ÂÚ˚Â', 'ÔˇÚ¸', '¯ÂÒÚ¸', 'ÒÂÏ¸', '‚ÓÒÂÏ¸', '‰Â‚ˇÚ¸'),
+-        array('ÌÓÎ¸', 'Ó‰Ì‡', '‰‚Â', 'ÚË', '˜ÂÚ˚Â', 'ÔˇÚ¸', '¯ÂÒÚ¸', 'ÒÂÏ¸', '‚ÓÒÂÏ¸', '‰Â‚ˇÚ¸')
++    private $_digits = array(
++        array('—ç—é—ã—ú', '—é—Ñ—ç—é', '—Ñ—Ç—Ä', '—í‚Ññ—à', '—ó—Ö—í—õ‚Ññ—Ö', '—è—ü—í—ú', '—ò—Ö—ë—í—ú', '—ë—Ö—å—ú', '—Ç—é—ë—Ö—å—ú', '—Ñ—Ö—Ç—ü—í—ú'),
++        array('—ç—é—ã—ú', '—é—Ñ—à—ç', '—Ñ—Ç—Ä', '—í‚Ññ—à', '—ó—Ö—í—õ‚Ññ—Ö', '—è—ü—í—ú', '—ò—Ö—ë—í—ú', '—ë—Ö—å—ú', '—Ç—é—ë—Ö—å—ú', '—Ñ—Ö—Ç—ü—í—ú'),
++        array('—ç—é—ã—ú', '—é—Ñ—ç—Ä', '—Ñ—Ç—Ö', '—í‚Ññ—à', '—ó—Ö—í—õ‚Ññ—Ö', '—è—ü—í—ú', '—ò—Ö—ë—í—ú', '—ë—Ö—å—ú', '—Ç—é—ë—Ö—å—ú', '—Ñ—Ö—Ç—ü—í—ú')
+     );
+ 
+     /**
+@@ -258,7 +246,7 @@
+      * @var string
+      * @access private
+      */
+-    var $_sep = ' ';
++    private $_sep = ' ';
+ 
+     /**
+      * The currency names (based on the below links,
+@@ -270,147 +258,147 @@
+      * @link http://www.cofe.ru/Finance/money.asp Currencies names
+      * @access private
+      */
+-    var $_currency_names = array(
++    private $_currency_names = array(
+       'ALL' => array(
+-                array(1, 'ÎÂÍ', 'ÎÂÍ‡', 'ÎÂÍÓ‚'), 
+-                array(2, 'ÍËÌ‰‡Í‡', 'ÍËÌ‰‡ÍË', 'ÍËÌ‰‡ÓÍ')
++                array(1, '—ã—Ö—ä', '—ã—Ö—ä—Ä', '—ã—Ö—ä—é—Ç'), 
++                array(2, '—ä—à—ç—Ñ—Ä‚Ññ—ä—Ä', '—ä—à—ç—Ñ—Ä‚Ññ—ä—à', '—ä—à—ç—Ñ—Ä‚Ññ—é—ä')
+                ),
+       'AUD' => array(
+-                array(1, '‡‚ÒÚ‡ÎËÈÒÍËÈ ‰ÓÎÎ‡', '‡‚ÒÚ‡ÎËÈÒÍËı ‰ÓÎÎ‡‡', '‡‚ÒÚ‡ÎËÈÒÍËı ‰ÓÎÎ‡Ó‚'),
+-                array(1, 'ˆÂÌÚ', 'ˆÂÌÚ‡', 'ˆÂÌÚÓ‚')
++                array(1, '—Ä—Ç—ë—í‚Ññ—Ä—ã—à—â—ë—ä—à—â —Ñ—é—ã—ã—Ä‚Ññ', '—Ä—Ç—ë—í‚Ññ—Ä—ã—à—â—ë—ä—à—ï —Ñ—é—ã—ã—Ä‚Ññ—Ä', '—Ä—Ç—ë—í‚Ññ—Ä—ã—à—â—ë—ä—à—ï —Ñ—é—ã—ã—Ä‚Ññ—é—Ç'),
++                array(1, '—ñ—Ö—ç—í', '—ñ—Ö—ç—í—Ä', '—ñ—Ö—ç—í—é—Ç')
+                ),
+       'BGN' => array(
+-                array(1, 'ÎÂ‚', 'ÎÂ‚‡', 'ÎÂ‚Ó‚'), 
+-                array(2, 'ÒÚÓÚËÌÍ‡', 'ÒÚÓÚËÌÍË', 'ÒÚÓÚËÌÓÍ')
++                array(1, '—ã—Ö—Ç', '—ã—Ö—Ç—Ä', '—ã—Ö—Ç—é—Ç'), 
++                array(2, '—ë—í—é—í—à—ç—ä—Ä', '—ë—í—é—í—à—ç—ä—à', '—ë—í—é—í—à—ç—é—ä')
+                ),
+       'BRL' => array(
+-                array(1, '·‡ÁËÎ¸ÒÍËÈ Â‡Î', '·‡ÁËÎ¸ÒÍËı Â‡Î‡', '·‡ÁËÎ¸ÒÍËı Â‡ÎÓ‚'), 
+-                array(1, 'ÒÂÌÚ‡‚Ó', 'ÒÂÌÚ‡‚Ó', 'ÒÂÌÚ‡‚Ó')
++                array(1, '—Å‚Ññ—Ä—á—à—ã—ú—ë—ä—à—â ‚Ññ—Ö—Ä—ã', '—Å‚Ññ—Ä—á—à—ã—ú—ë—ä—à—ï ‚Ññ—Ö—Ä—ã—Ä', '—Å‚Ññ—Ä—á—à—ã—ú—ë—ä—à—ï ‚Ññ—Ö—Ä—ã—é—Ç'), 
++                array(1, '—ë—Ö—ç—í—Ä—Ç—é', '—ë—Ö—ç—í—Ä—Ç—é', '—ë—Ö—ç—í—Ä—Ç—é')
+                ),
+       'BYR' => array(
+-                array(1, '·ÂÎÓÛÒÒÍËÈ Û·Î¸', '·ÂÎÓÛÒÒÍËı Û·Îˇ', '·ÂÎÓÛÒÒÍËı Û·ÎÂÈ'), 
+-                array(2, 'ÍÓÔÂÈÍ‡', 'ÍÓÔÂÈÍË', 'ÍÓÔÂÂÍ')
++                array(1, '—Å—Ö—ã—é‚Ññ—ì—ë—ë—ä—à—â ‚Ññ—ì—Å—ã—ú', '—Å—Ö—ã—é‚Ññ—ì—ë—ë—ä—à—ï ‚Ññ—ì—Å—ã—ü', '—Å—Ö—ã—é‚Ññ—ì—ë—ë—ä—à—ï ‚Ññ—ì—Å—ã—Ö—â'), 
++                array(2, '—ä—é—è—Ö—â—ä—Ä', '—ä—é—è—Ö—â—ä—à', '—ä—é—è—Ö—Ö—ä')
+                ),
+       'CAD' => array(
+-                array(1, 'Í‡Ì‡‰ÒÍËÈ ‰ÓÎÎ‡', 'Í‡Ì‡‰ÒÍËı ‰ÓÎÎ‡‡', 'Í‡Ì‡‰ÒÍËı ‰ÓÎÎ‡Ó‚'),
+-                array(1, 'ˆÂÌÚ', 'ˆÂÌÚ‡', 'ˆÂÌÚÓ‚')
++                array(1, '—ä—Ä—ç—Ä—Ñ—ë—ä—à—â —Ñ—é—ã—ã—Ä‚Ññ', '—ä—Ä—ç—Ä—Ñ—ë—ä—à—ï —Ñ—é—ã—ã—Ä‚Ññ—Ä', '—ä—Ä—ç—Ä—Ñ—ë—ä—à—ï —Ñ—é—ã—ã—Ä‚Ññ—é—Ç'),
++                array(1, '—ñ—Ö—ç—í', '—ñ—Ö—ç—í—Ä', '—ñ—Ö—ç—í—é—Ç')
+                ),
+       'CHF' => array(
+-                array(1, '¯‚ÂÈˆ‡ÒÍËÈ Ù‡ÌÍ', '¯‚ÂÈˆ‡ÒÍËı Ù‡ÌÍ‡', '¯‚ÂÈˆ‡ÒÍËı Ù‡ÌÍÓ‚'),
+-                array(1, 'Ò‡ÌÚËÏ', 'Ò‡ÌÚËÏ‡', 'Ò‡ÌÚËÏÓ‚')
++                array(1, '—ò—Ç—Ö—â—ñ—Ä‚Ññ—ë—ä—à—â —î‚Ññ—Ä—ç—ä', '—ò—Ç—Ö—â—ñ—Ä‚Ññ—ë—ä—à—ï —î‚Ññ—Ä—ç—ä—Ä', '—ò—Ç—Ö—â—ñ—Ä‚Ññ—ë—ä—à—ï —î‚Ññ—Ä—ç—ä—é—Ç'),
++                array(1, '—ë—Ä—ç—í—à—å', '—ë—Ä—ç—í—à—å—Ä', '—ë—Ä—ç—í—à—å—é—Ç')
+                ),
+       'CYP' => array(
+-                array(1, 'ÍËÔÒÍËÈ ÙÛÌÚ', 'ÍËÔÒÍËı ÙÛÌÚ‡', 'ÍËÔÒÍËı ÙÛÌÚÓ‚'),
+-                array(1, 'ˆÂÌÚ', 'ˆÂÌÚ‡', 'ˆÂÌÚÓ‚')
++                array(1, '—ä—à—è‚Ññ—ë—ä—à—â —î—ì—ç—í', '—ä—à—è‚Ññ—ë—ä—à—ï —î—ì—ç—í—Ä', '—ä—à—è‚Ññ—ë—ä—à—ï —î—ì—ç—í—é—Ç'),
++                array(1, '—ñ—Ö—ç—í', '—ñ—Ö—ç—í—Ä', '—ñ—Ö—ç—í—é—Ç')
+                ),
+       'CZK' => array(
+-                array(2, '˜Â¯ÒÍ‡ˇ ÍÓÌ‡', '˜Â¯ÒÍËı ÍÓÌ˚', '˜Â¯ÒÍËı ÍÓÌ'),
+-                array(1, '„‡ÎËÊ', '„‡ÎËÊ‡', '„‡ÎËÊÂÈ')
++                array(2, '—ó—Ö—ò—ë—ä—Ä—ü —ä‚Ññ—é—ç—Ä', '—ó—Ö—ò—ë—ä—à—ï —ä‚Ññ—é—ç—õ', '—ó—Ö—ò—ë—ä—à—ï —ä‚Ññ—é—ç'),
++                array(1, '—É—Ä—ã—à‚Ññ—Ü', '—É—Ä—ã—à‚Ññ—Ü—Ä', '—É—Ä—ã—à‚Ññ—Ü—Ö—â')
+                ),
+       'DKK' => array(
+-                array(2, '‰‡ÚÒÍ‡ˇ ÍÓÌ‡', '‰‡ÚÒÍËı ÍÓÌ˚', '‰‡ÚÒÍËı ÍÓÌ'),
+-                array(1, '˝Â', '˝Â', '˝Â')
++                array(2, '—Ñ—Ä—í—ë—ä—Ä—ü —ä‚Ññ—é—ç—Ä', '—Ñ—Ä—í—ë—ä—à—ï —ä‚Ññ—é—ç—õ', '—Ñ—Ä—í—ë—ä—à—ï —ä‚Ññ—é—ç'),
++                array(1, '¬ß‚Ññ—Ö', '¬ß‚Ññ—Ö', '¬ß‚Ññ—Ö')
+                ),
+       'EEK' => array(
+-                array(2, '˝ÒÚÓÌÒÍ‡ˇ ÍÓÌ‡', '˝ÒÚÓÌÒÍËı ÍÓÌ˚', '˝ÒÚÓÌÒÍËı ÍÓÌ'),
+-                array(1, 'ÒÂÌÚË', 'ÒÂÌÚË', 'ÒÂÌÚË')
++                array(2, '¬ß—ë—í—é—ç—ë—ä—Ä—ü —ä‚Ññ—é—ç—Ä', '¬ß—ë—í—é—ç—ë—ä—à—ï —ä‚Ññ—é—ç—õ', '¬ß—ë—í—é—ç—ë—ä—à—ï —ä‚Ññ—é—ç'),
++                array(1, '—ë—Ö—ç—í—à', '—ë—Ö—ç—í—à', '—ë—Ö—ç—í—à')
+                ),
+       'EUR' => array(
+-                array(1, 'Â‚Ó', 'Â‚Ó', 'Â‚Ó'),
+-                array(1, 'Â‚ÓˆÂÌÚ', 'Â‚ÓˆÂÌÚ‡', 'Â‚ÓˆÂÌÚÓ‚')
++                array(1, '—Ö—Ç‚Ññ—é', '—Ö—Ç‚Ññ—é', '—Ö—Ç‚Ññ—é'),
++                array(1, '—Ö—Ç‚Ññ—é—ñ—Ö—ç—í', '—Ö—Ç‚Ññ—é—ñ—Ö—ç—í—Ä', '—Ö—Ç‚Ññ—é—ñ—Ö—ç—í—é—Ç')
+                ),
+       'CYP' => array(
+-                array(1, 'ÙÛÌÚ ÒÚÂÎËÌ„Ó‚', 'ÙÛÌÚ‡ ÒÚÂÎËÌ„Ó‚', 'ÙÛÌÚÓ‚ ÒÚÂÎËÌ„Ó‚'),
+-                array(1, 'ÔÂÌÒ', 'ÔÂÌÒ‡', 'ÔÂÌÒÓ‚')
++                array(1, '—î—ì—ç—í —ë—í—Ö‚Ññ—ã—à—ç—É—é—Ç', '—î—ì—ç—í—Ä —ë—í—Ö‚Ññ—ã—à—ç—É—é—Ç', '—î—ì—ç—í—é—Ç —ë—í—Ö‚Ññ—ã—à—ç—É—é—Ç'),
++                array(1, '—è—Ö—ç—ë', '—è—Ö—ç—ë—Ä', '—è—Ö—ç—ë—é—Ç')
+                ),
+       'CAD' => array(
+-                array(1, '„ÓÌÍÓÌ„ÒÍËÈ ‰ÓÎÎ‡', '„ÓÌÍÓÌ„ÒÍËı ‰ÓÎÎ‡‡', '„ÓÌÍÓÌ„ÒÍËı ‰ÓÎÎ‡Ó‚'),
+-                array(1, 'ˆÂÌÚ', 'ˆÂÌÚ‡', 'ˆÂÌÚÓ‚')
++                array(1, '—É—é—ç—ä—é—ç—É—ë—ä—à—â —Ñ—é—ã—ã—Ä‚Ññ', '—É—é—ç—ä—é—ç—É—ë—ä—à—ï —Ñ—é—ã—ã—Ä‚Ññ—Ä', '—É—é—ç—ä—é—ç—É—ë—ä—à—ï —Ñ—é—ã—ã—Ä‚Ññ—é—Ç'),
++                array(1, '—ñ—Ö—ç—í', '—ñ—Ö—ç—í—Ä', '—ñ—Ö—ç—í—é—Ç')
+                ),
+       'HRK' => array(
+-                array(2, 'ıÓ‚‡ÚÒÍ‡ˇ ÍÛÌ‡', 'ıÓ‚‡ÚÒÍËı ÍÛÌ˚', 'ıÓ‚‡ÚÒÍËı ÍÛÌ'),
+-                array(2, 'ÎËÔ‡', 'ÎËÔ˚', 'ÎËÔ')
++                array(2, '—ï—é‚Ññ—Ç—Ä—í—ë—ä—Ä—ü —ä—ì—ç—Ä', '—ï—é‚Ññ—Ç—Ä—í—ë—ä—à—ï —ä—ì—ç—õ', '—ï—é‚Ññ—Ç—Ä—í—ë—ä—à—ï —ä—ì—ç'),
++                array(2, '—ã—à—è—Ä', '—ã—à—è—õ', '—ã—à—è')
+                ),
+       'HUF' => array(
+-                array(1, '‚ÂÌ„ÂÒÍËÈ ÙÓËÌÚ', '‚ÂÌ„ÂÒÍËı ÙÓËÌÚ‡', '‚ÂÌ„ÂÒÍËı ÙÓËÌÚÓ‚'),
+-                array(1, 'ÙËÎÎÂ', 'ÙËÎÎÂ‡', 'ÙËÎÎÂÓ‚')
++                array(1, '—Ç—Ö—ç—É—Ö‚Ññ—ë—ä—à—â —î—é‚Ññ—à—ç—í', '—Ç—Ö—ç—É—Ö‚Ññ—ë—ä—à—ï —î—é‚Ññ—à—ç—í—Ä', '—Ç—Ö—ç—É—Ö‚Ññ—ë—ä—à—ï —î—é‚Ññ—à—ç—í—é—Ç'),
++                array(1, '—î—à—ã—ã—Ö‚Ññ', '—î—à—ã—ã—Ö‚Ññ—Ä', '—î—à—ã—ã—Ö‚Ññ—é—Ç')
+                ),
+       'ISK' => array(
+-                array(2, 'ËÒÎ‡Ì‰ÒÍ‡ˇ ÍÓÌ‡', 'ËÒÎ‡Ì‰ÒÍËı ÍÓÌ˚', 'ËÒÎ‡Ì‰ÒÍËı ÍÓÌ'),
+-                array(1, '˝Â', '˝Â', '˝Â')
++                array(2, '—à—ë—ã—Ä—ç—Ñ—ë—ä—Ä—ü —ä‚Ññ—é—ç—Ä', '—à—ë—ã—Ä—ç—Ñ—ë—ä—à—ï —ä‚Ññ—é—ç—õ', '—à—ë—ã—Ä—ç—Ñ—ë—ä—à—ï —ä‚Ññ—é—ç'),
++                array(1, '¬ß‚Ññ—Ö', '¬ß‚Ññ—Ö', '¬ß‚Ññ—Ö')
+                ),
+       'JPY' => array(
+-                array(2, 'ËÂÌ‡', 'ËÂÌ˚', 'ËÂÌ'),
+-                array(2, 'ÒÂÌ‡', 'ÒÂÌ˚', 'ÒÂÌ')
++                array(2, '—à—Ö—ç—Ä', '—à—Ö—ç—õ', '—à—Ö—ç'),
++                array(2, '—ë—Ö—ç—Ä', '—ë—Ö—ç—õ', '—ë—Ö—ç')
+                ),
+       'LTL' => array(
+-                array(1, 'ÎËÚ', 'ÎËÚ‡', 'ÎËÚÓ‚'),
+-                array(1, 'ˆÂÌÚ', 'ˆÂÌÚ‡', 'ˆÂÌÚÓ‚')
++                array(1, '—ã—à—í', '—ã—à—í—Ä', '—ã—à—í—é—Ç'),
++                array(1, '—ñ—Ö—ç—í', '—ñ—Ö—ç—í—Ä', '—ñ—Ö—ç—í—é—Ç')
+                ),
+       'LVL' => array(
+-                array(1, 'Î‡Ú', 'Î‡Ú‡', 'Î‡ÚÓ‚'),
+-                array(1, 'ÒÂÌÚËÏ', 'ÒÂÌÚËÏ‡', 'ÒÂÌÚËÏÓ‚')
++                array(1, '—ã—Ä—í', '—ã—Ä—í—Ä', '—ã—Ä—í—é—Ç'),
++                array(1, '—ë—Ö—ç—í—à—å', '—ë—Ö—ç—í—à—å—Ä', '—ë—Ö—ç—í—à—å—é—Ç')
+                ),
+       'MKD' => array(
+-                array(1, 'Ï‡ÍÂ‰ÓÌÒÍËÈ ‰ËÌ‡', 'Ï‡ÍÂ‰ÓÌÒÍËı ‰ËÌ‡‡', 'Ï‡ÍÂ‰ÓÌÒÍËı ‰ËÌ‡Ó‚'),
+-                array(1, '‰ÂÌË', '‰ÂÌË', '‰ÂÌË')
++                array(1, '—å—Ä—ä—Ö—Ñ—é—ç—ë—ä—à—â —Ñ—à—ç—Ä‚Ññ', '—å—Ä—ä—Ö—Ñ—é—ç—ë—ä—à—ï —Ñ—à—ç—Ä‚Ññ—Ä', '—å—Ä—ä—Ö—Ñ—é—ç—ë—ä—à—ï —Ñ—à—ç—Ä‚Ññ—é—Ç'),
++                array(1, '—Ñ—Ö—ç—à', '—Ñ—Ö—ç—à', '—Ñ—Ö—ç—à')
+                ),
+       'MTL' => array(
+-                array(2, 'Ï‡Î¸ÚËÈÒÍ‡ˇ ÎË‡', 'Ï‡Î¸ÚËÈÒÍËı ÎË˚', 'Ï‡Î¸ÚËÈÒÍËı ÎË'),
+-                array(1, 'ÒÂÌÚËÏ', 'ÒÂÌÚËÏ‡', 'ÒÂÌÚËÏÓ‚')
++                array(2, '—å—Ä—ã—ú—í—à—â—ë—ä—Ä—ü —ã—à‚Ññ—Ä', '—å—Ä—ã—ú—í—à—â—ë—ä—à—ï —ã—à‚Ññ—õ', '—å—Ä—ã—ú—í—à—â—ë—ä—à—ï —ã—à‚Ññ'),
++                array(1, '—ë—Ö—ç—í—à—å', '—ë—Ö—ç—í—à—å—Ä', '—ë—Ö—ç—í—à—å—é—Ç')
+                ),
+       'NOK' => array(
+-                array(2, 'ÌÓ‚ÂÊÒÍ‡ˇ ÍÓÌ‡', 'ÌÓ‚ÂÊÒÍËı ÍÓÌ˚', 'ÌÓ‚ÂÊÒÍËı ÍÓÌ'),
+-                array(0, '˝Â', '˝Â', '˝Â')
++                array(2, '—ç—é‚Ññ—Ç—Ö—Ü—ë—ä—Ä—ü —ä‚Ññ—é—ç—Ä', '—ç—é‚Ññ—Ç—Ö—Ü—ë—ä—à—ï —ä‚Ññ—é—ç—õ', '—ç—é‚Ññ—Ç—Ö—Ü—ë—ä—à—ï —ä‚Ññ—é—ç'),
++                array(0, '¬ß‚Ññ—Ö', '¬ß‚Ññ—Ö', '¬ß‚Ññ—Ö')
+                ),
+       'PLN' => array(
+-                array(1, 'ÁÎÓÚ˚È', 'ÁÎÓÚ˚ı', 'ÁÎÓÚ˚ı'),
+-                array(1, '„Ó¯', '„Ó¯‡', '„Ó¯ÂÈ')
++                array(1, '—á—ã—é—í—õ—â', '—á—ã—é—í—õ—ï', '—á—ã—é—í—õ—ï'),
++                array(1, '—É‚Ññ—é—ò', '—É‚Ññ—é—ò—Ä', '—É‚Ññ—é—ò—Ö—â')
+                ),
+       'ROL' => array(
+-                array(1, 'ÛÏ˚ÌÒÍËÈ ÎÂÈ', 'ÛÏ˚ÌÒÍËı ÎÂÈ', 'ÛÏ˚ÌÒÍËı ÎÂÈ'),
+-                array(1, '·‡ÌË', '·‡ÌË', '·‡ÌË')
++                array(1, '‚Ññ—ì—å—õ—ç—ë—ä—à—â —ã—Ö—â', '‚Ññ—ì—å—õ—ç—ë—ä—à—ï —ã—Ö—â', '‚Ññ—ì—å—õ—ç—ë—ä—à—ï —ã—Ö—â'),
++                array(1, '—Å—Ä—ç—à', '—Å—Ä—ç—à', '—Å—Ä—ç—à')
+                ),
+        // both RUR and RUR are used, I use RUB for shorter form
+       'RUB' => array(
+-                array(1, 'Û·Î¸', 'Û·Îˇ', 'Û·ÎÂÈ'),
+-                array(2, 'ÍÓÔÂÈÍ‡', 'ÍÓÔÂÈÍË', 'ÍÓÔÂÂÍ')
++                array(1, '‚Ññ—ì—Å—ã—ú', '‚Ññ—ì—Å—ã—ü', '‚Ññ—ì—Å—ã—Ö—â'),
++                array(2, '—ä—é—è—Ö—â—ä—Ä', '—ä—é—è—Ö—â—ä—à', '—ä—é—è—Ö—Ö—ä')
+                ),
+       'RUR' => array(
+-                array(1, 'ÓÒÒËÈÒÍËÈ Û·Î¸', 'ÓÒÒËÈÒÍËı Û·Îˇ', 'ÓÒÒËÈÒÍËı Û·ÎÂÈ'),
+-                array(2, 'ÍÓÔÂÈÍ‡', 'ÍÓÔÂÈÍË', 'ÍÓÔÂÂÍ')
++                array(1, '‚Ññ—é—ë—ë—à—â—ë—ä—à—â ‚Ññ—ì—Å—ã—ú', '‚Ññ—é—ë—ë—à—â—ë—ä—à—ï ‚Ññ—ì—Å—ã—ü', '‚Ññ—é—ë—ë—à—â—ë—ä—à—ï ‚Ññ—ì—Å—ã—Ö—â'),
++                array(2, '—ä—é—è—Ö—â—ä—Ä', '—ä—é—è—Ö—â—ä—à', '—ä—é—è—Ö—Ö—ä')
+                ),
+       'SEK' => array(
+-                array(2, '¯‚Â‰ÒÍ‡ˇ ÍÓÌ‡', '¯‚Â‰ÒÍËı ÍÓÌ˚', '¯‚Â‰ÒÍËı ÍÓÌ'),
+-                array(1, '˝Â', '˝Â', '˝Â')
++                array(2, '—ò—Ç—Ö—Ñ—ë—ä—Ä—ü —ä‚Ññ—é—ç—Ä', '—ò—Ç—Ö—Ñ—ë—ä—à—ï —ä‚Ññ—é—ç—õ', '—ò—Ç—Ö—Ñ—ë—ä—à—ï —ä‚Ññ—é—ç'),
++                array(1, '¬ß‚Ññ—Ö', '¬ß‚Ññ—Ö', '¬ß‚Ññ—Ö')
+                ),
+       'SIT' => array(
+-                array(1, 'ÒÎÓ‚ÂÌÒÍËÈ ÚÓÎ‡', 'ÒÎÓ‚ÂÌÒÍËı ÚÓÎ‡‡', 'ÒÎÓ‚ÂÌÒÍËı ÚÓÎ‡Ó‚'),
+-                array(2, 'ÒÚÓÚËÌ‡', 'ÒÚÓÚËÌ˚', 'ÒÚÓÚËÌ')
++                array(1, '—ë—ã—é—Ç—Ö—ç—ë—ä—à—â —í—é—ã—Ä‚Ññ', '—ë—ã—é—Ç—Ö—ç—ë—ä—à—ï —í—é—ã—Ä‚Ññ—Ä', '—ë—ã—é—Ç—Ö—ç—ë—ä—à—ï —í—é—ã—Ä‚Ññ—é—Ç'),
++                array(2, '—ë—í—é—í—à—ç—Ä', '—ë—í—é—í—à—ç—õ', '—ë—í—é—í—à—ç')
+                ),
+       'SKK' => array(
+-                array(2, 'ÒÎÓ‚‡ˆÍ‡ˇ ÍÓÌ‡', 'ÒÎÓ‚‡ˆÍËı ÍÓÌ˚', 'ÒÎÓ‚‡ˆÍËı ÍÓÌ'),
++                array(2, '—ë—ã—é—Ç—Ä—ñ—ä—Ä—ü —ä‚Ññ—é—ç—Ä', '—ë—ã—é—Ç—Ä—ñ—ä—à—ï —ä‚Ññ—é—ç—õ', '—ë—ã—é—Ç—Ä—ñ—ä—à—ï —ä‚Ññ—é—ç'),
+                 array(0, '', '', '')
+                ),
+       'TRL' => array(
+-                array(2, 'ÚÛÂˆÍ‡ˇ ÎË‡', 'ÚÛÂˆÍËı ÎË˚', 'ÚÛÂˆÍËı ÎË'),
+-                array(1, 'ÔË‡ÒÚ', 'ÔË‡ÒÚ‡', 'ÔË‡ÒÚÓ‚')
++                array(2, '—í—ì‚Ññ—Ö—ñ—ä—Ä—ü —ã—à‚Ññ—Ä', '—í—ì‚Ññ—Ö—ñ—ä—à—ï —ã—à‚Ññ—õ', '—í—ì‚Ññ—Ö—ñ—ä—à—ï —ã—à‚Ññ'),
++                array(1, '—è—à—Ä—ë—í‚Ññ', '—è—à—Ä—ë—í‚Ññ—Ä', '—è—à—Ä—ë—í‚Ññ—é—Ç')
+                ),
+       'UAH' => array(
+-                array(2, '„Ë‚Ì‡', '„Ë‚Ì˚', '„Ë‚ÂÌ'),
+-                array(1, 'ˆÂÌÚ', 'ˆÂÌÚ‡', 'ˆÂÌÚÓ‚')
++                array(2, '—É‚Ññ—à—Ç—ç—Ä', '—É‚Ññ—à—Ç—ç—õ', '—É‚Ññ—à—Ç—Ö—ç'),
++                array(1, '—ñ—Ö—ç—í', '—ñ—Ö—ç—í—Ä', '—ñ—Ö—ç—í—é—Ç')
+                ),
+       'USD' => array(
+-                array(1, '‰ÓÎÎ‡ —ÿ¿', '‰ÓÎÎ‡‡ —ÿ¿', '‰ÓÎÎ‡Ó‚ —ÿ¿'),
+-                array(1, 'ˆÂÌÚ', 'ˆÂÌÚ‡', 'ˆÂÌÚÓ‚')
++                array(1, '—Ñ—é—ã—ã—Ä‚Ññ –±–∏–†', '—Ñ—é—ã—ã—Ä‚Ññ—Ä –±–∏–†', '—Ñ—é—ã—ã—Ä‚Ññ—é—Ç –±–∏–†'),
++                array(1, '—ñ—Ö—ç—í', '—ñ—Ö—ç—í—Ä', '—ñ—Ö—ç—í—é—Ç')
+                ),
+       'YUM' => array(
+-                array(1, '˛„ÓÒÎ‡‚ÒÍËÈ ‰ËÌ‡', '˛„ÓÒÎ‡‚ÒÍËı ‰ËÌ‡‡', '˛„ÓÒÎ‡‚ÒÍËı ‰ËÌ‡Ó‚'),
+-                array(1, 'Ô‡‡', 'Ô‡‡', 'Ô‡‡')
++                array(1, '—û—É—é—ë—ã—Ä—Ç—ë—ä—à—â —Ñ—à—ç—Ä‚Ññ', '—û—É—é—ë—ã—Ä—Ç—ë—ä—à—ï —Ñ—à—ç—Ä‚Ññ—Ä', '—û—É—é—ë—ã—Ä—Ç—ë—ä—à—ï —Ñ—à—ç—Ä‚Ññ—é—Ç'),
++                array(1, '—è—Ä‚Ññ—Ä', '—è—Ä‚Ññ—Ä', '—è—Ä‚Ññ—Ä')
+                ),
+       'ZAR' => array(
+-                array(1, '‡Ì‰', '‡Ì‰‡', '‡Ì‰Ó‚'),
+-                array(1, 'ˆÂÌÚ', 'ˆÂÌÚ‡', 'ˆÂÌÚÓ‚')
++                array(1, '‚Ññ—Ä—ç—Ñ', '‚Ññ—Ä—ç—Ñ—Ä', '‚Ññ—Ä—ç—Ñ—é—Ç'),
++                array(1, '—ñ—Ö—ç—í', '—ñ—Ö—ç—í—Ä', '—ñ—Ö—ç—í—é—Ç')
+                )
+     );
+ 
+@@ -419,7 +407,7 @@
+      * @var string
+      * @access public
+      */
+-    var $def_currency = 'RUB'; // Russian rouble
++    public $def_currency = 'RUB'; // Russian rouble
+ 
+     // }}}
+     // {{{ toWords()
+@@ -438,7 +426,7 @@
+      * @access private
+      * @author Andrey Demenev <demenev@on-line.jar.ru>
+      */
+-    function toWords($num, $gender = 1) 
++    public function toWords($num, $gender = 1) 
+     {
+         return $this->_toWordsWithCase($num, $dummy, $gender);
+     }
+@@ -459,7 +447,7 @@
+      * @access private
+      * @author Andrey Demenev <demenev@on-line.jar.ru>
+      */
+-    function _toWordsWithCase($num, &$case, $gender = 1)
++    private function _toWordsWithCase($num, &$case, $gender = 1)
+     {
+         $ret  = '';
+         $case = 3;
+@@ -497,18 +485,18 @@
+ 
+                 if ($power == 3) {
+                     if ($_case == 1) {
+-                        $group .= $this->_sep . 'Ú˚Òˇ˜‡';
++                        $group .= $this->_sep . '—í—õ—ë—ü—ó—Ä';
+                     } elseif ($_case == 2) {
+-                        $group .= $this->_sep . 'Ú˚Òˇ˜Ë';
++                        $group .= $this->_sep . '—í—õ—ë—ü—ó—à';
+                     } else {
+-                        $group .= $this->_sep . 'Ú˚Òˇ˜';
++                        $group .= $this->_sep . '—í—õ—ë—ü—ó';
+                     }
+                 } elseif ($group && $power>3 && isset($this->_exponent[$power])) {
+                     $group .= $this->_sep . $this->_exponent[$power];
+                     if ($_case == 2) {
+-                        $group .= '‡';
++                        $group .= '—Ä';
+                     } elseif ($_case == 3) {
+-                        $group .= 'Ó‚';
++                        $group .= '—é—Ç';
+                     }
+                 }
+ 
+@@ -541,7 +529,7 @@
+      * @access private
+      * @author Andrey Demenev <demenev@on-line.jar.ru>
+      */
+-    function _groupToWords($num, $gender, &$case)
++    private function _groupToWords($num, $gender, &$case)
+     {
+         $ret  = '';        
+         $case = 3;
+@@ -575,7 +563,7 @@
+             $ones = (int)$num{2};
+             if ($tens || $ones) {
+                 if ($tens == 1 && $ones == 0) {
+-                    $ret .= '‰ÂÒˇÚ¸';
++                    $ret .= '—Ñ—Ö—ë—ü—í—ú';
+                 } elseif ($tens == 1) {
+                     $ret .= $this->_teens[$ones+10];
+                 } else {
+@@ -621,7 +609,7 @@
+      * @access public
+      * @author Andrey Demenev <demenev@on-line.jar.ru>
+      */
+-    function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
++    public function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
+     {
+         $int_curr = strtoupper($int_curr);
+         if (!isset($this->_currency_names[$int_curr])) {
+@@ -647,5 +635,3 @@
+     // }}}
+ 
+ }
+-
+-?>
+Index: Numbers/Words/lang.de.php
+===================================================================
+--- Numbers/Words/lang.de.php	(wersja 33074)
++++ Numbers/Words/lang.de.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -23,18 +23,6 @@
+  */
+ 
+ /**
+- *
+- * Class for translating numbers into German.
+- * @author Piotr Klaban
+- * @package Numbers_Words
+- */
+-
+-/**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+-/**
+  * Class for translating numbers into German.
+  *
+  * @category Numbers
+@@ -43,7 +31,7 @@
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_de extends Numbers_Words
++class Numbers_Words_de
+ {
+ 
+     // {{{ properties
+@@ -53,28 +41,28 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'de';
++    public $locale = 'de';
+ 
+     /**
+      * Language name in English
+      * @var string
+      * @access public
+      */
+-    var $lang = 'German';
++    public $lang = 'German';
+ 
+     /**
+      * Native language name
+      * @var string
+      * @access public
+      */
+-    var $lang_native = 'Deutsch';
++    public $lang_native = 'Deutsch';
+ 
+     /**
+      * The word for the minus sign
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'Minus'; // minus sign
++    private $_minus = 'Minus'; // minus sign
+ 
+     /**
+      * The sufixes for exponents (singular and plural)
+@@ -84,7 +72,7 @@
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         0 => array(''),
+         3 => array('tausend','tausend'),
+         6 => array('Million','Millionen'),
+@@ -118,9 +106,9 @@
+      * @var array
+      * @access private
+      */
+-    var $_digits = array(
++    private $_digits = array(
+         0 => 'null', 'ein', 'zwei', 'drei', 'vier',
+-        'f¸nf', 'sechs', 'sieben', 'acht', 'neun'
++        'f√ºnf', 'sechs', 'sieben', 'acht', 'neun'
+     );
+ 
+     /**
+@@ -128,14 +116,14 @@
+      * @var string
+      * @access private
+      */
+-    var $_sep = '';
++    private $_sep = '';
+ 
+     /**
+      * The exponent word separator
+      * @var string
+      * @access private
+      */
+-    var $_sep2 = ' ';
++    private $_sep2 = ' ';
+ 
+     // }}}
+     // {{{ toWords()
+@@ -157,7 +145,7 @@
+      * @author Piotr Klaban <makler@man.torun.pl>
+      * @since  PHP 4.2.3
+      */
+-    function toWords($num, $power = 0, $powsuffix = '')
++    public function toWords($num, $power = 0, $powsuffix = '')
+     {
+         $ret = '';
+ 
+@@ -261,7 +249,7 @@
+             break;
+ 
+         case 3:
+-            $ret .= $this->_sep . 'dreiﬂig';
++            $ret .= $this->_sep . 'drei√üig';
+             break;
+ 
+         case 2:
+@@ -279,7 +267,7 @@
+                 break;
+ 
+             case 2:
+-                $ret .= $this->_sep . 'zwˆlf';
++                $ret .= $this->_sep . 'zw√∂lf';
+                 break;
+ 
+             case 3:
+@@ -327,5 +315,3 @@
+     }
+     // }}}
+ }
+-
+-?>
+Index: Numbers/Words/lang.bg.php
+===================================================================
+--- Numbers/Words/lang.bg.php	(wersja 33074)
++++ Numbers/Words/lang.bg.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -23,11 +23,6 @@
+  */
+ 
+ /**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+-/**
+  * Class for translating numbers into Bulgarian.
+  *
+  * @category Numbers
+@@ -36,7 +31,7 @@
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_bg extends Numbers_Words
++class Numbers_Words_bg
+ {
+ 
+     // {{{ properties
+@@ -46,35 +41,35 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'bg';
++    public $locale = 'bg';
+ 
+     /**
+      * Language name in English.
+      * @var string
+      * @access public
+      */
+-    var $lang = 'Bulgarian';
++    public $lang = 'Bulgarian';
+ 
+     /**
+      * Native language name.
+      * @var string
+      * @access public
+      */
+-    var $lang_native = '¡˙Î„‡ÒÍË';
++    public $lang_native = '–°—ö—ã—É—Ä‚Ññ—ë—ä—à';
+ 
+     /**
+      * Some miscellaneous words and language constructs.
+      * @var string
+      * @access private
+      */
+-    var $_misc_strings = array(
+-        'deset'=>'‰ÂÒÂÚ',           // "ten"
+-        'edinadeset'=>'Â‰ËÌ‡‰ÂÒÂÚ', // "eleven"
+-        'na'=>'Ì‡',                 // liaison particle for 12 to 19
+-        'sto'=>'ÒÚÓ',               // "hundred"
+-        'sta'=>'ÒÚ‡',               // suffix for 2 and 3 hundred
+-        'stotin'=>'ÒÚÓÚËÌ',         // suffix for 4 to 9 hundred
+-        'hiliadi'=>'ıËÎˇ‰Ë'         // plural form of "thousand"
++    private $_misc_strings = array(
++        'deset'=>'—Ñ—Ö—ë—Ö—í',           // "ten"
++        'edinadeset'=>'—Ö—Ñ—à—ç—Ä—Ñ—Ö—ë—Ö—í', // "eleven"
++        'na'=>'—ç—Ä',                 // liaison particle for 12 to 19
++        'sto'=>'—ë—í—é',               // "hundred"
++        'sta'=>'—ë—í—Ä',               // suffix for 2 and 3 hundred
++        'stotin'=>'—ë—í—é—í—à—ç',         // suffix for 4 to 9 hundred
++        'hiliadi'=>'—ï—à—ã—ü—Ñ—à'         // plural form of "thousand"
+     );
+ 
+ 
+@@ -85,10 +80,10 @@
+      * @var string
+      * @access private
+      */
+-    var $_digits = array(
+-        0=>array(1=>"Â‰ÌÓ", "‰‚Â", "ÚË", "˜ÂÚËË", "ÔÂÚ", "¯ÂÒÚ", "ÒÂ‰ÂÏ", "ÓÒÂÏ", "‰Â‚ÂÚ"), // neuter
+-        1=>array(1=>'Â‰ËÌ', '‰‚‡'),                                                           // masculine
+-       -1=>array(1=>'Â‰Ì‡')                                                                   // feminine
++    private $_digits = array(
++        0=>array(1=>"—Ö—Ñ—ç—é", "—Ñ—Ç—Ö", "—í‚Ññ—à", "—ó—Ö—í—à‚Ññ—à", "—è—Ö—í", "—ò—Ö—ë—í", "—ë—Ö—Ñ—Ö—å", "—é—ë—Ö—å", "—Ñ—Ö—Ç—Ö—í"), // neuter
++        1=>array(1=>'—Ö—Ñ—à—ç', '—Ñ—Ç—Ä'),                                                           // masculine
++       -1=>array(1=>'—Ö—Ñ—ç—Ä')                                                                   // feminine
+     );
+ 
+     /**
+@@ -96,165 +91,165 @@
+      * @var string
+      * @access private
+      */
+-    var $_digits_initialized = false;
++    private $_digits_initialized = false;
+ 
+     /**
+      * A flag, that determines if the "and" word is placed already before the last non-empty group of digits.
+      * @var string
+      * @access private
+      */
+-    var $_last_and = false;
++    private $_last_and = false;
+ 
+     /**
+      * The word for zero.
+      * @var string
+      * @access private
+      */
+-    var $_zero = 'ÌÛÎ‡';
++    private $_zero = '—ç—ì—ã—Ä';
+ 
+     /**
+      * The word for infinity.
+      * @var string
+      * @access private
+      */
+-    var $_infinity = '·ÂÁÍ‡ÈÌÓÒÚ';
++    private $_infinity = '—Å—Ö—á—ä‚Ññ—Ä—â—ç—é—ë—í';
+ 
+     /**
+      * The word for the "and" language construct.
+      * @var string
+      * @access private
+      */
+-    var $_and = 'Ë';
++    private $_and = '—à';
+     
+     /**
+      * The word separator.
+      * @var string
+      * @access private
+      */
+-    var $_sep = ' ';
++    private $_sep = ' ';
+ 
+     /**
+      * The word for the minus sign.
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'ÏËÌÛÒ'; // minus sign
++    private $_minus = '—å—à—ç—ì—ë'; // minus sign
+ 
+     /**
+      * The plural suffix (except for thousand).
+      * @var string
+      * @access private
+      */
+-    var $_plural = '‡'; // plural suffix
++    private $_plural = '—Ä'; // plural suffix
+ 
+     /**
+      * The suffixes for exponents (singular).
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+           0 => '',
+-          3 => 'ıËÎˇ‰‡',
+-          6 => 'ÏËÎËÓÌ',
+-          9 => 'ÏËÎË‡‰',
+-         12 => 'ÚËÎËÓÌ',
+-         15 => 'Í‚‡‰ËÎËÓÌ',
+-         18 => 'Í‚ËÌÚËÎËÓÌ',
+-         21 => 'ÒÂÍÒÚËÎËÓÌ',
+-         24 => 'ÒÂÔÚËÎËÓÌ',
+-         27 => 'ÓÍÚËÎËÓÌ',
+-         30 => 'ÌÓÌ‡ÎËÓÌ',
+-         33 => '‰ÂÍ‡ÎËÓÌ',
+-         36 => 'ÛÌ‰ÂÍ‡ÎËÓÌ',
+-         39 => '‰ÛÓ‰ÂÍ‡ÎËÓÌ',
+-         42 => 'ÚÂ‰ÂÍ‡ÎËÓÌ',
+-         45 => 'Í‚‡ÚÓ‰ÂÍ‡ÎËÓÌ',
+-         48 => 'Í‚ËÌÚ‰ÂÍ‡ÎËÓÌ',
+-         51 => 'ÒÂÍÒ‰ÂÍ‡ÎËÓÌ',
+-         54 => 'ÒÂÔÚ‰ÂÍ‡ÎËÓÌ',
+-         57 => 'ÓÍÚÓ‰ÂÍ‡ÎËÓÌ',
+-         60 => 'ÌÓ‚ÂÏ‰ÂÍ‡ÎËÓÌ',
+-         63 => '‚Ë„ËÌÚËÎËÓÌ',
+-         66 => 'ÛÌ‚Ë„ËÌÚËÎËÓÌ',
+-         69 => '‰ÛÓ‚Ë„ËÌÚËÎËÓÌ',
+-         72 => 'ÚÂ‚Ë„ËÌÚËÎËÓÌ',
+-         75 => 'Í‚‡ÚÓ‚Ë„ËÌÚËÎËÓÌ',
+-         78 => 'Í‚ËÌ‚Ë„ËÌÚËÎËÓÌ',
+-         81 => 'ÒÂÍÒ‚Ë„ËÌÚËÎËÓÌ',
+-         84 => 'ÒÂÔÚÂÌ‚Ë„ËÌÚËÎËÓÌ',
+-         87 => 'ÓÍÚÓ‚Ë„ËÌÚËÎËÓÌ',
+-         90 => 'ÌÓ‚ÂÏ‚Ë„ËÌÚËÎËÓÌ',
+-         93 => 'ÚË„ËÌÚËÎËÓÌ',
+-         96 => 'ÛÌÚË„ËÌÚËÎËÓÌ',
+-         99 => '‰ÛÓÚË„ËÌÚËÎËÓÌ',
+-        102 => 'ÚÂÚË„ËÌÚËÎËÓÌ',
+-        105 => 'Í‚‡ÚÓÚË„ËÌÚËÎËÓÌ',
+-        108 => 'Í‚ËÌÚË„ËÌÚËÎËÓÌ',
+-        111 => 'ÒÂÍÒÚË„ËÌÚËÎËÓÌ',
+-        114 => 'ÒÂÔÚÂÌÚË„ËÌÚËÎËÓÌ',
+-        117 => 'ÓÍÚÓÚË„ËÌÚËÎËÓÌ',
+-        120 => 'ÌÓ‚ÂÏÚË„ËÌÚËÎËÓÌ',
+-        123 => 'Í‚‡‰‡„ËÌÚËÎËÓÌ',
+-        126 => 'ÛÌÍ‚‡‰‡„ËÌÚËÎËÓÌ',
+-        129 => '‰ÛÓÍ‚‡‰‡„ËÌÚËÎËÓÌ',
+-        132 => 'ÚÂÍ‚‡‰‡„ËÌÚËÎËÓÌ',
+-        135 => 'Í‚‡ÚÓÍ‚‡‰‡„ËÌÚËÎËÓÌ',
+-        138 => 'Í‚ËÌÍ‚‡‰‡„ËÌÚËÎËÓÌ',
+-        141 => 'ÒÂÍÒÍ‚‡‰‡„ËÌÚËÎËÓÌ',
+-        144 => 'ÒÂÔÚÂÌÍ‚‡‰‡„ËÌÚËÎËÓÌ',
+-        147 => 'ÓÍÚÓÍ‚‡‰‡„ËÌÚËÎËÓÌ',
+-        150 => 'ÌÓ‚ÂÏÍ‚‡‰‡„ËÌÚËÎËÓÌ',
+-        153 => 'Í‚ËÌÍ‚‡„ËÌÚËÎËÓÌ',
+-        156 => 'ÛÌÍ‚ËÌÍ‡„ËÌÚËÎËÓÌ',
+-        159 => '‰ÛÓÍ‚ËÌÍ‡„ËÌÚËÎËÓÌ',
+-        162 => 'ÚÂÍ‚ËÌÍ‡„ËÌÚËÎËÓÌ',
+-        165 => 'Í‚‡ÚÓÍ‚ËÌÍ‡„ËÌÚËÎËÓÌ',
+-        168 => 'Í‚ËÌÍ‚ËÌÍ‡„ËÌÚËÎËÓÌ',
+-        171 => 'ÒÂÍÒÍ‚ËÌÍ‡„ËÌÚËÎËÓÌ',
+-        174 => 'ÒÂÔÚÂÌÍ‚ËÌÍ‡„ËÌÚËÎËÓÌ',
+-        177 => 'ÓÍÚÓÍ‚ËÌÍ‡„ËÌÚËÎËÓÌ',
+-        180 => 'ÌÓ‚ÂÏÍ‚ËÌÍ‡„ËÌÚËÎËÓÌ',
+-        183 => 'ÒÂÍÒ‡„ËÌÚËÎËÓÌ',
+-        186 => 'ÛÌÒÂÍÒ‡„ËÌÚËÎËÓÌ',
+-        189 => '‰ÛÓÒÂÍÒ‡„ËÌÚËÎËÓÌ',
+-        192 => 'ÚÂÒÂÍÒ‡„ËÌÚËÎËÓÌ',
+-        195 => 'Í‚‡ÚÓÒÂÍÒ‡„ËÌÚËÎËÓÌ',
+-        198 => 'Í‚ËÌÒÂÍÒ‡„ËÌÚËÎËÓÌ',
+-        201 => 'ÒÂÍÒÒÂÍÒ‡„ËÌÚËÎËÓÌ',
+-        204 => 'ÒÂÔÚÂÌÒÂÍÒ‡„ËÌÚËÎËÓÌ',
+-        207 => 'ÓÍÚÓÒÂÍÒ‡„ËÌÚËÎËÓÌ',
+-        210 => 'ÌÓ‚ÂÏÒÂÍÒ‡„ËÌÚËÎËÓÌ',
+-        213 => 'ÒÂÔÚ‡„ËÌÚËÎËÓÌ',
+-        216 => 'ÛÌÒÂÔÚ‡„ËÌÚËÎËÓÌ',
+-        219 => '‰ÛÓÒÂÔÚ‡„ËÌÚËÎËÓÌ',
+-        222 => 'ÚÂÒÂÔÚ‡„ËÌÚËÎËÓÌ',
+-        225 => 'Í‚‡ÚÓÒÂÔÚ‡„ËÌÚËÎËÓÌ',
+-        228 => 'Í‚ËÌÒÂÔÚ‡„ËÌÚËÎËÓÌ',
+-        231 => 'ÒÂÍÒÒÂÔÚ‡„ËÌÚËÎËÓÌ',
+-        234 => 'ÒÂÔÚÂÌÒÂÔÚ‡„ËÌÚËÎËÓÌ',
+-        237 => 'ÓÍÚÓÒÂÔÚ‡„ËÌÚËÎËÓÌ',
+-        240 => 'ÌÓ‚ÂÏÒÂÔÚ‡„ËÌÚËÎËÓÌ',
+-        243 => 'ÓÍÚÓ„ËÌÚËÎËÓÌ',
+-        246 => 'ÛÌÓÍÚÓ„ËÌÚËÎËÓÌ',
+-        249 => '‰ÛÓÓÍÚÓ„ËÌÚËÎËÓÌ',
+-        252 => 'ÚÂÓÍÚÓ„ËÌÚËÎËÓÌ',
+-        255 => 'Í‚‡ÚÓÓÍÚÓ„ËÌÚËÎËÓÌ',
+-        258 => 'Í‚ËÌÓÍÚÓ„ËÌÚËÎËÓÌ',
+-        261 => 'ÒÂÍÒÓÍÚÓ„ËÌÚËÎËÓÌ',
+-        264 => 'ÒÂÔÚÓÍÚÓ„ËÌÚËÎËÓÌ',
+-        267 => 'ÓÍÚÓÓÍÚÓ„ËÌÚËÎËÓÌ',
+-        270 => 'ÌÓ‚ÂÏÓÍÚÓ„ËÌÚËÎËÓÌ',
+-        273 => 'ÌÓÌ‡„ËÌÚËÎËÓÌ',
+-        276 => 'ÛÌÌÓÌ‡„ËÌÚËÎËÓÌ',
+-        279 => '‰ÛÓÌÓÌ‡„ËÌÚËÎËÓÌ',
+-        282 => 'ÚÂÌÓÌ‡„ËÌÚËÎËÓÌ',
+-        285 => 'Í‚‡ÚÓÌÓÌ‡„ËÌÚËÎËÓÌ',
+-        288 => 'Í‚ËÌÌÓÌ‡„ËÌÚËÎËÓÌ',
+-        291 => 'ÒÂÍÒÌÓÌ‡„ËÌÚËÎËÓÌ',
+-        294 => 'ÒÂÔÚÂÌÌÓÌ‡„ËÌÚËÎËÓÌ',
+-        297 => 'ÓÍÚÓÌÓÌ‡„ËÌÚËÎËÓÌ',
+-        300 => 'ÌÓ‚ÂÏÌÓÌ‡„ËÌÚËÎËÓÌ',
+-        303 => 'ˆÂÌÚËÎËÓÌ'
++          3 => '—ï—à—ã—ü—Ñ—Ä',
++          6 => '—å—à—ã—à—é—ç',
++          9 => '—å—à—ã—à—Ä‚Ññ—Ñ',
++         12 => '—í‚Ññ—à—ã—à—é—ç',
++         15 => '—ä—Ç—Ä—Ñ‚Ññ—à—ã—à—é—ç',
++         18 => '—ä—Ç—à—ç—í—à—ã—à—é—ç',
++         21 => '—ë—Ö—ä—ë—í—à—ã—à—é—ç',
++         24 => '—ë—Ö—è—í—à—ã—à—é—ç',
++         27 => '—é—ä—í—à—ã—à—é—ç',
++         30 => '—ç—é—ç—Ä—ã—à—é—ç',
++         33 => '—Ñ—Ö—ä—Ä—ã—à—é—ç',
++         36 => '—ì—ç—Ñ—Ö—ä—Ä—ã—à—é—ç',
++         39 => '—Ñ—ì—é—Ñ—Ö—ä—Ä—ã—à—é—ç',
++         42 => '—í‚Ññ—Ö—Ñ—Ö—ä—Ä—ã—à—é—ç',
++         45 => '—ä—Ç—Ä—í—é‚Ññ—Ñ—Ö—ä—Ä—ã—à—é—ç',
++         48 => '—ä—Ç—à—ç—í—Ñ—Ö—ä—Ä—ã—à—é—ç',
++         51 => '—ë—Ö—ä—ë—Ñ—Ö—ä—Ä—ã—à—é—ç',
++         54 => '—ë—Ö—è—í—Ñ—Ö—ä—Ä—ã—à—é—ç',
++         57 => '—é—ä—í—é—Ñ—Ö—ä—Ä—ã—à—é—ç',
++         60 => '—ç—é—Ç—Ö—å—Ñ—Ö—ä—Ä—ã—à—é—ç',
++         63 => '—Ç—à—É—à—ç—í—à—ã—à—é—ç',
++         66 => '—ì—ç—Ç—à—É—à—ç—í—à—ã—à—é—ç',
++         69 => '—Ñ—ì—é—Ç—à—É—à—ç—í—à—ã—à—é—ç',
++         72 => '—í‚Ññ—Ö—Ç—à—É—à—ç—í—à—ã—à—é—ç',
++         75 => '—ä—Ç—Ä—í—é‚Ññ—Ç—à—É—à—ç—í—à—ã—à—é—ç',
++         78 => '—ä—Ç—à—ç—Ç—à—É—à—ç—í—à—ã—à—é—ç',
++         81 => '—ë—Ö—ä—ë—Ç—à—É—à—ç—í—à—ã—à—é—ç',
++         84 => '—ë—Ö—è—í—Ö—ç—Ç—à—É—à—ç—í—à—ã—à—é—ç',
++         87 => '—é—ä—í—é—Ç—à—É—à—ç—í—à—ã—à—é—ç',
++         90 => '—ç—é—Ç—Ö—å—Ç—à—É—à—ç—í—à—ã—à—é—ç',
++         93 => '—í‚Ññ—à—É—à—ç—í—à—ã—à—é—ç',
++         96 => '—ì—ç—í‚Ññ—à—É—à—ç—í—à—ã—à—é—ç',
++         99 => '—Ñ—ì—é—í‚Ññ—à—É—à—ç—í—à—ã—à—é—ç',
++        102 => '—í‚Ññ—Ö—í‚Ññ—à—É—à—ç—í—à—ã—à—é—ç',
++        105 => '—ä—Ç—Ä—í—é‚Ññ—í‚Ññ—à—É—à—ç—í—à—ã—à—é—ç',
++        108 => '—ä—Ç—à—ç—í‚Ññ—à—É—à—ç—í—à—ã—à—é—ç',
++        111 => '—ë—Ö—ä—ë—í‚Ññ—à—É—à—ç—í—à—ã—à—é—ç',
++        114 => '—ë—Ö—è—í—Ö—ç—í‚Ññ—à—É—à—ç—í—à—ã—à—é—ç',
++        117 => '—é—ä—í—é—í‚Ññ—à—É—à—ç—í—à—ã—à—é—ç',
++        120 => '—ç—é—Ç—Ö—å—í‚Ññ—à—É—à—ç—í—à—ã—à—é—ç',
++        123 => '—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—à—é—ç',
++        126 => '—ì—ç—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—à—é—ç',
++        129 => '—Ñ—ì—é—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—à—é—ç',
++        132 => '—í‚Ññ—Ö—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—à—é—ç',
++        135 => '—ä—Ç—Ä—í—é‚Ññ—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—à—é—ç',
++        138 => '—ä—Ç—à—ç—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—à—é—ç',
++        141 => '—ë—Ö—ä—ë—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—à—é—ç',
++        144 => '—ë—Ö—è—í—Ö—ç—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—à—é—ç',
++        147 => '—é—ä—í—é—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—à—é—ç',
++        150 => '—ç—é—Ç—Ö—å—ä—Ç—Ä—Ñ‚Ññ—Ä—É—à—ç—í—à—ã—à—é—ç',
++        153 => '—ä—Ç—à—ç—ä—Ç—Ä—É—à—ç—í—à—ã—à—é—ç',
++        156 => '—ì—ç—ä—Ç—à—ç—ä—Ä—É—à—ç—í—à—ã—à—é—ç',
++        159 => '—Ñ—ì—é—ä—Ç—à—ç—ä—Ä—É—à—ç—í—à—ã—à—é—ç',
++        162 => '—í‚Ññ—Ö—ä—Ç—à—ç—ä—Ä—É—à—ç—í—à—ã—à—é—ç',
++        165 => '—ä—Ç—Ä—í—é‚Ññ—ä—Ç—à—ç—ä—Ä—É—à—ç—í—à—ã—à—é—ç',
++        168 => '—ä—Ç—à—ç—ä—Ç—à—ç—ä—Ä—É—à—ç—í—à—ã—à—é—ç',
++        171 => '—ë—Ö—ä—ë—ä—Ç—à—ç—ä—Ä—É—à—ç—í—à—ã—à—é—ç',
++        174 => '—ë—Ö—è—í—Ö—ç—ä—Ç—à—ç—ä—Ä—É—à—ç—í—à—ã—à—é—ç',
++        177 => '—é—ä—í—é—ä—Ç—à—ç—ä—Ä—É—à—ç—í—à—ã—à—é—ç',
++        180 => '—ç—é—Ç—Ö—å—ä—Ç—à—ç—ä—Ä—É—à—ç—í—à—ã—à—é—ç',
++        183 => '—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—à—é—ç',
++        186 => '—ì—ç—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—à—é—ç',
++        189 => '—Ñ—ì—é—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—à—é—ç',
++        192 => '—í‚Ññ—Ö—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—à—é—ç',
++        195 => '—ä—Ç—Ä—í—é‚Ññ—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—à—é—ç',
++        198 => '—ä—Ç—à—ç—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—à—é—ç',
++        201 => '—ë—Ö—ä—ë—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—à—é—ç',
++        204 => '—ë—Ö—è—í—Ö—ç—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—à—é—ç',
++        207 => '—é—ä—í—é—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—à—é—ç',
++        210 => '—ç—é—Ç—Ö—å—ë—Ö—ä—ë—Ä—É—à—ç—í—à—ã—à—é—ç',
++        213 => '—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—à—é—ç',
++        216 => '—ì—ç—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—à—é—ç',
++        219 => '—Ñ—ì—é—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—à—é—ç',
++        222 => '—í‚Ññ—Ö—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—à—é—ç',
++        225 => '—ä—Ç—Ä—í—é‚Ññ—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—à—é—ç',
++        228 => '—ä—Ç—à—ç—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—à—é—ç',
++        231 => '—ë—Ö—ä—ë—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—à—é—ç',
++        234 => '—ë—Ö—è—í—Ö—ç—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—à—é—ç',
++        237 => '—é—ä—í—é—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—à—é—ç',
++        240 => '—ç—é—Ç—Ö—å—ë—Ö—è—í—Ä—É—à—ç—í—à—ã—à—é—ç',
++        243 => '—é—ä—í—é—É—à—ç—í—à—ã—à—é—ç',
++        246 => '—ì—ç—é—ä—í—é—É—à—ç—í—à—ã—à—é—ç',
++        249 => '—Ñ—ì—é—é—ä—í—é—É—à—ç—í—à—ã—à—é—ç',
++        252 => '—í‚Ññ—Ö—é—ä—í—é—É—à—ç—í—à—ã—à—é—ç',
++        255 => '—ä—Ç—Ä—í—é‚Ññ—é—ä—í—é—É—à—ç—í—à—ã—à—é—ç',
++        258 => '—ä—Ç—à—ç—é—ä—í—é—É—à—ç—í—à—ã—à—é—ç',
++        261 => '—ë—Ö—ä—ë—é—ä—í—é—É—à—ç—í—à—ã—à—é—ç',
++        264 => '—ë—Ö—è—í—é—ä—í—é—É—à—ç—í—à—ã—à—é—ç',
++        267 => '—é—ä—í—é—é—ä—í—é—É—à—ç—í—à—ã—à—é—ç',
++        270 => '—ç—é—Ç—Ö—å—é—ä—í—é—É—à—ç—í—à—ã—à—é—ç',
++        273 => '—ç—é—ç—Ä—É—à—ç—í—à—ã—à—é—ç',
++        276 => '—ì—ç—ç—é—ç—Ä—É—à—ç—í—à—ã—à—é—ç',
++        279 => '—Ñ—ì—é—ç—é—ç—Ä—É—à—ç—í—à—ã—à—é—ç',
++        282 => '—í‚Ññ—Ö—ç—é—ç—Ä—É—à—ç—í—à—ã—à—é—ç',
++        285 => '—ä—Ç—Ä—í—é‚Ññ—ç—é—ç—Ä—É—à—ç—í—à—ã—à—é—ç',
++        288 => '—ä—Ç—à—ç—ç—é—ç—Ä—É—à—ç—í—à—ã—à—é—ç',
++        291 => '—ë—Ö—ä—ë—ç—é—ç—Ä—É—à—ç—í—à—ã—à—é—ç',
++        294 => '—ë—Ö—è—í—Ö—ç—ç—é—ç—Ä—É—à—ç—í—à—ã—à—é—ç',
++        297 => '—é—ä—í—é—ç—é—ç—Ä—É—à—ç—í—à—ã—à—é—ç',
++        300 => '—ç—é—Ç—Ö—å—ç—é—ç—Ä—É—à—ç—í—à—ã—à—é—ç',
++        303 => '—ñ—Ö—ç—í—à—ã—à—é—ç'
+     );
+     // }}}
+ 
+@@ -269,7 +264,7 @@
+      * @author Kouber Saparev <kouber@php.net>
+      * @see function _initDigits
+      */
+-    function Numbers_Words_bg()
++    public function __construct()
+     {
+         $this->_initDigits();
+     }
+@@ -286,7 +281,7 @@
+      * @access private
+      * @author Kouber Saparev <kouber@php.net>
+      */
+-    function _initDigits()
++    private function _initDigits()
+     {
+         if (!$this->_digits_initialized) {
+             for ($i=3; $i<=9; $i++) {
+@@ -314,7 +309,7 @@
+      * @author Kouber Saparev <kouber@php.net>
+      * @since  PHP 4.2.3
+      */
+-    function _splitNumber($num)
++    private function _splitNumber($num)
+     {
+         if (is_string($num)) {
+             $ret = array();
+@@ -355,7 +350,7 @@
+      * @access private
+      * @author Kouber Saparev <kouber@php.net>
+      */
+-    function _showDigitsGroup($num, $gender = 0, $last = false)
++    private function _showDigitsGroup($num, $gender = 0, $last = false)
+     {
+         /* A storage array for the return string.
+              Positions 1, 3, 5 are intended for digit words
+@@ -448,7 +443,7 @@
+      * @access public
+      * @author Kouber Saparev <kouber@php.net>
+      */
+-    function toWords($num = 0)
++    public function toWords($num = 0)
+     {
+         $ret = array();
+ 
+@@ -517,4 +512,3 @@
+     }
+     // }}}
+ }
+-?>
+Index: Numbers/Words/lang.sv.php
+===================================================================
+--- Numbers/Words/lang.sv.php	(wersja 33074)
++++ Numbers/Words/lang.sv.php	(kopia robocza)
+@@ -23,19 +23,6 @@
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+ 
+-
+-/**
+- *
+- * Class for translating numbers into Swedish.
+- * @author Robin Ericsson
+- * @package Numbers_Words
+- */
+-
+-/**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+ /**
+  * Class for translating numbers into Swedish.
+  *
+@@ -46,7 +33,7 @@
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_sv extends Numbers_Words
++class Numbers_Words_sv
+ {
+ 
+     // {{{ properties
+@@ -56,35 +43,35 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'sv';
++    public $locale = 'sv';
+ 
+     /**
+      * Language name in English
+      * @var string
+      * @access public
+      */
+-    var $lang = 'Swedish';
++    public $lang = 'Swedish';
+ 
+     /**
+      * Native language name
+      * @var string
+      * @access public
+      */
+-    var $lang_native = 'Svenska';
++    public $lang_native = 'Svenska';
+     
+     /**
+      * The word for the minus sign
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'Minus'; // minus sign
++    private $_minus = 'Minus'; // minus sign
+ 
+     /**
+      * The sufixes for exponents (singular and plural)
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         0 => array(''),
+         3 => array('tusen', 'tusen'),
+         6 => array('miljon','miljoner'),
+@@ -118,9 +105,9 @@
+      * @var array
+      * @access private
+      */
+-    var $_digits = array(
+-        0 => 'noll', 'ett', 'tvÂ', 'tre', 'fyra',
+-        'fem', 'sex', 'sju', 'Âtta', 'nio'
++    private $_digits = array(
++        0 => 'noll', 'ett', 'tv√•', 'tre', 'fyra',
++        'fem', 'sex', 'sju', '√•tta', 'nio'
+     );
+ 
+     /**
+@@ -128,14 +115,14 @@
+      * @var string
+      * @access private
+      */
+-    var $_sep = '';
++    private $_sep = '';
+     
+     /**
+      * The exponent word separator
+      * @var string
+      * @access private
+      */
+-    var $_sep2 = ' ';
++    private $_sep2 = ' ';
+ 
+     // }}}
+     // {{{ toWords()
+@@ -158,7 +145,7 @@
+      * @author Robin Ericsson <lobbin@localhost.nu>
+      * @since  PHP 4.2.3
+      */
+-    function toWords($num, $power = 0, $powsuffix = '')
++    public function toWords($num, $power = 0, $powsuffix = '')
+     {
+         $ret = '';        
+         
+@@ -241,7 +228,7 @@
+             break;
+     
+         case 8:
+-            $ret .= $this->_sep . 'Âttio';
++            $ret .= $this->_sep . '√•ttio';
+             break;
+     
+         case 4:
+@@ -321,5 +308,3 @@
+     }
+     // }}}
+ }
+-
+-?>
+Index: Numbers/Words/lang.es_AR.php
+===================================================================
+--- Numbers/Words/lang.es_AR.php	(wersja 33074)
++++ Numbers/Words/lang.es_AR.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -25,18 +25,6 @@
+ 
+ /**
+  * Class for translating numbers into Argentinian Spanish.
+- *
+- * @author Martin Marrese
+- * @package Numbers_Words
+- */
+-
+-/**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+-/**
+- * Class for translating numbers into Argentinian Spanish.
+  * It supports up to decallones (10^6).
+  * It doesn't support spanish tonic accents (acentos).
+  *
+@@ -47,7 +35,7 @@
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_es_AR extends Numbers_Words
++class Numbers_Words_es_AR
+ {
+     // {{{ properties
+ 
+@@ -56,54 +44,54 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'es_AR';
++    public $locale = 'es_AR';
+ 
+     /**
+      * Language name in English
+      * @var string
+      * @access public
+      */
+-    var $lang = 'Spanish';
++    public $lang = 'Spanish';
+ 
+     /**
+      * Native language name
+      * @var string
+      * @access public
+      */
+-    var $lang_native = 'EspaÒol';
++    public $lang_native = 'Espa√±ol';
+ 
+     /**
+      * The word for the minus sign
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'menos';
++    private $_minus = 'menos';
+ 
+     /**
+      * The sufixes for exponents (singular and plural)
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         0 => array('',''),
+         3 => array('mil','mil'),
+-        6 => array('millÛn','millones'),
+-       12 => array('billÛn','billones'),
+-       18 => array('trilÛn','trillones'),
+-       24 => array('cuatrillÛn','cuatrillones'),
+-       30 => array('quintillÛn','quintillones'),
+-       36 => array('sextillÛn','sextillones'),
+-       42 => array('septillÛn','septillones'),
+-       48 => array('octallÛn','octallones'),
+-       54 => array('nonallÛn','nonallones'),
+-       60 => array('decallÛn','decallones'),
++        6 => array('mill√≥n','millones'),
++       12 => array('bill√≥n','billones'),
++       18 => array('tril√≥n','trillones'),
++       24 => array('cuatrill√≥n','cuatrillones'),
++       30 => array('quintill√≥n','quintillones'),
++       36 => array('sextill√≥n','sextillones'),
++       42 => array('septill√≥n','septillones'),
++       48 => array('octall√≥n','octallones'),
++       54 => array('nonall√≥n','nonallones'),
++       60 => array('decall√≥n','decallones'),
+         );
+     /**
+      * The array containing the digits (indexed by the digits themselves).
+      * @var array
+      * @access private
+      */
+-    var $_digits = array(
++    private $_digits = array(
+         0 => 'cero', 'uno', 'dos', 'tres', 'cuatro',
+         'cinco', 'seis', 'siete', 'ocho', 'nueve'
+         );
+@@ -112,7 +100,7 @@
+      * @var string
+      * @access private
+      */
+-    var $_sep = ' ';
++    private $_sep = ' ';
+ 
+     /**
+      * The currency names (based on the below links,
+@@ -124,7 +112,7 @@
+      * @link http://www.shoestring.co.kr/world/p.visa/change.htm Currency names in English
+      * @access private
+      */
+-    var $_currency_names = array(
++    private $_currency_names = array(
+       'ALL' => array(array('lek'), array('qindarka')),
+       'AUD' => array(array('Australian dollar'), array('cent')),
+       'ARS' => array(array('Peso'), array ('centavo')),
+@@ -144,7 +132,7 @@
+       'HRK' => array(array('Croatian kuna'), array('lipa')),
+       'HUF' => array(array('forint'), array('filler')),
+       'ILS' => array(array('new sheqel','new sheqels'), array('agora','agorot')),
+-      'ISK' => array(array('Icelandic krÛna'), array('aurar')),
++      'ISK' => array(array('Icelandic kr√≥na'), array('aurar')),
+       'JPY' => array(array('yen'), array('sen')),
+       'LTL' => array(array('litas'), array('cent')),
+       'LVL' => array(array('lat'), array('sentim')),
+@@ -157,7 +145,7 @@
+       'SEK' => array(array('Swedish krona'), array('oere')),
+       'SIT' => array(array('Tolar'), array('stotinia')),
+       'SKK' => array(array('Slovak koruna'), array()),
+-      'TRL' => array(array('lira'), array('kuru˛')),
++      'TRL' => array(array('lira'), array('kuru√æ')),
+       'UAH' => array(array('hryvna'), array('cent')),
+       'USD' => array(array('dollar'), array('cent')),
+       'YUM' => array(array('dinars'), array('para')),
+@@ -169,7 +157,7 @@
+      * @var string
+      * @access public
+      */
+-    var $def_currency = 'ARS'; // Argentinian Peso
++    public $def_currency = 'ARS'; // Argentinian Peso
+ 
+     // }}}
+     // {{{ toWords()
+@@ -188,7 +176,7 @@
+      * @access private
+      * @author Martin Marrese
+      */
+-    function toWords($num, $power = 0)
++    public function toWords($num, $power = 0)
+     {
+         // The return string;
+         $ret = '';
+@@ -306,7 +294,7 @@
+                 $ret .= $this->_sep . 'veinte';
+             } else {
+                 if (($power > 0) and ($d == 1)) {
+-                    $ret .= $this->_sep . 'veinti˙n';
++                    $ret .= $this->_sep . 'veinti√∫n';
+                 } else {
+                     $ret .= $this->_sep . 'veinti' . $this->_digits[$d];
+                 }
+@@ -417,7 +405,7 @@
+      * @access public
+      * @author Martin Marrese
+      */
+-    function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
++    public function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
+     {
+         $int_curr = strtoupper($int_curr);
+         if (!isset($this->_currency_names[$int_curr])) {
+@@ -466,4 +454,3 @@
+ 
+ 
+ }
+-?>
+Index: Numbers/Words/lang.he.php
+===================================================================
+--- Numbers/Words/lang.he.php	(wersja 33074)
++++ Numbers/Words/lang.he.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -25,25 +25,13 @@
+ /**
+  * Class for translating numbers into Hebrew.
+  *
+- * @author Hadar Porat
+- * @package Numbers_Words
+- */
+-
+-/**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+-/**
+- * Class for translating numbers into Hebrew.
+- *
+  * @category Numbers
+  * @package  Numbers_Words
+  * @author   Hadar Porat <hpman28@gmail.com>
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_he extends Numbers_Words
++class Numbers_Words_he
+ {
+ 
+     // {{{ properties
+@@ -53,28 +41,28 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'he';
++    public $locale = 'he';
+ 
+     /**
+      * Language name in English
+      * @var string
+      * @access public
+      */
+-    var $lang = 'Hebrew';
++    public $lang = 'Hebrew';
+ 
+     /**
+      * Native language name
+      * @var string
+      * @access public
+      */
+-    var $lang_native = '◊¢◊ë◊®◊ô◊™';
++    public $lang_native = '◊¢◊ë◊®◊ô◊™';
+     
+     /**
+      * The word for the minus sign
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'minus'; // minus sign
++    private $_minus = 'minus'; // minus sign
+     
+     /**
+      * The sufixes for exponents (singular and plural)
+@@ -85,7 +73,7 @@
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         0 => array(''),
+         3 => array('◊ê◊ú◊§◊ô◊ù'),
+         6 => array('◊û◊ô◊ú◊ô◊ï◊ü'),
+@@ -207,22 +195,22 @@
+      * @var array
+      * @access private
+      */
+-    var $_digits = array(
++    private $_digits = array(
+         0 => '◊ê◊§◊°', '◊ê◊ó◊ì', '◊©◊†◊ô◊ô◊ù', '◊©◊ú◊ï◊©◊î', '◊ê◊®◊ë◊¢◊î',
+         '◊ó◊û◊ô◊©◊î', '◊©◊ô◊©◊î', '◊©◊ë◊¢◊î', '◊©◊û◊ï◊†◊î', '◊™◊©◊¢◊î'
+     );
+     
+-    var $_digits_ten = array(
++    private $_digits_ten = array(
+         2 => '◊¢◊©◊®◊ô◊ù', '◊©◊ú◊ï◊©◊ô◊ù', '◊ê◊®◊ë◊¢◊ô◊ù', '◊ó◊û◊ô◊©◊ô◊ù',
+         '◊©◊ô◊©◊ô◊ù', '◊©◊ë◊¢◊ô◊ù', '◊©◊û◊ï◊†◊ô◊ù', '◊™◊©◊¢◊ô◊ù'
+     );
+     
+-    var $_digits_female = array(
++    private $_digits_female = array(
+         0 => '◊ê◊§◊°', '◊ê◊ó◊™', '◊©◊™◊ô◊ô◊ù', '◊©◊ú◊ï◊©', '◊ê◊®◊ë◊¢',
+         '◊ó◊û◊©', '◊©◊©', '◊©◊ë◊¢', '◊©◊û◊ï◊†◊î', '◊™◊©◊¢'
+     );     
+     
+-    var $digits_hundreds = array(
++    private $digits_hundreds = array(
+         0 => '', '◊û◊ê◊î', '◊©◊†◊ô-◊û◊ê◊ï◊™', '◊©◊ú◊ï◊©-◊û◊ê◊ï◊™', '◊ê◊®◊ë◊¢-◊û◊ê◊ï◊™',
+         '◊ó◊û◊©-◊û◊ê◊ï◊™', '◊©◊©-◊û◊ê◊ï◊™', '◊©◊ë◊¢-◊û◊ê◊ï◊™', '◊©◊û◊ï◊†◊î-◊û◊ê◊ï◊™', '◊™◊©◊¢-◊û◊ê◊ï◊™'
+     );         
+@@ -232,11 +220,11 @@
+      * @var string
+      * @access private
+      */
+-    var $_sep = ' ';
++    private $_sep = ' ';
+ 
+-    var $_sep_hundred = '-';
++    private $_sep_hundred = '-';
+ 
+-    var $_sep_ten = ' ◊ï';
++    private $_sep_ten = ' ◊ï';
+ 
+     /**
+      * The currency names (based on the below links,
+@@ -248,7 +236,7 @@
+      * @link http://www.shoestring.co.kr/world/p.visa/change.htm Currency names in English
+      * @access private
+      */
+-    var $_currency_names = array(
++    private $_currency_names = array(
+       'ALL' => array(array('lek'), array('qindarka')),
+       'AUD' => array(array('Australian dollar'), array('cent')),
+       'BAM' => array(array('convertible marka'), array('fenig')),
+@@ -293,7 +281,7 @@
+      * @var string
+      * @access public
+      */
+-    var $def_currency = 'NIS';
++    public $def_currency = 'NIS';
+ 
+     // }}}
+     // {{{ toWords()
+@@ -314,7 +302,7 @@
+      * @author Piotr Klaban <makler@man.torun.pl>
+      * @since  PHP 4.2.3
+      */
+-    function toWords($num, $power = 0, $powsuffix = '')
++    public function toWords($num, $power = 0, $powsuffix = '')
+     {
+         $ret = '';        
+       
+@@ -478,7 +466,7 @@
+      * @author Piotr Klaban <makler@man.torun.pl>
+      * @since  Numbers_Words 0.4
+      */
+-    function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
++    public function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
+     {
+         $int_curr = strtoupper($int_curr);
+         if (!isset($this->_currency_names[$int_curr])) {
+@@ -521,5 +509,3 @@
+     // }}}
+ 
+ }
+-
+-?>
+Index: Numbers/Words/lang.id.php
+===================================================================
+--- Numbers/Words/lang.id.php	(wersja 33074)
++++ Numbers/Words/lang.id.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -23,9 +23,6 @@
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+ 
+-require_once "PEAR.php";
+-require_once "Numbers/Words.php";
+-
+ /**
+ * Class for translating numbers into Indonesian.
+  *
+@@ -36,7 +33,7 @@
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_id extends Numbers_Words
++class Numbers_Words_id
+ {
+ 
+     // {{{ properties
+@@ -46,28 +43,28 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'id';
++    public $locale = 'id';
+ 
+     /**
+      * Language name in English
+      * @var string
+      * @access public
+      */
+-    var $lang = 'Indonesia Language';
++    public $lang = 'Indonesia Language';
+ 
+     /**
+      * Native language name
+      * @var string
+      * @access public
+      */
+-    var $lang_native = 'Bahasa Indonesia';
++    public $lang_native = 'Bahasa Indonesia';
+ 
+     /**
+      * The word for the minus sign
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'minus'; // minus sign
++    private $_minus = 'minus'; // minus sign
+ 
+     /**
+      * The sufixes for exponents (singular and plural)
+@@ -76,7 +73,7 @@
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         0 => array(''),
+         3 => array('ribu'),
+         6 => array('juta'),
+@@ -108,7 +105,7 @@
+      * @var array
+      * @access private
+      */
+-    var $_digits = array(
++    private $_digits = array(
+         0 => 'nol', 'satu', 'dua', 'tiga', 'empat',
+         'lima', 'enam', 'tujuh', 'delapan', 'sembilan'
+     );
+@@ -118,7 +115,7 @@
+      * @var string
+      * @access private
+      */
+-    var $_sep = ' ';
++    private $_sep = ' ';
+ 
+     // }}}
+     // {{{ toWords()
+@@ -140,7 +137,7 @@
+      * @author Ernas M. Jamil
+      * @since  PHP 4.2.3
+      */
+-    function toWords($num, $power = 0, $powsuffix = '')
++    public function toWords($num, $power = 0, $powsuffix = '')
+     {
+         $ret = '';
+ 
+@@ -293,5 +290,3 @@
+     }
+     // }}}
+ }
+-
+-?>
+Index: Numbers/Words/lang.dk.php
+===================================================================
+--- Numbers/Words/lang.dk.php	(wersja 33074)
++++ Numbers/Words/lang.dk.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -25,25 +25,13 @@
+ /**
+  * Class for translating numbers into Danish.
+  *
+- * @author Jesper Veggerby <pear.nosey@veggerby.dk>
+- * @package Numbers_Words
+- */
+-
+-/**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+-/**
+- * Class for translating numbers into Danish.
+- *
+  * @category Numbers
+  * @package  Numbers_Words
+  * @author   Jesper Veggerby <pear.nosey@veggerby.dk>
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_dk extends Numbers_Words
++class Numbers_Words_dk
+ {
+ 
+     // {{{ properties
+@@ -53,28 +41,28 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'dk';
++    public $locale = 'dk';
+ 
+     /**
+      * Language name in English
+      * @var string
+      * @access public
+      */
+-    var $lang = 'Danish';
++    public $lang = 'Danish';
+ 
+     /**
+      * Native language name
+      * @var string
+      * @access public
+      */
+-    var $lang_native = 'Dansk';
++    public $lang_native = 'Dansk';
+ 
+     /**
+      * The word for the minus sign
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'minus'; // minus sign
++    private $_minus = 'minus'; // minus sign
+ 
+     /**
+      * The sufixes for exponents (singular and plural).
+@@ -82,7 +70,7 @@
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         0 => array(''),
+         3 => array('tusind','tusinde'),
+         6 => array('million','millioner'),
+@@ -107,7 +95,7 @@
+      * @var array
+      * @access private
+      */
+-    var $_digits = array(
++    private $_digits = array(
+         0 => 'nul', 'en', 'to', 'tre', 'fire',
+         'fem', 'seks', 'syv', 'otte', 'ni'
+     );
+@@ -117,7 +105,7 @@
+      * @var string
+      * @access private
+      */
+-    var $_sep = ' ';
++    private $_sep = ' ';
+ 
+     /**
+      * The currency names (based on the below links,
+@@ -127,20 +115,20 @@
+      * @link http://da.wikipedia.org/wiki/Valuta
+      * @access private
+      */
+-    var $_currency_names = array(
++    private $_currency_names = array(
+       'AUD' => array(array('australsk dollar', 'australske dollars'), array('cent')),
+       'CAD' => array(array('canadisk dollar', 'canadisk dollars'), array('cent')),
+       'CHF' => array(array('schweitzer franc'), array('rappen')),
+       'CYP' => array(array('cypriotisk pund', 'cypriotiske pund'), array('cent')),
+       'CZK' => array(array('tjekkisk koruna'), array('halerz')),
+-      'DKK' => array(array('krone', 'kroner'), array('¯re')),
++      'DKK' => array(array('krone', 'kroner'), array('√∏re')),
+       'EUR' => array(array('euro'), array('euro-cent')),
+       'GBP' => array(array('pund'), array('pence')),
+       'HKD' => array(array('Hong Kong dollar', 'Hong Kong dollars'), array('cent')),
+       'JPY' => array(array('yen'), array('sen')),
+-      'NOK' => array(array('norsk krone', 'norske kroner'), array('¯re')),
++      'NOK' => array(array('norsk krone', 'norske kroner'), array('√∏re')),
+       'PLN' => array(array('zloty', 'zlotys'), array('grosz')),
+-      'SEK' => array(array('svensk krone', 'svenske kroner'), array('¯re')),
++      'SEK' => array(array('svensk krone', 'svenske kroner'), array('√∏re')),
+       'USD' => array(array('dollar', 'dollars'), array('cent'))
+     );
+ 
+@@ -149,7 +137,7 @@
+      * @var string
+      * @access public
+      */
+-    var $def_currency = 'DKK'; // Danish krone
++    public $def_currency = 'DKK'; // Danish krone
+ 
+     // }}}
+     // {{{ toWords()
+@@ -171,7 +159,7 @@
+      * @author Jesper Veggerby <pear.nosey@veggerby.dk>
+      * @since  PHP 4.2.3
+      */
+-    function toWords($num, $power = 0, $powsuffix = '')
++    public function toWords($num, $power = 0, $powsuffix = '')
+     {
+         $ret = '';
+ 
+@@ -376,7 +364,7 @@
+      * @author Jesper Veggerby <pear.nosey@veggerby.dk>
+      * @since  Numbers_Words 0.4
+      */
+-    function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
++    public function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
+     {
+         $int_curr = strtoupper($int_curr);
+         if (!isset($this->_currency_names[$int_curr])) {
+@@ -425,5 +413,3 @@
+ 
+ 
+ }
+-
+-?>
+Index: Numbers/Words/lang.cs.php
+===================================================================
+--- Numbers/Words/lang.cs.php	(wersja 33074)
++++ Numbers/Words/lang.cs.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -25,25 +25,13 @@
+ /**
+  * Class for translating numbers into Czech.
+  *
+- * @author Petr 'PePa' Pavel
+- * @package Numbers_Words
+- */
+-
+-/**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+-/**
+- * Class for translating numbers into Czech.
+- *
+  * @category Numbers
+  * @package  Numbers_Words
+  * @author   Petr 'PePa' Pavel <petr.pavel@pepa.info>
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_cs extends Numbers_Words
++class Numbers_Words_cs
+ {
+ 
+     // {{{ properties
+@@ -53,28 +41,28 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'cs';
++    public $locale = 'cs';
+ 
+     /**
+      * Language name in English
+      * @var string
+      * @access public
+      */
+-    var $lang = 'Czech';
++    public $lang = 'Czech';
+ 
+     /**
+      * Native language name
+      * @var string
+      * @access public
+      */
+-    var $lang_native = 'Czech';
++    public $lang_native = 'Czech';
+ 
+     /**
+      * The word for the minus sign
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'mÌnus'; // minus sign
++    private $_minus = 'm√≠nus'; // minus sign
+ 
+     /**
+      * The sufixes for exponents (singular and plural)
+@@ -86,37 +74,37 @@
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         0 => array(''),
+-        3 => array('tisÌc','tisÌce','tisÌc'),
+-        6 => array('milion','miliony','milion˘'),
++        3 => array('tis√≠c','tis√≠ce','tis√≠c'),
++        6 => array('milion','miliony','milion≈Ø'),
+         9 => array('miliarda','miliardy','miliard'),
+-       12 => array('bilion','biliony','bilion˘'),
++       12 => array('bilion','biliony','bilion≈Ø'),
+        15 => array('biliarda','biliardy','biliard'),
+-       18 => array('trilion','triliony','trilion˘'),
++       18 => array('trilion','triliony','trilion≈Ø'),
+        21 => array('triliarda','triliardy','triliard'),
+ 
+-       24 => array('kvadrilion','kvadriliony','kvadrilion˘'),
+-       30 => array('kvintilion','kvintiliony','kvintilion˘'),
+-       36 => array('sextilion','sextiliony','sextilion˘'),
+-       42 => array('septilion','septiliony','septilion˘'),
+-
+-       48 => array('oktilion','oktiliony','oktilion˘'),
+-       54 => array('nonilion','noniliony','nonilion˘'),
+-       60 => array('decilion','deciliony','decilion˘'),
+-
+-       66 => array('undecilion','undeciliony','undecilion˘'),
+-       72 => array('duodecilion','duodeciliony','duodecilion˘'),
+-       78 => array('tredecilion','tredeciliony','tredecilion˘'),
+-       84 => array('kvatrodecilion','kvatrodeciliony','kvatrodecilion˘'),
+-       90 => array('kvindecilion','kvindeciliony','kvindecilion˘'),
+-       96 => array('sexdecilion','sexdeciliony','sexdecilion˘'),
+-      102 => array('septendecilion','septendeciliony','septendecilion˘'),
+-      108 => array('oktodecilion','oktodeciliony','oktodecilion˘'),
+-      114 => array('novemdecilion','novemdeciliony','novemdecilion˘'),
+-      120 => array('vigintilion','vigintiliony','vigintilion˘'),
+-      192 => array('duotrigintilion','duotrigintiliony','duotrigintilion˘'),
+-      600 => array('centilion','centiliony','centilion˘')
++       24 => array('kvadrilion','kvadriliony','kvadrilion≈Ø'),
++       30 => array('kvintilion','kvintiliony','kvintilion≈Ø'),
++       36 => array('sextilion','sextiliony','sextilion≈Ø'),
++       42 => array('septilion','septiliony','septilion≈Ø'),
++
++       48 => array('oktilion','oktiliony','oktilion≈Ø'),
++       54 => array('nonilion','noniliony','nonilion≈Ø'),
++       60 => array('decilion','deciliony','decilion≈Ø'),
++
++       66 => array('undecilion','undeciliony','undecilion≈Ø'),
++       72 => array('duodecilion','duodeciliony','duodecilion≈Ø'),
++       78 => array('tredecilion','tredeciliony','tredecilion≈Ø'),
++       84 => array('kvatrodecilion','kvatrodeciliony','kvatrodecilion≈Ø'),
++       90 => array('kvindecilion','kvindeciliony','kvindecilion≈Ø'),
++       96 => array('sexdecilion','sexdeciliony','sexdecilion≈Ø'),
++      102 => array('septendecilion','septendeciliony','septendecilion≈Ø'),
++      108 => array('oktodecilion','oktodeciliony','oktodecilion≈Ø'),
++      114 => array('novemdecilion','novemdeciliony','novemdecilion≈Ø'),
++      120 => array('vigintilion','vigintiliony','vigintilion≈Ø'),
++      192 => array('duotrigintilion','duotrigintiliony','duotrigintilion≈Ø'),
++      600 => array('centilion','centiliony','centilion≈Ø')
+ 
+         );
+ 
+@@ -125,8 +113,8 @@
+      * @var array
+      * @access private
+      */
+-    var $_hundreds = array(
+-        0 => 'sto', 'stÏ', 'sta', 'set'
++    private $_hundreds = array(
++        0 => 'sto', 'stƒõ', 'sta', 'set'
+     );
+ 
+     /**
+@@ -134,9 +122,9 @@
+      * @var array
+      * @access private
+      */
+-    var $_digits = array(
+-        0 => 'nula', 'jedna', 'dva', 't¯i', 'Ëty¯i',
+-        'pÏt', 'πest', 'sedm', 'osm', 'devÏt'
++    private $_digits = array(
++        0 => 'nula', 'jedna', 'dva', 't≈ôi', 'ƒçty≈ôi',
++        'pƒõt', '≈°est', 'sedm', 'osm', 'devƒõt'
+     );
+ 
+     /**
+@@ -144,7 +132,7 @@
+      * @var string
+      * @access private
+      */
+-    var $_sep = ' ';
++    private $_sep = ' ';
+ 
+     // }}}
+     // {{{ toWords()
+@@ -166,7 +154,7 @@
+      * @author Petr 'PePa' Pavel <petr.pavel@pepa.info>
+      * @since  PHP 4.2.3
+      */
+-    function toWords($num, $power = 0, $powsuffix = '')
++    public function toWords($num, $power = 0, $powsuffix = '')
+     {
+         $ret = '';
+ 
+@@ -234,7 +222,7 @@
+             if ($h == 1) {
+                 $ret .= $this->_sep . $this->_hundreds[0];
+             } elseif ($h == 2) {
+-                $ret .= $this->_sep . "dvÏ" . $this->_sep . $this->_hundreds[1];
++                $ret .= $this->_sep . "dvƒõ" . $this->_sep . $this->_hundreds[1];
+             } elseif ( ($h > 1) && ($h < 5) ) {
+                 $ret .= $this->_sep . $this->_digits[$h] . $this->_sep . $this->_hundreds[2];
+             } else {		//if ($h >= 5)
+@@ -257,23 +245,23 @@
+             break;
+ 
+         case 5:
+-            $ret .= $this->_sep . 'pades·t';
++            $ret .= $this->_sep . 'pades√°t';
+             break;
+ 
+         case 6:
+-            $ret .= $this->_sep . 'πedes·t';
++            $ret .= $this->_sep . '≈°edes√°t';
+             break;
+ 
+         case 7:
+-            $ret .= $this->_sep . 'sedmdes·t';
++            $ret .= $this->_sep . 'sedmdes√°t';
+             break;
+ 
+         case 8:
+-            $ret .= $this->_sep . 'osmdes·t';
++            $ret .= $this->_sep . 'osmdes√°t';
+             break;
+ 
+         case 9:
+-            $ret .= $this->_sep . 'devades·t';
++            $ret .= $this->_sep . 'devades√°t';
+             break;
+ 
+         case 1:
+@@ -283,19 +271,19 @@
+                 break;
+ 
+             case 1:
+-                $ret .= $this->_sep . 'jeden·ct';
++                $ret .= $this->_sep . 'jeden√°ct';
+                 break;
+ 
+             case 4:
+-                $ret .= $this->_sep . 'Ëtrn·ct';
++                $ret .= $this->_sep . 'ƒçtrn√°ct';
+                 break;
+ 
+             case 5:
+-                $ret .= $this->_sep . 'patn·ct';
++                $ret .= $this->_sep . 'patn√°ct';
+                 break;
+ 
+             case 9:
+-                $ret .= $this->_sep . 'devaten·ct';
++                $ret .= $this->_sep . 'devaten√°ct';
+                 break;
+ 
+             case 2:
+@@ -303,7 +291,7 @@
+             case 6:
+             case 7:
+             case 8:
+-                $ret .= $this->_sep . $this->_digits[$d] . 'n·ct';
++                $ret .= $this->_sep . $this->_digits[$d] . 'n√°ct';
+                 break;
+             }
+             break;
+@@ -342,5 +330,3 @@
+     }
+     // }}}
+ }
+-
+-?>
+Index: Numbers/Words/lang.pt_BR.php
+===================================================================
+--- Numbers/Words/lang.pt_BR.php	(wersja 33074)
++++ Numbers/Words/lang.pt_BR.php	(kopia robocza)
+@@ -22,11 +22,6 @@
+  */
+ 
+ /**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+-/**
+  * Class for translating numbers into Brazilian Portuguese. This class complies
+  * to Brazilian Academy of Letters rules as of 2008-12-12.
+  *
+@@ -36,49 +31,49 @@
+  * @license  http://www.php.net/license/3_01.txt  PHP License 3.01
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_pt_BR extends Numbers_Words
++class Numbers_Words_pt_BR
+ {
+     /**
+      * Locale name
+      * @var string
+      * @access public
+      */
+-    var $locale = 'pt_BR';
++    public $locale = 'pt_BR';
+ 
+     /**
+      * Language name in English
+      * @var string
+      * @access public
+      */
+-    var $lang = 'Brazilian Portuguese';
++    public $lang = 'Brazilian Portuguese';
+ 
+     /**
+      * Native language name
+      * @var string
+      * @access public
+      */
+-    var $lang_native = 'PortuguÍs Brasileiro';
++    public $lang_native = 'Portugu√™s Brasileiro';
+ 
+     /**
+      * The word for the minus sign
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'negativo';
++    private $_minus = 'negativo';
+ 
+     /**
+      * The word separator for numerals
+      * @var string
+      * @access private
+      */
+-    var $_sep = ' e ';
++    private $_sep = ' e ';
+ 
+     /**
+      * The special separator for numbers and currency names
+      * @var string
+      * @access private
+      */
+-    var $_curr_sep = ' de ';
++    private $_curr_sep = ' de ';
+ 
+     /**
+      * The array containing numbers 11-19.
+@@ -87,7 +82,7 @@
+      * @var array
+      * @access private
+      */
+-    var $_contractions = array(
++    private $_contractions = array(
+         '',
+         'onze',
+         'doze',
+@@ -100,7 +95,7 @@
+         'dezenove'
+     );
+ 
+-    var $_words = array(
++    private $_words = array(
+         /**
+          * The array containing the digits (indexed by the digits themselves).
+          * @var array
+@@ -110,7 +105,7 @@
+             '',         // 0: not displayed
+             'um',
+             'dois',
+-            'trÍs',
++            'tr√™s',
+             'quatro',
+             'cinco',
+             'seis',
+@@ -130,7 +125,7 @@
+             'vinte',
+             'trinta',
+             'quarenta',
+-            'cinq¸enta',
++            'cinq√ºenta',
+             'sessenta',
+             'setenta',
+             'oitenta',
+@@ -161,26 +156,26 @@
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         '',         // 0: not displayed
+         'mil',
+-        'milh„o',
+-        'bilh„o',
+-        'trilh„o',
+-        'quatrilh„o',
+-        'quintilh„o',
+-        'sextilh„o',
+-        'septilh„o',
+-        'octilh„o',
+-        'nonilh„o',
+-        'decilh„o',
+-        'undecilh„o',
+-        'dodecilh„o',
+-        'tredecilh„o',
+-        'quatuordecilh„o',
+-        'quindecilh„o',
+-        'sedecilh„o',
+-        'septendecilh„o'
++        'milh√£o',
++        'bilh√£o',
++        'trilh√£o',
++        'quatrilh√£o',
++        'quintilh√£o',
++        'sextilh√£o',
++        'septilh√£o',
++        'octilh√£o',
++        'nonilh√£o',
++        'decilh√£o',
++        'undecilh√£o',
++        'dodecilh√£o',
++        'tredecilh√£o',
++        'quatuordecilh√£o',
++        'quindecilh√£o',
++        'sedecilh√£o',
++        'septendecilh√£o'
+     );
+ 
+     /**
+@@ -190,9 +185,9 @@
+      * @link http://pt.wikipedia.org/wiki/ISO_4217
+      * @access private
+      */
+-    var $_currency_names = array(
++    private $_currency_names = array(
+         'BRL' => array(array('real', 'reais'), array('centavo', 'centavos')),
+-        'USD' => array(array('dÛlar', 'dÛlares'), array('centavo', 'centavos')),
++        'USD' => array(array('d√≥lar', 'd√≥lares'), array('centavo', 'centavos')),
+         'EUR' => array(array('euro', 'euros'), array('centavo', 'centavos')),
+         'GBP' => array(array('libra esterlina', 'libras esterlinas'), array('centavo', 'centavos')),
+         'JPY' => array(array('iene', 'ienes'), array('centavo', 'centavos')),
+@@ -211,7 +206,7 @@
+      * @var string
+      * @access public
+      */
+-    var $def_currency = 'BRL'; // Real
++    public $def_currency = 'BRL'; // Real
+ 
+     // {{{ toWords()
+ 
+@@ -227,7 +222,7 @@
+      * @author Igor Feghali <ifeghali@php.net>
+      * @since  Numbers_Words 0.11.0
+      */
+-    function toWords($num)
++    public function toWords($num)
+     {
+         $neg   = 0;
+         $ret   = array();
+@@ -283,7 +278,7 @@
+              * Testing plural of exponent
+              */
+             if ($chunk > 1) {
+-                $exponent = str_replace('„o', 'ıes', $this->_exponent[$index]);
++                $exponent = str_replace('√£o', '√µes', $this->_exponent[$index]);
+             } else {
+                 $exponent = $this->_exponent[$index];
+             }
+@@ -327,7 +322,7 @@
+      * @author Igor Feghali <ifeghali@php.net>
+      * @since  Numbers_Words 0.15.1
+      */
+-    function _parseChunk($chunk)
++    private function _parseChunk($chunk)
+     {
+         /**
+          * Base Case
+@@ -373,7 +368,7 @@
+      * @author Igor Feghali <ifeghali@php.net>
+      * @since  Numbers_Words 0.15.1
+      */
+-    function _mustSeparate($chunks)
++    private function _mustSeparate($chunks)
+     {
+         $chunk = null;
+ 
+@@ -413,7 +408,7 @@
+      * @author Igor Feghali <ifeghali@php.net>
+      * @since  Numbers_Words 0.11.0
+      */
+-    function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
++    public function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
+     {
+         $neg   = 0;
+         $ret   = array();
+@@ -539,5 +534,3 @@
+     }
+     // }}}
+ }
+-
+-?>
+Index: Numbers/Words/lang.fr.php
+===================================================================
+--- Numbers/Words/lang.fr.php	(wersja 33074)
++++ Numbers/Words/lang.fr.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -23,11 +23,6 @@
+  */
+ 
+ /**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+-/**
+  * Class for translating numbers into French.
+  *
+  * @category Numbers
+@@ -36,7 +31,7 @@
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_fr extends Numbers_Words
++class Numbers_Words_fr
+ {
+ 
+     // {{{ properties
+@@ -46,28 +41,28 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'fr';
++    public $locale = 'fr';
+ 
+     /**
+      * Language name in English.
+      * @var string
+      * @access public
+      */
+-    var $lang = 'French';
++    public $lang = 'French';
+ 
+     /**
+      * Native language name.
+      * @var string
+      * @access public
+      */
+-    var $lang_native = 'FranÁais';
++    public $lang_native = 'Fran√ßais';
+ 
+     /**
+      * The words for some numbers.
+      * @var string
+      * @access private
+      */
+-    var $_misc_numbers = array(
++    private $_misc_numbers = array(
+         10=>'dix',      // 10
+             'onze',     // 11
+             'douze',    // 12
+@@ -89,63 +84,63 @@
+      * @var string
+      * @access private
+      */
+-    var $_digits = array(1=>"un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf");
++    private $_digits = array(1=>"un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf");
+ 
+     /**
+      * The word for zero.
+      * @var string
+      * @access private
+      */
+-    var $_zero = 'zÈro';
++    private $_zero = 'z√©ro';
+ 
+     /**
+      * The word for infinity.
+      * @var string
+      * @access private
+      */
+-    var $_infinity = 'infini';
++    private $_infinity = 'infini';
+ 
+     /**
+      * The word for the "and" language construct.
+      * @var string
+      * @access private
+      */
+-    var $_and = 'et';
++    private $_and = 'et';
+     
+     /**
+      * The word separator.
+      * @var string
+      * @access private
+      */
+-    var $_sep = ' ';
++    private $_sep = ' ';
+ 
+     /**
+      * The dash liaison.
+      * @var string
+      * @access private
+      */
+-    var $_dash = '-';
++    private $_dash = '-';
+ 
+     /**
+      * The word for the minus sign.
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'moins'; // minus sign
++    private $_minus = 'moins'; // minus sign
+ 
+     /**
+      * The plural suffix (except for hundred).
+      * @var string
+      * @access private
+      */
+-    var $_plural = 's'; // plural suffix
++    private $_plural = 's'; // plural suffix
+ 
+     /**
+      * The suffixes for exponents (singular).
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         0 => '',
+         3 => 'mille',
+         6 => 'million',
+@@ -264,7 +259,7 @@
+      * @author Kouber Saparev <kouber@php.net>
+      * @since  PHP 4.2.3
+      */
+-    function _splitNumber($num)
++    private function _splitNumber($num)
+     {
+         if (is_string($num)) {
+             $ret    = array();
+@@ -299,7 +294,7 @@
+      * @access private
+      * @author Kouber Saparev <kouber@php.net>
+      */
+-    function _showDigitsGroup($num, $last = false)
++    private function _showDigitsGroup($num, $last = false)
+     {
+         $ret = '';
+         
+@@ -396,7 +391,7 @@
+      * @access public
+      * @author Kouber Saparev <kouber@php.net>
+      */
+-    function toWords($num = 0)
++    public function toWords($num = 0)
+     {
+         $ret = '';
+ 
+@@ -445,4 +440,3 @@
+     }
+     // }}}
+ }
+-?>
+Index: Numbers/Words/lang.es.php
+===================================================================
+--- Numbers/Words/lang.es.php	(wersja 33074)
++++ Numbers/Words/lang.es.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -24,18 +24,6 @@
+ 
+ /**
+  * Class for translating numbers into Spanish (Castellano).
+- *
+- * @author Xavier Noguer
+- * @package Numbers_Words
+- */
+-
+-/**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+-/**
+- * Class for translating numbers into Spanish (Castellano).
+  * It supports up to decallones (10^6).
+  * It doesn't support spanish tonic accents (acentos).
+  *
+@@ -45,7 +33,7 @@
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_es extends Numbers_Words
++class Numbers_Words_es
+ {
+     // {{{ properties
+ 
+@@ -54,54 +42,54 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'es';
++    public $locale = 'es';
+ 
+     /**
+      * Language name in English
+      * @var string
+      * @access public
+      */
+-    var $lang = 'Spanish';
++    public $lang = 'Spanish';
+ 
+     /**
+      * Native language name
+      * @var string
+      * @access public
+      */
+-    var $lang_native = 'EspaÒol';
++    public $lang_native = 'Espa√±ol';
+ 
+     /**
+      * The word for the minus sign
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'menos';
++    private $_minus = 'menos';
+ 
+     /**
+      * The sufixes for exponents (singular and plural)
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         0 => array('',''),
+         3 => array('mil','mil'),
+-        6 => array('millÛn','millones'),
+-       12 => array('billÛn','billones'),
+-       18 => array('trilÛn','trillones'),
+-       24 => array('cuatrillÛn','cuatrillones'),
+-       30 => array('quintillÛn','quintillones'),
+-       36 => array('sextillÛn','sextillones'),
+-       42 => array('septillÛn','septillones'),
+-       48 => array('octallÛn','octallones'),
+-       54 => array('nonallÛn','nonallones'),
+-       60 => array('decallÛn','decallones'),
++        6 => array('mill√≥n','millones'),
++       12 => array('bill√≥n','billones'),
++       18 => array('tril√≥n','trillones'),
++       24 => array('cuatrill√≥n','cuatrillones'),
++       30 => array('quintill√≥n','quintillones'),
++       36 => array('sextill√≥n','sextillones'),
++       42 => array('septill√≥n','septillones'),
++       48 => array('octall√≥n','octallones'),
++       54 => array('nonall√≥n','nonallones'),
++       60 => array('decall√≥n','decallones'),
+         );
+     /**
+      * The array containing the digits (indexed by the digits themselves).
+      * @var array
+      * @access private
+      */
+-    var $_digits = array(
++    private $_digits = array(
+         0 => 'cero', 'uno', 'dos', 'tres', 'cuatro',
+         'cinco', 'seis', 'siete', 'ocho', 'nueve'
+         );
+@@ -110,7 +98,7 @@
+      * @var string
+      * @access private
+      */
+-    var $_sep = ' ';
++    private $_sep = ' ';
+     // }}}
+     // {{{ toWords()
+     /**
+@@ -129,7 +117,7 @@
+      * @author Xavier Noguer
+      * @since  PHP 4.2.3
+      */
+-    function toWords($num, $power = 0)
++    public function toWords($num, $power = 0)
+     {
+         // The return string;
+         $ret = '';
+@@ -242,7 +230,7 @@
+                 $ret .= $this->_sep . 'veinte';
+             } else {
+                 if (($power > 0) and ($d == 1)) {
+-                    $ret .= $this->_sep . 'veinti˙n';
++                    $ret .= $this->_sep . 'veinti√∫n';
+                 } else {
+                     $ret .= $this->_sep . 'veinti' . $this->_digits[$d];
+                 }
+@@ -329,4 +317,3 @@
+     }
+     // }}}
+ }
+-?>
+Index: Numbers/Words/lang.et.php
+===================================================================
+--- Numbers/Words/lang.et.php	(wersja 33074)
++++ Numbers/Words/lang.et.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -21,7 +21,6 @@
+  * @version  CVS: $Id: lang.et.php 269655 2008-11-25 03:53:39Z clockwerx $
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-require_once "Numbers/Words.php";
+ 
+ /**
+  * Class for translating numbers into Estonian.
+@@ -32,7 +31,7 @@
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_et extends Numbers_Words
++class Numbers_Words_et
+ {
+ 
+     // {{{ properties
+@@ -42,28 +41,28 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'et';
++    public $locale = 'et';
+ 
+     /**
+      * Language name in English
+      * @var string
+      * @access public
+      */
+-    var $lang = 'Estonian';
++    public $lang = 'Estonian';
+ 
+     /**
+      * Native language name
+      * @var string
+      * @access public
+      */
+-    var $lang_native = 'eesti keel';
++    public $lang_native = 'eesti keel';
+ 
+     /**
+      * The word for the minus sign
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'miinus'; // minus sign
++    private $_minus = 'miinus'; // minus sign
+ 
+     /**
+      * The sufixes for exponents (singular and plural)
+@@ -74,7 +73,7 @@
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         0 => array(''),
+         3 => array('tuhat'),
+         6 => array('miljon'),
+@@ -192,9 +191,9 @@
+      * @var array
+      * @access private
+      */
+-    var $_digits = array(
+-        0 => 'null', '¸ks', 'kaks', 'kolm', 'neli',
+-        'viis', 'kuus', 'seitse', 'kaheksa', '¸heksa'
++    private $_digits = array(
++        0 => 'null', '√ºks', 'kaks', 'kolm', 'neli',
++        'viis', 'kuus', 'seitse', 'kaheksa', '√ºheksa'
+     );
+ 
+     /**
+@@ -202,7 +201,7 @@
+      * @var string
+      * @access private
+      */
+-    var $_sep = ' ';
++    private $_sep = ' ';
+ 
+     // }}}
+     // {{{ toWords()
+@@ -223,7 +222,7 @@
+      * @access public
+      * @since  PHP 4.2.3
+      */
+-    function toWords($num, $power = 0, $powsuffix = '')
++    public function toWords($num, $power = 0, $powsuffix = '')
+     {
+         $ret = '';
+ 
+@@ -296,13 +295,13 @@
+         case 4:
+         case 3:
+         case 2:
+-            $ret .= $this->_sep . $this->_digits[$t] . 'k¸mmend';
++            $ret .= $this->_sep . $this->_digits[$t] . 'k√ºmmend';
+             break;
+ 
+         case 1:
+             switch ($d) {
+             case 0:
+-                $ret .= $this->_sep . 'k¸mme';
++                $ret .= $this->_sep . 'k√ºmme';
+                 break;
+ 
+             case 1:
+@@ -349,5 +348,3 @@
+     }
+     // }}}
+ }
+-
+-?>
+Index: Numbers/Words/lang.it_IT.php
+===================================================================
+--- Numbers/Words/lang.it_IT.php	(wersja 33074)
++++ Numbers/Words/lang.it_IT.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -25,19 +25,6 @@
+ 
+ /**
+  * Class for translating numbers into Italian.
+- *
+- * @author Filippo Beltramini <phil@esight.it>
+- * @author Davide Caironi     <cairo@esight.it>
+- * @package Numbers_Words
+- */
+-
+-/**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+-/**
+- * Class for translating numbers into Italian.
+  * It supports up to quadrilions
+  *
+  * @category Numbers
+@@ -48,7 +35,7 @@
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+ 
+-class Numbers_Words_it_IT extends Numbers_Words
++class Numbers_Words_it_IT
+ {
+     // {{{ properties
+ 
+@@ -57,35 +44,35 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'it_IT';
++    public $locale = 'it_IT';
+ 
+     /**
+      * Language name in English
+      * @var string
+      * @access public
+      */
+-    var $lang = 'Italian';
++    public $lang = 'Italian';
+ 
+     /**
+      * Native language name
+      * @var string
+      * @access public
+      */
+-    var $lang_native = 'Italiano';
++    public $lang_native = 'Italiano';
+ 
+     /**
+      * The word for the minus sign
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'meno ';
++    private $_minus = 'meno ';
+ 
+     /**
+      * The sufixes for exponents (singular and plural)
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         0 => array('',''),
+         3 => array('mille','mila'),
+         6 => array('milione','miloni'),
+@@ -98,7 +85,7 @@
+      * @var array
+      * @access private
+      */
+-    var $_digits = array(
++    private $_digits = array(
+       0 => 'zero', 'uno', 'due', 'tre', 'quattro',
+        'cinque', 'sei', 'sette', 'otto', 'nove'
+     );
+@@ -108,7 +95,7 @@
+      * @var string
+      * @access private
+      */
+-    var $_sep = '';
++    private $_sep = '';
+     // }}}
+     // {{{ toWords()
+     /**
+@@ -127,7 +114,7 @@
+      * @author Filippo Beltramini
+      * @since  PHP 4.2.3
+      */
+-    function toWords($num, $power = 0)
++    public function toWords($num, $power = 0)
+     {
+         // The return string;
+         $ret = '';
+@@ -391,4 +378,3 @@
+     }
+     // }}}
+ }
+-?>
+\ Brak znaku nowej linii na ko≈Ñcu pliku
+Index: Numbers/Words/lang.hu_HU.php
+===================================================================
+--- Numbers/Words/lang.hu_HU.php	(wersja 33074)
++++ Numbers/Words/lang.hu_HU.php	(kopia robocza)
+@@ -2,7 +2,7 @@
+ /**
+  * Numbers_Words
+  *
+- * PHP version 4
++ * PHP version 5
+  *
+  * Copyright (c) 1997-2006 The PHP Group
+  *
+@@ -29,25 +29,13 @@
+ /**
+  * Class for translating numbers into Hungarian.
+  *
+- * @author Nils Homp
+- * @package Numbers_Words
+- */
+-
+-/**
+- * Include needed files
+- */
+-require_once "Numbers/Words.php";
+-
+-/**
+- * Class for translating numbers into Hungarian.
+- *
+  * @category Numbers
+  * @package  Numbers_Words
+  * @author   Nils Homp
+  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
+  * @link     http://pear.php.net/package/Numbers_Words
+  */
+-class Numbers_Words_hu_HU extends Numbers_Words
++class Numbers_Words_hu_HU
+ {
+ 
+     // {{{ properties
+@@ -57,28 +45,28 @@
+      * @var string
+      * @access public
+      */
+-    var $locale = 'hu_HU';
++    public $locale = 'hu_HU';
+ 
+     /**
+      * Language name in English
+      * @var string
+      * @access public
+      */
+-    var $lang = 'Hungarian';
++    public $lang = 'Hungarian';
+ 
+     /**
+      * Native language name
+      * @var string
+      * @access public
+      */
+-    var $lang_native = 'Magyar';
++    public $lang_native = 'Magyar';
+     
+     /**
+      * The word for the minus sign
+      * @var string
+      * @access private
+      */
+-    var $_minus = 'Minusz'; // minus sign
++    private $_minus = 'Minusz'; // minus sign
+     
+     /**
+      * The sufixes for exponents (singular and plural)
+@@ -87,30 +75,30 @@
+      * @var array
+      * @access private
+      */
+-    var $_exponent = array(
++    private $_exponent = array(
+         0 => array(''),
+         3 => array('ezer'),
+-        6 => array('milliÛ'),
+-        9 => array('milli·rd'),
+-       12 => array('billiÛ'),
+-       15 => array('billi·rd'),
+-       18 => array('trilliÛ'),
+-       21 => array('trilli·rd'),
+-       24 => array('kvadrilliÛ'),
+-       27 => array('kvadrilli·rd'),
+-       30 => array('kvintilliÛ'),
+-       33 => array('kvintilli·rd'),
+-       36 => array('szextilliÛ'),
+-       39 => array('szextilli·rd'),
+-       42 => array('szeptilliÛ'),
+-       45 => array('szeptilli·rd'),
+-       48 => array('oktilliÛ'),
+-       51 => array('oktilli·rd'),
+-       54 => array('nonilliÛ'),
+-       57 => array('nonilli·rd'),
+-       60 => array('decilliÛ'),
+-       63 => array('decilli·rd'),
+-       600 => array('centilliÛ')
++        6 => array('milli√≥'),
++        9 => array('milli√°rd'),
++       12 => array('billi√≥'),
++       15 => array('billi√°rd'),
++       18 => array('trilli√≥'),
++       21 => array('trilli√°rd'),
++       24 => array('kvadrilli√≥'),
++       27 => array('kvadrilli√°rd'),
++       30 => array('kvintilli√≥'),
++       33 => array('kvintilli√°rd'),
++       36 => array('szextilli√≥'),
++       39 => array('szextilli√°rd'),
++       42 => array('szeptilli√≥'),
++       45 => array('szeptilli√°rd'),
++       48 => array('oktilli√≥'),
++       51 => array('oktilli√°rd'),
++       54 => array('nonilli√≥'),
++       57 => array('nonilli√°rd'),
++       60 => array('decilli√≥'),
++       63 => array('decilli√°rd'),
++       600 => array('centilli√≥')
+         );
+ 
+     /**
+@@ -118,9 +106,9 @@
+      * @var array
+      * @access private
+      */
+-    var $_digits = array(
+-        0 => 'nulla', 'egy', 'kettı', 'h·rom', 'nÈgy',
+-        'ˆt', 'hat', 'hÈt', 'nyolc', 'kilenc'
++    private $_digits = array(
++        0 => 'nulla', 'egy', 'kett≈ë', 'h√°rom', 'n√©gy',
++        '√∂t', 'hat', 'h√©t', 'nyolc', 'kilenc'
+     );
+ 
+     /**
+@@ -128,7 +116,7 @@
+      * @var string
+      * @access private
+      */
+-    var $_sep = '';
++    private $_sep = '';
+ 
+     /**
+      * The currency names (based on the below links,
+@@ -140,7 +128,7 @@
+      * @link http://www.shoestring.co.kr/world/p.visa/change.htm Currency names in English
+      * @access private
+      */
+-    var $_currency_names = array(
++    private $_currency_names = array(
+       'ALL' => array(array('lek'), array('qindarka')),
+       'AUD' => array(array('Australian dollar'), array('cent')),
+       'BAM' => array(array('convertible marka'), array('fenig')),
+@@ -159,7 +147,7 @@
+       'HRK' => array(array('Croatian kuna'), array('lipa')),
+       'HUF' => array(array('forint'), array('filler')),
+       'ILS' => array(array('new sheqel','new sheqels'), array('agora','agorot')),
+-      'ISK' => array(array('Icelandic krÛna'), array('aurar')),
++      'ISK' => array(array('Icelandic kr√≥na'), array('aurar')),
+       'JPY' => array(array('yen'), array('sen')),
+       'LTL' => array(array('litas'), array('cent')),
+       'LVL' => array(array('lat'), array('sentim')),
+@@ -172,7 +160,7 @@
+       'SEK' => array(array('Swedish krona'), array('oere')),
+       'SIT' => array(array('Tolar'), array('stotinia')),
+       'SKK' => array(array('Slovak koruna'), array()),
+-      'TRL' => array(array('lira'), array('kuru˛')),
++      'TRL' => array(array('lira'), array('kuru≈£')),
+       'UAH' => array(array('hryvna'), array('cent')),
+       'USD' => array(array('dollar'), array('cent')),
+       'YUM' => array(array('dinars'), array('para')),
+@@ -184,7 +172,7 @@
+      * @var string
+      * @access public
+      */
+-    var $def_currency = 'HUF'; // forint
++    public $def_currency = 'HUF'; // forint
+ 
+     // }}}
+     // {{{ toWords()
+@@ -206,7 +194,7 @@
+      * @author Nils Homp
+      * @since  PHP 4.2.3
+      */
+-    function toWords($num, $power = 0, $powsuffix = '') 
++    public function toWords($num, $power = 0, $powsuffix = '') 
+     {
+         $ret = '';        
+         
+@@ -269,7 +257,7 @@
+         }
+     
+         if ($h) {
+-            $ret .= $this->_sep . $this->_digits[$h] . $this->_sep . 'sz·z';
++            $ret .= $this->_sep . $this->_digits[$h] . $this->_sep . 'sz√°z';
+         }
+ 
+         // ten, twenty etc.
+@@ -294,7 +282,7 @@
+         case 2:
+             switch ($d) {
+             case 0:
+-                $ret .= $this->_sep . 'h˙sz';
++                $ret .= $this->_sep . 'h√∫sz';
+                 break;   
+             case 1: 
+             case 2:
+@@ -305,14 +293,14 @@
+             case 7:
+             case 8:
+             case 9:
+-                $ret .= $this->_sep . 'h˙szon';
++                $ret .= $this->_sep . 'h√∫szon';
+                 break;
+             }
+             break;
+         case 1:
+             switch ($d) {
+             case 0:
+-                $ret .= $this->_sep . 'tÌz';
++                $ret .= $this->_sep . 't√≠z';
+                 break;   
+             case 1: 
+             case 2:
+@@ -372,7 +360,7 @@
+      * @author Piotr Klaban <makler@man.torun.pl>
+      * @since  Numbers_Words 0.4
+      */
+-    function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
++    public function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
+     {
+         $int_curr = strtoupper($int_curr);
+         if (!isset($this->_currency_names[$int_curr])) {
+@@ -414,5 +402,3 @@
+     // }}}
+ 
+ }
+-
+-?>

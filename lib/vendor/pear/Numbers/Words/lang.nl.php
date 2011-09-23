@@ -2,7 +2,7 @@
 /**
  * Numbers_Words
  *
- * PHP version 4
+ * PHP version 5
  *
  * Copyright (c) 1997-2006 The PHP Group
  *
@@ -23,19 +23,6 @@
  */
 
 /**
- *
- * Class for translating numbers into Dutch.
- * @author Piotr Klaban
- * @author WHAM van Dinter (for Dutch Translations)
- * @package Numbers_Words
- */
-
-/**
- * Include needed files
- */
-require_once "Numbers/Words.php";
-
-/**
  * Class for translating numbers into Dutch.
  *
  * @category Numbers
@@ -45,7 +32,7 @@ require_once "Numbers/Words.php";
  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
  * @link     http://pear.php.net/package/Numbers_Words
  */
-class Numbers_Words_nl extends Numbers_Words
+class Numbers_Words_nl
 {
 
     // {{{ properties
@@ -55,28 +42,28 @@ class Numbers_Words_nl extends Numbers_Words
      * @var string
      * @access public
      */
-    var $locale = 'nl';
+    public $locale = 'nl';
 
     /**
      * Language name in English
      * @var string
      * @access public
      */
-    var $lang = 'Dutch';
+    public $lang = 'Dutch';
 
     /**
      * Native language name
      * @var string
      * @access public
      */
-    var $lang_native = 'Nederlands';
+    public $lang_native = 'Nederlands';
 
     /**
      * The word for the minus sign
      * @var string
      * @access private
      */
-    var $_minus = 'Minus'; // minus sign
+    private $_minus = 'Minus'; // minus sign
 
     /**
      * The sufixes for exponents (singular and plural)
@@ -85,7 +72,7 @@ class Numbers_Words_nl extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_exponent = array(
+    private $_exponent = array(
         0 => array(''),
         3 => array('Duizend','Duizend'),
         6 => array('Miljoen','Miljoen'),
@@ -125,7 +112,7 @@ class Numbers_Words_nl extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_digits = array(
+    private $_digits = array(
         0 => 'nul', 'een', 'twee', 'drie', 'vier',
         'vijf', 'zes', 'zeven', 'acht', 'negen'
     );
@@ -135,14 +122,14 @@ class Numbers_Words_nl extends Numbers_Words
      * @var string
      * @access private
      */
-    var $_sep = '';
+    private $_sep = '';
 
     /**
      * The exponent word separator
      * @var string
      * @access private
      */
-    var $_sep2 = '-';
+    private $_sep2 = '-';
 
     // }}}
     // {{{ toWords()
@@ -165,7 +152,7 @@ class Numbers_Words_nl extends Numbers_Words
      * @author WHAM van Dinter <willem@fkkc.nl>
      * @since  PHP 4.2.3
      */
-    function toWords($num, $power = 0, $powsuffix = '')
+    public function toWords($num, $power = 0, $powsuffix = '')
     {
         $ret = '';
 
@@ -331,5 +318,3 @@ class Numbers_Words_nl extends Numbers_Words
     }
     // }}}
 }
-
-?>

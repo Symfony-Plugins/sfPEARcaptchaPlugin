@@ -2,7 +2,7 @@
 /**
  * Numbers_Words
  *
- * PHP version 4
+ * PHP version 5
  *
  * Copyright (c) 1997-2006 The PHP Group
  *
@@ -25,19 +25,6 @@
 
 /**
  * Class for translating numbers into Italian.
- *
- * @author Filippo Beltramini <phil@esight.it>
- * @author Davide Caironi     <cairo@esight.it>
- * @package Numbers_Words
- */
-
-/**
- * Include needed files
- */
-require_once "Numbers/Words.php";
-
-/**
- * Class for translating numbers into Italian.
  * It supports up to quadrilions
  *
  * @category Numbers
@@ -48,7 +35,7 @@ require_once "Numbers/Words.php";
  * @link     http://pear.php.net/package/Numbers_Words
  */
 
-class Numbers_Words_it_IT extends Numbers_Words
+class Numbers_Words_it_IT
 {
     // {{{ properties
 
@@ -57,35 +44,35 @@ class Numbers_Words_it_IT extends Numbers_Words
      * @var string
      * @access public
      */
-    var $locale = 'it_IT';
+    public $locale = 'it_IT';
 
     /**
      * Language name in English
      * @var string
      * @access public
      */
-    var $lang = 'Italian';
+    public $lang = 'Italian';
 
     /**
      * Native language name
      * @var string
      * @access public
      */
-    var $lang_native = 'Italiano';
+    public $lang_native = 'Italiano';
 
     /**
      * The word for the minus sign
      * @var string
      * @access private
      */
-    var $_minus = 'meno ';
+    private $_minus = 'meno ';
 
     /**
      * The sufixes for exponents (singular and plural)
      * @var array
      * @access private
      */
-    var $_exponent = array(
+    private $_exponent = array(
         0 => array('',''),
         3 => array('mille','mila'),
         6 => array('milione','miloni'),
@@ -98,7 +85,7 @@ class Numbers_Words_it_IT extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_digits = array(
+    private $_digits = array(
       0 => 'zero', 'uno', 'due', 'tre', 'quattro',
        'cinque', 'sei', 'sette', 'otto', 'nove'
     );
@@ -108,7 +95,7 @@ class Numbers_Words_it_IT extends Numbers_Words
      * @var string
      * @access private
      */
-    var $_sep = '';
+    private $_sep = '';
     // }}}
     // {{{ toWords()
     /**
@@ -127,7 +114,7 @@ class Numbers_Words_it_IT extends Numbers_Words
      * @author Filippo Beltramini
      * @since  PHP 4.2.3
      */
-    function toWords($num, $power = 0)
+    public function toWords($num, $power = 0)
     {
         // The return string;
         $ret = '';
@@ -391,4 +378,3 @@ class Numbers_Words_it_IT extends Numbers_Words
     }
     // }}}
 }
-?>

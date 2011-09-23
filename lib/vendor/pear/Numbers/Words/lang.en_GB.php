@@ -2,7 +2,7 @@
 /**
  * Numbers_Words
  *
- * PHP version 4
+ * PHP version 5
  *
  * Copyright (c) 1997-2006 The PHP Group
  *
@@ -25,25 +25,13 @@
 /**
  * Class for translating numbers into British English.
  *
- * @author Piotr Klaban
- * @package Numbers_Words
- */
-
-/**
- * Include needed files
- */
-require_once "Numbers/Words.php";
-
-/**
- * Class for translating numbers into British English.
- *
  * @category Numbers
  * @package  Numbers_Words
  * @author   Piotr Klaban <makler@man.torun.pl>
  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
  * @link     http://pear.php.net/package/Numbers_Words
  */
-class Numbers_Words_en_GB extends Numbers_Words
+class Numbers_Words_en_GB
 {
 
     // {{{ properties
@@ -53,28 +41,28 @@ class Numbers_Words_en_GB extends Numbers_Words
      * @var string
      * @access public
      */
-    var $locale = 'en_GB';
+    public $locale = 'en_GB';
 
     /**
      * Language name in English
      * @var string
      * @access public
      */
-    var $lang = 'British English';
+    public $lang = 'British English';
 
     /**
      * Native language name
      * @var string
      * @access public
      */
-    var $lang_native = 'British English';
+    public $lang_native = 'British English';
 
     /**
      * The word for the minus sign
      * @var string
      * @access private
      */
-    var $_minus = 'minus'; // minus sign
+    private $_minus = 'minus'; // minus sign
 
     /**
      * The sufixes for exponents (singular and plural)
@@ -83,7 +71,7 @@ class Numbers_Words_en_GB extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_exponent = array(
+    private $_exponent = array(
         0 => array(''),
         3 => array('thousand'),
         6 => array('million'),
@@ -115,7 +103,7 @@ class Numbers_Words_en_GB extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_digits = array(
+    private $_digits = array(
         0 => 'zero', 'one', 'two', 'three', 'four',
         'five', 'six', 'seven', 'eight', 'nine'
     );
@@ -125,7 +113,7 @@ class Numbers_Words_en_GB extends Numbers_Words
      * @var string
      * @access private
      */
-    var $_sep = ' ';
+    private $_sep = ' ';
 
     /**
      * The currency names (based on the below links,
@@ -137,7 +125,7 @@ class Numbers_Words_en_GB extends Numbers_Words
      * @link http://www.shoestring.co.kr/world/p.visa/change.htm Currency names in English
      * @access private
      */
-    var $_currency_names = array(
+    private $_currency_names = array(
       'ALL' => array(array('lek'), array('qindarka')),
       'AUD' => array(array('Australian dollar'), array('cent')),
       'BAM' => array(array('convertible marka'), array('fenig')),
@@ -156,7 +144,7 @@ class Numbers_Words_en_GB extends Numbers_Words
       'HRK' => array(array('Croatian kuna'), array('lipa')),
       'HUF' => array(array('forint'), array('filler')),
       'ILS' => array(array('new sheqel','new sheqels'), array('agora','agorot')),
-      'ISK' => array(array('Icelandic króna'), array('aurar')),
+      'ISK' => array(array('Icelandic krÃ³na'), array('aurar')),
       'JPY' => array(array('yen'), array('sen')),
       'LTL' => array(array('litas'), array('cent')),
       'LVL' => array(array('lat'), array('sentim')),
@@ -169,7 +157,7 @@ class Numbers_Words_en_GB extends Numbers_Words
       'SEK' => array(array('Swedish krona'), array('oere')),
       'SIT' => array(array('Tolar'), array('stotinia')),
       'SKK' => array(array('Slovak koruna'), array()),
-      'TRL' => array(array('lira'), array('kuruþ')),
+      'TRL' => array(array('lira'), array('kuruÃ¾')),
       'UAH' => array(array('hryvna'), array('cent')),
       'USD' => array(array('dollar'), array('cent')),
       'YUM' => array(array('dinars'), array('para')),
@@ -181,7 +169,7 @@ class Numbers_Words_en_GB extends Numbers_Words
      * @var string
      * @access public
      */
-    var $def_currency = 'GBP'; // English pound
+    public $def_currency = 'GBP'; // English pound
 
     // }}}
     // {{{ toWords()
@@ -203,7 +191,7 @@ class Numbers_Words_en_GB extends Numbers_Words
      * @author Piotr Klaban <makler@man.torun.pl>
      * @since  PHP 4.2.3
      */
-    function toWords($num, $power = 0, $powsuffix = '')
+    public function toWords($num, $power = 0, $powsuffix = '')
     {
         $ret = '';
 
@@ -388,7 +376,7 @@ class Numbers_Words_en_GB extends Numbers_Words
      * @author Piotr Klaban <makler@man.torun.pl>
      * @since  Numbers_Words 0.13.1
      */
-    function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
+    public function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
     {
         $int_curr = strtoupper($int_curr);
         if (!isset($this->_currency_names[$int_curr])) {
@@ -431,5 +419,3 @@ class Numbers_Words_en_GB extends Numbers_Words
 
 
 }
-
-?>

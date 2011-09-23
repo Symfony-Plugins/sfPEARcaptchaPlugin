@@ -2,7 +2,7 @@
 /**
  * Numbers_Words
  *
- * PHP version 4
+ * PHP version 5
  *
  * Copyright (c) 1997-2006 The PHP Group
  *
@@ -25,25 +25,13 @@
 /**
  * Class for translating numbers into Lithuanian.
  *
- * @author Laurynas Butkus
- * @package Numbers_Words
- */
-
-/**
- * Include needed files
- */
-require_once "Numbers/Words.php";
-
-/**
- * Class for translating numbers into Lithuanian.
- *
  * @category Numbers
  * @package  Numbers_Words
  * @author   Laurynas Butkus <lauris@night.lt>
  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
  * @link     http://pear.php.net/package/Numbers_Words
  */
-class Numbers_Words_lt extends Numbers_Words
+class Numbers_Words_lt
 {
 
     // {{{ properties
@@ -53,42 +41,42 @@ class Numbers_Words_lt extends Numbers_Words
      * @var string
      * @access public
      */
-    var $locale = 'lt';
+    public $locale = 'lt';
 
     /**
      * Language name in English
      * @var string
      * @access public
      */
-    var $lang = 'Lithuanian';
+    public $lang = 'Lithuanian';
 
     /**
      * Native language name
      * @var string
      * @access public
      */
-    var $lang_native = 'lietuviðkai';
+    public $lang_native = 'lietuviÄ‘kai';
 
     /**
      * The word for the minus sign
      * @var string
      * @access private
      */
-    var $_minus = 'minus'; // minus sign
+    private $_minus = 'minus'; // minus sign
 
     /**
      * The sufixes for exponents (singular and plural)
      * @var array
      * @access private
      */
-    var $_exponent = array(
+    private $_exponent = array(
         0 => array(''),
-        3 => array('tûkstantis','tûkstanèiai','tûkstanèiø'),
-        6 => array('milijonas','milijonai','milijonø'),
-        9 => array('bilijonas','bilijonai','bilijonø'),
-       12 => array('trilijonas','trilijonai','trilijonø'),
-       15 => array('kvadrilijonas','kvadrilijonai','kvadrilijonø'),
-       18 => array('kvintilijonas','kvintilijonai','kvintilijonø')
+        3 => array('tÃ»kstantis','tÃ»kstanÄiai','tÃ»kstanÄiÃ¸'),
+        6 => array('milijonas','milijonai','milijonÃ¸'),
+        9 => array('bilijonas','bilijonai','bilijonÃ¸'),
+       12 => array('trilijonas','trilijonai','trilijonÃ¸'),
+       15 => array('kvadrilijonas','kvadrilijonai','kvadrilijonÃ¸'),
+       18 => array('kvintilijonas','kvintilijonai','kvintilijonÃ¸')
         );
 
     /**
@@ -96,9 +84,9 @@ class Numbers_Words_lt extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_digits = array(
+    private $_digits = array(
         0 => 'nulis', 'vienas', 'du', 'trys', 'keturi',
-        'penki', 'ðeði', 'septyni', 'aðtuoni', 'devyni'
+        'penki', 'Ä‘eÄ‘i', 'septyni', 'aÄ‘tuoni', 'devyni'
     );
 
     /**
@@ -106,14 +94,14 @@ class Numbers_Words_lt extends Numbers_Words
      * @var string
      * @access private
      */
-    var $_sep = ' ';
+    private $_sep = ' ';
 
     /**
      * The default currency name
      * @var string
      * @access public
      */
-    var $def_currency = 'LTL';
+    public $def_currency = 'LTL';
 
     // }}}
     // {{{ toWords()
@@ -135,7 +123,7 @@ class Numbers_Words_lt extends Numbers_Words
      * @author Laurynas Butkus <lauris@night.lt>
      * @since  PHP 4.2.3
      */
-    function toWords($num, $power = 0, $powsuffix = '')
+    public function toWords($num, $power = 0, $powsuffix = '')
     {
         $ret = '';
 
@@ -198,49 +186,49 @@ class Numbers_Words_lt extends Numbers_Words
         }
 
         if ( $h > 1 ) {
-            $ret .= $this->_sep . $this->_digits[$h] . $this->_sep . 'ðimtai';
+            $ret .= $this->_sep . $this->_digits[$h] . $this->_sep . 'Ä‘imtai';
         } elseif ( $h ) {
-            $ret .= $this->_sep . 'ðimtas';
+            $ret .= $this->_sep . 'Ä‘imtas';
         }
 
         // ten, twenty etc.
         switch ($t) {
         case 9:
-            $ret .= $this->_sep . 'devyniasdeðimt';
+            $ret .= $this->_sep . 'devyniasdeÄ‘imt';
             break;
 
         case 8:
-            $ret .= $this->_sep . 'aðtuoniasdeðimt';
+            $ret .= $this->_sep . 'aÄ‘tuoniasdeÄ‘imt';
             break;
 
         case 7:
-            $ret .= $this->_sep . 'septyniasdeðimt';
+            $ret .= $this->_sep . 'septyniasdeÄ‘imt';
             break;
 
         case 6:
-            $ret .= $this->_sep . 'ðeðiasdeðimt';
+            $ret .= $this->_sep . 'Ä‘eÄ‘iasdeÄ‘imt';
             break;
 
         case 5:
-            $ret .= $this->_sep . 'penkiasdeðimt';
+            $ret .= $this->_sep . 'penkiasdeÄ‘imt';
             break;
 
         case 4:
-            $ret .= $this->_sep . 'keturiasdeðimt';
+            $ret .= $this->_sep . 'keturiasdeÄ‘imt';
             break;
 
         case 3:
-            $ret .= $this->_sep . 'trisdeðimt';
+            $ret .= $this->_sep . 'trisdeÄ‘imt';
             break;
 
         case 2:
-            $ret .= $this->_sep . 'dvideðimt';
+            $ret .= $this->_sep . 'dvideÄ‘imt';
             break;
 
         case 1:
             switch ($d) {
             case 0:
-                $ret .= $this->_sep . 'deðimt';
+                $ret .= $this->_sep . 'deÄ‘imt';
                 break;
 
             case 1:
@@ -264,7 +252,7 @@ class Numbers_Words_lt extends Numbers_Words
                 break;
 
             case 6:
-                $ret .= $this->_sep . 'ðeðiolika';
+                $ret .= $this->_sep . 'Ä‘eÄ‘iolika';
                 break;
 
             case 7:
@@ -272,7 +260,7 @@ class Numbers_Words_lt extends Numbers_Words
                 break;
 
             case 8:
-                $ret .= $this->_sep . 'aðtuoniolika';
+                $ret .= $this->_sep . 'aÄ‘tuoniolika';
                 break;
 
             case 9:
@@ -319,5 +307,3 @@ class Numbers_Words_lt extends Numbers_Words
     // }}}
 
 }
-
-?>

@@ -2,7 +2,7 @@
 /**
  * Numbers_Words
  *
- * PHP version 4
+ * PHP version 5
  *
  * Copyright (c) 1997-2006 The PHP Group
  *
@@ -21,7 +21,6 @@
  * @version  CVS: $Id: lang.et.php 269655 2008-11-25 03:53:39Z clockwerx $
  * @link     http://pear.php.net/package/Numbers_Words
  */
-require_once "Numbers/Words.php";
 
 /**
  * Class for translating numbers into Estonian.
@@ -32,7 +31,7 @@ require_once "Numbers/Words.php";
  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
  * @link     http://pear.php.net/package/Numbers_Words
  */
-class Numbers_Words_et extends Numbers_Words
+class Numbers_Words_et
 {
 
     // {{{ properties
@@ -42,28 +41,28 @@ class Numbers_Words_et extends Numbers_Words
      * @var string
      * @access public
      */
-    var $locale = 'et';
+    public $locale = 'et';
 
     /**
      * Language name in English
      * @var string
      * @access public
      */
-    var $lang = 'Estonian';
+    public $lang = 'Estonian';
 
     /**
      * Native language name
      * @var string
      * @access public
      */
-    var $lang_native = 'eesti keel';
+    public $lang_native = 'eesti keel';
 
     /**
      * The word for the minus sign
      * @var string
      * @access private
      */
-    var $_minus = 'miinus'; // minus sign
+    private $_minus = 'miinus'; // minus sign
 
     /**
      * The sufixes for exponents (singular and plural)
@@ -74,7 +73,7 @@ class Numbers_Words_et extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_exponent = array(
+    private $_exponent = array(
         0 => array(''),
         3 => array('tuhat'),
         6 => array('miljon'),
@@ -192,9 +191,9 @@ class Numbers_Words_et extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_digits = array(
-        0 => 'null', 'üks', 'kaks', 'kolm', 'neli',
-        'viis', 'kuus', 'seitse', 'kaheksa', 'üheksa'
+    private $_digits = array(
+        0 => 'null', 'Ã¼ks', 'kaks', 'kolm', 'neli',
+        'viis', 'kuus', 'seitse', 'kaheksa', 'Ã¼heksa'
     );
 
     /**
@@ -202,7 +201,7 @@ class Numbers_Words_et extends Numbers_Words
      * @var string
      * @access private
      */
-    var $_sep = ' ';
+    private $_sep = ' ';
 
     // }}}
     // {{{ toWords()
@@ -223,7 +222,7 @@ class Numbers_Words_et extends Numbers_Words
      * @access public
      * @since  PHP 4.2.3
      */
-    function toWords($num, $power = 0, $powsuffix = '')
+    public function toWords($num, $power = 0, $powsuffix = '')
     {
         $ret = '';
 
@@ -296,13 +295,13 @@ class Numbers_Words_et extends Numbers_Words
         case 4:
         case 3:
         case 2:
-            $ret .= $this->_sep . $this->_digits[$t] . 'kümmend';
+            $ret .= $this->_sep . $this->_digits[$t] . 'kÃ¼mmend';
             break;
 
         case 1:
             switch ($d) {
             case 0:
-                $ret .= $this->_sep . 'kümme';
+                $ret .= $this->_sep . 'kÃ¼mme';
                 break;
 
             case 1:
@@ -349,5 +348,3 @@ class Numbers_Words_et extends Numbers_Words
     }
     // }}}
 }
-
-?>

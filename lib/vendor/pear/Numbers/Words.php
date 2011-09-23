@@ -2,7 +2,7 @@
 /**
  * Numbers_Words
  *
- * PHP version 4
+ * PHP version 5
  *
  * Copyright (c) 1997-2006 The PHP Group
  *
@@ -53,21 +53,18 @@ class Numbers_Words
      * @since  PHP 4.2.3
      * @return string  The corresponding word representation
      */
-    function toWords($num, $locale = 'en_US')
+    public static function toWords($num, $locale = 'en_US')
     {
-
-        include_once "Numbers/Words/lang.${locale}.php";
-
         $classname = "Numbers_Words_${locale}";
 
         if (!class_exists($classname)) {
-            return Numbers_Words::raiseError("Unable to include the Numbers/Words/lang.${locale}.php file");
+            return PEAR::raiseError("Unable to include the Numbers/Words/lang.${locale}.php file");
         }
 
         $methods = get_class_methods($classname);
 
         if (!in_array('toWords', $methods) && !in_array('towords', $methods)) {
-            return Numbers_Words::raiseError("Unable to find toWords method in '$classname' class");
+            return PEAR::raiseError("Unable to find toWords method in '$classname' class");
         }
 
         @$obj = new $classname;
@@ -102,22 +99,20 @@ class Numbers_Words
      * @since  PHP 4.2.3
      * @return string
      */
-    function toCurrency($num, $locale = 'en_US', $int_curr = '')
+    public static function toCurrency($num, $locale = 'en_US', $int_curr = '')
     {
         $ret = $num;
-
-        @include_once "Numbers/Words/lang.${locale}.php";
 
         $classname = "Numbers_Words_${locale}";
 
         if (!class_exists($classname)) {
-            return Numbers_Words::raiseError("Unable to include the Numbers/Words/lang.${locale}.php file");
+            return PEAR::raiseError("Unable to include the Numbers/Words/lang.${locale}.php file");
         }
 
         $methods = get_class_methods($classname);
 
         if (!in_array('toCurrencyWords', $methods) && !in_array('tocurrencywords', $methods)) {
-            return Numbers_Words::raiseError("Unable to find toCurrencyWords method in '$classname' class");
+            return PEAR::raiseError("Unable to find toCurrencyWords method in '$classname' class");
         }
 
         @$obj = new $classname;
@@ -147,8 +142,6 @@ class Numbers_Words
             
             if ($round_digit >= 5) {
                 // round up without losing precision
-                include_once "Math/BigInteger.php";
-
                 $int = new Math_BigInteger(join($currency));
                 $int = $int->add(new Math_BigInteger(1));
                 $int_str = $int->toString();
@@ -183,7 +176,7 @@ class Numbers_Words
      * @static
      * @return mixed[]
      */
-    function getLocales($locale = null)
+    public static function getLocales($locale = null)
     {
         $ret = array();
         if (isset($locale) && is_string($locale)) {
@@ -210,24 +203,6 @@ class Numbers_Words
         return $ret;
     }
     // }}}
-
-    // {{{ raiseError()
-    /**
-     * Trigger a PEAR error
-     *
-     * To improve performances, the PEAR.php file is included dynamically.
-     *
-     * @param string $msg error message
-     *
-     * @return PEAR_Error
-     */
-    function raiseError($msg)
-    {
-        include_once 'PEAR.php';
-        return PEAR::raiseError($msg);
-    }
-    // }}}
 }
 
 // }}}
-?>

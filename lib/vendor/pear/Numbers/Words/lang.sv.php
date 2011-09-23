@@ -23,19 +23,6 @@
  * @link     http://pear.php.net/package/Numbers_Words
  */
 
-
-/**
- *
- * Class for translating numbers into Swedish.
- * @author Robin Ericsson
- * @package Numbers_Words
- */
-
-/**
- * Include needed files
- */
-require_once "Numbers/Words.php";
-
 /**
  * Class for translating numbers into Swedish.
  *
@@ -46,7 +33,7 @@ require_once "Numbers/Words.php";
  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
  * @link     http://pear.php.net/package/Numbers_Words
  */
-class Numbers_Words_sv extends Numbers_Words
+class Numbers_Words_sv
 {
 
     // {{{ properties
@@ -56,35 +43,35 @@ class Numbers_Words_sv extends Numbers_Words
      * @var string
      * @access public
      */
-    var $locale = 'sv';
+    public $locale = 'sv';
 
     /**
      * Language name in English
      * @var string
      * @access public
      */
-    var $lang = 'Swedish';
+    public $lang = 'Swedish';
 
     /**
      * Native language name
      * @var string
      * @access public
      */
-    var $lang_native = 'Svenska';
+    public $lang_native = 'Svenska';
     
     /**
      * The word for the minus sign
      * @var string
      * @access private
      */
-    var $_minus = 'Minus'; // minus sign
+    private $_minus = 'Minus'; // minus sign
 
     /**
      * The sufixes for exponents (singular and plural)
      * @var array
      * @access private
      */
-    var $_exponent = array(
+    private $_exponent = array(
         0 => array(''),
         3 => array('tusen', 'tusen'),
         6 => array('miljon','miljoner'),
@@ -118,9 +105,9 @@ class Numbers_Words_sv extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_digits = array(
-        0 => 'noll', 'ett', 'tvÂ', 'tre', 'fyra',
-        'fem', 'sex', 'sju', 'Âtta', 'nio'
+    private $_digits = array(
+        0 => 'noll', 'ett', 'tv√•', 'tre', 'fyra',
+        'fem', 'sex', 'sju', '√•tta', 'nio'
     );
 
     /**
@@ -128,14 +115,14 @@ class Numbers_Words_sv extends Numbers_Words
      * @var string
      * @access private
      */
-    var $_sep = '';
+    private $_sep = '';
     
     /**
      * The exponent word separator
      * @var string
      * @access private
      */
-    var $_sep2 = ' ';
+    private $_sep2 = ' ';
 
     // }}}
     // {{{ toWords()
@@ -158,7 +145,7 @@ class Numbers_Words_sv extends Numbers_Words
      * @author Robin Ericsson <lobbin@localhost.nu>
      * @since  PHP 4.2.3
      */
-    function toWords($num, $power = 0, $powsuffix = '')
+    public function toWords($num, $power = 0, $powsuffix = '')
     {
         $ret = '';        
         
@@ -241,7 +228,7 @@ class Numbers_Words_sv extends Numbers_Words
             break;
     
         case 8:
-            $ret .= $this->_sep . 'Âttio';
+            $ret .= $this->_sep . '√•ttio';
             break;
     
         case 4:
@@ -321,5 +308,3 @@ class Numbers_Words_sv extends Numbers_Words
     }
     // }}}
 }
-
-?>

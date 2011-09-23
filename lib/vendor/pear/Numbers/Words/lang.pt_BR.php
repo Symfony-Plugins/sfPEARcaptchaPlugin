@@ -22,11 +22,6 @@
  */
 
 /**
- * Include needed files
- */
-require_once "Numbers/Words.php";
-
-/**
  * Class for translating numbers into Brazilian Portuguese. This class complies
  * to Brazilian Academy of Letters rules as of 2008-12-12.
  *
@@ -36,49 +31,49 @@ require_once "Numbers/Words.php";
  * @license  http://www.php.net/license/3_01.txt  PHP License 3.01
  * @link     http://pear.php.net/package/Numbers_Words
  */
-class Numbers_Words_pt_BR extends Numbers_Words
+class Numbers_Words_pt_BR
 {
     /**
      * Locale name
      * @var string
      * @access public
      */
-    var $locale = 'pt_BR';
+    public $locale = 'pt_BR';
 
     /**
      * Language name in English
      * @var string
      * @access public
      */
-    var $lang = 'Brazilian Portuguese';
+    public $lang = 'Brazilian Portuguese';
 
     /**
      * Native language name
      * @var string
      * @access public
      */
-    var $lang_native = 'Português Brasileiro';
+    public $lang_native = 'PortuguÃªs Brasileiro';
 
     /**
      * The word for the minus sign
      * @var string
      * @access private
      */
-    var $_minus = 'negativo';
+    private $_minus = 'negativo';
 
     /**
      * The word separator for numerals
      * @var string
      * @access private
      */
-    var $_sep = ' e ';
+    private $_sep = ' e ';
 
     /**
      * The special separator for numbers and currency names
      * @var string
      * @access private
      */
-    var $_curr_sep = ' de ';
+    private $_curr_sep = ' de ';
 
     /**
      * The array containing numbers 11-19.
@@ -87,7 +82,7 @@ class Numbers_Words_pt_BR extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_contractions = array(
+    private $_contractions = array(
         '',
         'onze',
         'doze',
@@ -100,7 +95,7 @@ class Numbers_Words_pt_BR extends Numbers_Words
         'dezenove'
     );
 
-    var $_words = array(
+    private $_words = array(
         /**
          * The array containing the digits (indexed by the digits themselves).
          * @var array
@@ -110,7 +105,7 @@ class Numbers_Words_pt_BR extends Numbers_Words
             '',         // 0: not displayed
             'um',
             'dois',
-            'três',
+            'trÃªs',
             'quatro',
             'cinco',
             'seis',
@@ -130,7 +125,7 @@ class Numbers_Words_pt_BR extends Numbers_Words
             'vinte',
             'trinta',
             'quarenta',
-            'cinqüenta',
+            'cinqÃ¼enta',
             'sessenta',
             'setenta',
             'oitenta',
@@ -161,26 +156,26 @@ class Numbers_Words_pt_BR extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_exponent = array(
+    private $_exponent = array(
         '',         // 0: not displayed
         'mil',
-        'milhão',
-        'bilhão',
-        'trilhão',
-        'quatrilhão',
-        'quintilhão',
-        'sextilhão',
-        'septilhão',
-        'octilhão',
-        'nonilhão',
-        'decilhão',
-        'undecilhão',
-        'dodecilhão',
-        'tredecilhão',
-        'quatuordecilhão',
-        'quindecilhão',
-        'sedecilhão',
-        'septendecilhão'
+        'milhÃ£o',
+        'bilhÃ£o',
+        'trilhÃ£o',
+        'quatrilhÃ£o',
+        'quintilhÃ£o',
+        'sextilhÃ£o',
+        'septilhÃ£o',
+        'octilhÃ£o',
+        'nonilhÃ£o',
+        'decilhÃ£o',
+        'undecilhÃ£o',
+        'dodecilhÃ£o',
+        'tredecilhÃ£o',
+        'quatuordecilhÃ£o',
+        'quindecilhÃ£o',
+        'sedecilhÃ£o',
+        'septendecilhÃ£o'
     );
 
     /**
@@ -190,9 +185,9 @@ class Numbers_Words_pt_BR extends Numbers_Words
      * @link http://pt.wikipedia.org/wiki/ISO_4217
      * @access private
      */
-    var $_currency_names = array(
+    private $_currency_names = array(
         'BRL' => array(array('real', 'reais'), array('centavo', 'centavos')),
-        'USD' => array(array('dólar', 'dólares'), array('centavo', 'centavos')),
+        'USD' => array(array('dÃ³lar', 'dÃ³lares'), array('centavo', 'centavos')),
         'EUR' => array(array('euro', 'euros'), array('centavo', 'centavos')),
         'GBP' => array(array('libra esterlina', 'libras esterlinas'), array('centavo', 'centavos')),
         'JPY' => array(array('iene', 'ienes'), array('centavo', 'centavos')),
@@ -211,7 +206,7 @@ class Numbers_Words_pt_BR extends Numbers_Words
      * @var string
      * @access public
      */
-    var $def_currency = 'BRL'; // Real
+    public $def_currency = 'BRL'; // Real
 
     // {{{ toWords()
 
@@ -227,7 +222,7 @@ class Numbers_Words_pt_BR extends Numbers_Words
      * @author Igor Feghali <ifeghali@php.net>
      * @since  Numbers_Words 0.11.0
      */
-    function toWords($num)
+    public function toWords($num)
     {
         $neg   = 0;
         $ret   = array();
@@ -283,7 +278,7 @@ class Numbers_Words_pt_BR extends Numbers_Words
              * Testing plural of exponent
              */
             if ($chunk > 1) {
-                $exponent = str_replace('ão', 'ões', $this->_exponent[$index]);
+                $exponent = str_replace('Ã£o', 'Ãµes', $this->_exponent[$index]);
             } else {
                 $exponent = $this->_exponent[$index];
             }
@@ -327,7 +322,7 @@ class Numbers_Words_pt_BR extends Numbers_Words
      * @author Igor Feghali <ifeghali@php.net>
      * @since  Numbers_Words 0.15.1
      */
-    function _parseChunk($chunk)
+    private function _parseChunk($chunk)
     {
         /**
          * Base Case
@@ -373,7 +368,7 @@ class Numbers_Words_pt_BR extends Numbers_Words
      * @author Igor Feghali <ifeghali@php.net>
      * @since  Numbers_Words 0.15.1
      */
-    function _mustSeparate($chunks)
+    private function _mustSeparate($chunks)
     {
         $chunk = null;
 
@@ -413,7 +408,7 @@ class Numbers_Words_pt_BR extends Numbers_Words
      * @author Igor Feghali <ifeghali@php.net>
      * @since  Numbers_Words 0.11.0
      */
-    function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
+    public function toCurrencyWords($int_curr, $decimal, $fraction = false, $convert_fraction = true)
     {
         $neg   = 0;
         $ret   = array();
@@ -539,5 +534,3 @@ class Numbers_Words_pt_BR extends Numbers_Words
     }
     // }}}
 }
-
-?>

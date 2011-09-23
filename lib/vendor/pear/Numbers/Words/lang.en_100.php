@@ -2,7 +2,7 @@
 /**
  * Numbers_Words
  *
- * PHP version 4
+ * PHP version 5
  *
  * Copyright (c) 1997-2006 The PHP Group
  *
@@ -25,25 +25,13 @@
 /**
  * Class for translating numbers into Donald Knuth system, in English language.
  *
- * @author Piotr Klaban
- * @package Numbers_Words
- */
-
-/**
- * Include needed files
- */
-require_once "Numbers/Words.php";
-
-/**
- * Class for translating numbers into Donald Knuth system, in English language.
- *
  * @category Numbers
  * @package  Numbers_Words
  * @author   Piotr Klaban <makler@man.torun.pl>
  * @license  PHP 3.0 http://www.php.net/license/3_0.txt
  * @link     http://pear.php.net/package/Numbers_Words
  */
-class Numbers_Words_en_100 extends Numbers_Words
+class Numbers_Words_en_100
 {
 
     // {{{ properties
@@ -53,28 +41,28 @@ class Numbers_Words_en_100 extends Numbers_Words
      * @var string
      * @access public
      */
-    var $locale = 'en_100';
+    public $locale = 'en_100';
 
     /**
      * Language name in English
      * @var string
      * @access public
      */
-    var $lang = 'English (Donald Knuth system)';
+    public $lang = 'English (Donald Knuth system)';
 
     /**
      * Native language name
      * @var string
      * @access public
      */
-    var $lang_native = 'English (Donald Knuth system)';
+    public $lang_native = 'English (Donald Knuth system)';
 
     /**
      * The word for the minus sign
      * @var string
      * @access private
      */
-    var $_minus = 'minus'; // minus sign
+    private $_minus = 'minus'; // minus sign
 
     /**
      * The sufixes for exponents (singular and plural)
@@ -84,7 +72,7 @@ class Numbers_Words_en_100 extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_exponent = array(
+    private $_exponent = array(
         0 => array(''),
         2 => array('hundred'),
         4 => array('myriad'),
@@ -115,7 +103,7 @@ class Numbers_Words_en_100 extends Numbers_Words
      * @var array
      * @access private
      */
-    var $_digits = array(
+    private $_digits = array(
         0 => 'zero', 'one', 'two', 'three', 'four',
         'five', 'six', 'seven', 'eight', 'nine'
     );
@@ -125,7 +113,7 @@ class Numbers_Words_en_100 extends Numbers_Words
      * @var string
      * @access private
      */
-    var $_sep = ' ';
+    private $_sep = ' ';
     // }}}
     // {{{ toWords()
 
@@ -146,7 +134,7 @@ class Numbers_Words_en_100 extends Numbers_Words
      * @author Piotr Klaban <makler@man.torun.pl>
      * @since  PHP 4.2.3
      */
-    function toWords($num, $power = 0, $powsuffix = '')
+    public function toWords($num, $power = 0, $powsuffix = '')
     {
         $ret = '';
 
@@ -312,5 +300,3 @@ class Numbers_Words_en_100 extends Numbers_Words
     }
     // }}}
 }
-
-?>
