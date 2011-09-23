@@ -39,7 +39,7 @@ class sfWidgetFormCaptchaNumeral extends sfWidgetFormInputText {
 	 *
 	 * @return string An HTML tag string
 	 *
-	 * @see sfWidgetForm
+	 * @see sfWidgetFormInputText
 	 */
 	public function render($name, $value = null, $attributes = array(), $errors = array()) {
 		sfContext::getInstance()->getConfiguration()->loadHelpers('I18N');
