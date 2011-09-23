@@ -1,11 +1,5 @@
 <?php
 /**
- * Require Figlet class for rendering the text.
- */
-require_once 'Text/CAPTCHA.php';
-require_once 'Text/Figlet.php';
-
-/**
  * Text_CAPTCHA_Driver_Figlet - Text_CAPTCHA driver Figlet based CAPTCHAs
  *
  * @author  Aaron Wormus <wormus@php.net>
@@ -22,7 +16,7 @@ class Text_CAPTCHA_Driver_Figlet extends Text_CAPTCHA
      * @access private
      * @var resource
      */
-    var $_fig;
+    private $_fig;
 
     /**
      * Width of CAPTCHA
@@ -30,7 +24,7 @@ class Text_CAPTCHA_Driver_Figlet extends Text_CAPTCHA
      * @access private
      * @var int
      */
-    var $_width;
+    private $_width;
 
     /**
      * Figlet output string
@@ -38,7 +32,7 @@ class Text_CAPTCHA_Driver_Figlet extends Text_CAPTCHA
      * @access private
      * @var string
      */
-    var $_output_string;
+    private $_output_string;
 
      /**
      * Figlet font options
@@ -46,7 +40,7 @@ class Text_CAPTCHA_Driver_Figlet extends Text_CAPTCHA
      * @access private
      * @var array
      */
-    var $_fonts = array();
+    private $_fonts = array();
 
     /**
      * Figlet font
@@ -54,7 +48,7 @@ class Text_CAPTCHA_Driver_Figlet extends Text_CAPTCHA
      * @access private
      * @var string
      */
-    var $_font;
+    private $_font;
    
     /**
      * Figlet font
@@ -62,7 +56,7 @@ class Text_CAPTCHA_Driver_Figlet extends Text_CAPTCHA
      * @access private
      * @var array
      */
-    var $_style = array();
+    private $_style = array();
     
     /**
      * Output Format
@@ -70,7 +64,7 @@ class Text_CAPTCHA_Driver_Figlet extends Text_CAPTCHA
      * @access private
      * @var string
      */
-    var $_output;
+    private $_output;
 
     /**
      * Last error
@@ -78,7 +72,7 @@ class Text_CAPTCHA_Driver_Figlet extends Text_CAPTCHA
      * @access protected
      * @var PEAR_Error
      */
-    var $_error = null;
+    protected $_error = null;
 
     /**
      * init function
@@ -89,7 +83,7 @@ class Text_CAPTCHA_Driver_Figlet extends Text_CAPTCHA
      * @access public
      * @return mixed true upon success, PEAR error otherwise
      */
-    function init($options = array())
+    public function init($options = array())
     {
         if (is_array($options)) {
             if (!empty($options['output'])) {
@@ -118,23 +112,19 @@ class Text_CAPTCHA_Driver_Figlet extends Text_CAPTCHA
             }
         }
         
-        if (!isset($options['options']) || empty($options['options']) || !is_array($options['options'])) {
-            die;
-        } else {
-            if (isset($options['options']['style']) && !empty($options['options']['style']) && is_array($options['options']['style'])) {
-                $this->_style = $options['options']['style'];
-            }
-            
-            if (!isset($this->_style['padding']) || empty($this->_style['padding'])) {
-                $this->_style['padding'] = '5px';    
-            }
-            
-            if (isset($options['options']['font_file']) && !empty($options['options']['font_file'])) {
-                if (is_array($options['options']['font_file'])) {
-                    $this->_font = $options['options']['font_file'][array_rand($options['options']['font_file'])];
-                } else {
-                    $this->_font = $options['options']['font_file'];
-                }
+		if (isset($options['options']['style']) && !empty($options['options']['style']) && is_array($options['options']['style'])) {
+            $this->_style = $options['options']['style'];
+        }
+        
+        if (!isset($this->_style['padding']) || empty($this->_style['padding'])) {
+            $this->_style['padding'] = '5px';    
+        }
+        
+        if (isset($options['options']['font_file']) && !empty($options['options']['font_file'])) {
+            if (is_array($options['options']['font_file'])) {
+                $this->_font = $options['options']['font_file'][array_rand($options['options']['font_file'])];
+            } else {
+                $this->_font = $options['options']['font_file'];
             }
         }
     }
@@ -149,7 +139,7 @@ class Text_CAPTCHA_Driver_Figlet extends Text_CAPTCHA
      * @access private
      * @return void
      */
-    function _createPhrase($options = array())
+    protected function _createPhrase($options = array())
     {
         if (!is_array($options) || count($options) === 0) {
             $this->_phrase = Text_Password::create($this->_length);
@@ -170,7 +160,7 @@ class Text_CAPTCHA_Driver_Figlet extends Text_CAPTCHA
      * @access private
      * @return void PEAR_Error on error
      */
-    function _createCAPTCHA()
+    protected function _createCAPTCHA()
     {
         $this->_fig = new Text_Figlet();
         
@@ -190,7 +180,7 @@ class Text_CAPTCHA_Driver_Figlet extends Text_CAPTCHA
      * @access public
      * @return mixed Formatted captcha or PEAR error
      */
-    function getCAPTCHA()
+    public function getCAPTCHA()
     {
         $retval = $this->_createCAPTCHA();
         if (PEAR::isError($retval)) {
@@ -218,7 +208,7 @@ class Text_CAPTCHA_Driver_Figlet extends Text_CAPTCHA
      * @access public
      * @return mixed HTML Figlet image or PEAR error
      */
-    function getCAPTCHAAsHTML()
+    private function getCAPTCHAAsHTML()
     {
         $retval = $this->_createCAPTCHA();
         if (PEAR::isError($retval)) {
@@ -254,7 +244,7 @@ class Text_CAPTCHA_Driver_Figlet extends Text_CAPTCHA
      * @access public
      * @return mixed JavaScript string or PEAR error
      */
-    function getCAPTCHAAsJavascript()
+    private function getCAPTCHAAsJavascript()
     {
         $data = $this->getCAPTCHAAsHTML();
         if (PEAR::isError($data)) {

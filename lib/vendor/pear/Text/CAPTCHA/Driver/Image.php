@@ -1,11 +1,5 @@
 <?php
 /**
- * Require Image_Text class for generating the text.
- */
-require_once 'Text/CAPTCHA.php';
-require_once 'Image/Text.php';
-
-/**
  * Text_CAPTCHA_Driver_Image - Text_CAPTCHA driver graphical CAPTCHAs
  *
  * Class to create a graphical Turing test 
@@ -25,7 +19,7 @@ class Text_CAPTCHA_Driver_Image extends Text_CAPTCHA
      * @access private
      * @var resource
      */
-    var $_im;
+    private $_im;
 
     /**
      * Image_Text object
@@ -33,7 +27,7 @@ class Text_CAPTCHA_Driver_Image extends Text_CAPTCHA
      * @access private
      * @var resource
      */
-    var $_imt;
+    private $_imt;
 
     /**
      * Width of CAPTCHA
@@ -41,7 +35,7 @@ class Text_CAPTCHA_Driver_Image extends Text_CAPTCHA
      * @access private
      * @var int
      */
-    var $_width;
+    private $_width;
 
     /**
      * Height of CAPTCHA
@@ -49,7 +43,7 @@ class Text_CAPTCHA_Driver_Image extends Text_CAPTCHA
      * @access private
      * @var int
      */
-    var $_height;
+    private $_height;
 
     /**
      * CAPTCHA output format
@@ -57,7 +51,7 @@ class Text_CAPTCHA_Driver_Image extends Text_CAPTCHA
      * @access private
      * @var string
      */
-    var $_output;
+    private $_output;
 
     /**
      * Further options (here: for Image_Text)
@@ -65,7 +59,7 @@ class Text_CAPTCHA_Driver_Image extends Text_CAPTCHA
      * @access private
      * @var array
      */
-    var $_imageOptions = array(
+    private $_imageOptions = array(
         'font_size'        => 24,
         'font_path'        => './',
         'font_file'        => 'COUR.TTF',
@@ -80,7 +74,7 @@ class Text_CAPTCHA_Driver_Image extends Text_CAPTCHA
      * @access private
      * @var boolean
      */
-    var $_created = false;
+    private $_created = false;
 
     /**
      * Last error
@@ -88,7 +82,7 @@ class Text_CAPTCHA_Driver_Image extends Text_CAPTCHA
      * @access protected
      * @var PEAR_Error
      */
-    var $_error = null;
+    private $_error = null;
 
     /**
      * init function
@@ -100,7 +94,7 @@ class Text_CAPTCHA_Driver_Image extends Text_CAPTCHA
      * @access public
      * @return mixed true upon success, PEAR error otherwise
      */
-    function init($options = array())
+    public function init($options = array())
     {
         if (!is_array($options)) {
             // Compatibility mode ... in future versions, these two
@@ -162,7 +156,7 @@ class Text_CAPTCHA_Driver_Image extends Text_CAPTCHA
      * @access private
      * @return void
      */
-    function _createPhrase($options = array())
+    protected function _createPhrase($options = array())
     {
         $len = intval(min(8, $this->_width / 25));
         if (!is_array($options) || count($options) === 0) {
@@ -185,7 +179,7 @@ class Text_CAPTCHA_Driver_Image extends Text_CAPTCHA
      * @access  private
      * @return  void   PEAR_Error on error
      */
-    function _createCAPTCHA()
+    protected function _createCAPTCHA()
     {
         if ($this->_error) {
             return $this->_error;
@@ -263,7 +257,7 @@ class Text_CAPTCHA_Driver_Image extends Text_CAPTCHA
      * @access  public
      * @return  mixed        image resource or PEAR error
      */
-    function getCAPTCHA()
+    public function getCAPTCHA()
     {
         $retval = $this->_createCAPTCHA();
         if (PEAR::isError($retval)) {
@@ -299,7 +293,7 @@ class Text_CAPTCHA_Driver_Image extends Text_CAPTCHA
      * @access  public
      * @return  mixed        image contents or PEAR error
      */
-    function getCAPTCHAAsPNG()
+    private function getCAPTCHAAsPNG()
     {
         $retval = $this->_createCAPTCHA();
         if (PEAR::isError($retval)) {
@@ -326,7 +320,7 @@ class Text_CAPTCHA_Driver_Image extends Text_CAPTCHA
      * @access  public
      * @return  mixed        image contents or PEAR error
      */
-    function getCAPTCHAAsJPEG()
+    private function getCAPTCHAAsJPEG()
     {
         $retval = $this->_createCAPTCHA();
         if (PEAR::isError($retval)) {
@@ -353,7 +347,7 @@ class Text_CAPTCHA_Driver_Image extends Text_CAPTCHA
      * @access  public
      * @return  mixed        image contents or PEAR error
      */
-    function getCAPTCHAAsGIF()
+    private function getCAPTCHAAsGIF()
     {
         $retval = $this->_createCAPTCHA();
         if (PEAR::isError($retval)) {
@@ -377,7 +371,7 @@ class Text_CAPTCHA_Driver_Image extends Text_CAPTCHA
      *
      * @return void
      */
-    function __wakeup()
+    public function __wakeup()
     {
         $this->_created = false;
     } 

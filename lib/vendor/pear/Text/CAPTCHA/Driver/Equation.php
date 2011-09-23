@@ -7,7 +7,6 @@
  *  @author  Christian Wenz <wenz@php.net>
  *  @license BSD License
  */
-require_once 'Text/CAPTCHA.php';
 
 class Text_CAPTCHA_Driver_Equation extends Text_CAPTCHA
 {
@@ -20,7 +19,7 @@ class Text_CAPTCHA_Driver_Equation extends Text_CAPTCHA
      * @access protected
      * @var array
      */
-    var $_operators = array(
+    protected $_operators = array(
         '%s * %s',
         '%s + %s',
         '%s - %s',
@@ -34,7 +33,7 @@ class Text_CAPTCHA_Driver_Equation extends Text_CAPTCHA
      * @access protected
      * @var string
      */
-    var $_equation = null;
+    protected $_equation = null;
 
     /**
      * Minimal number to use in an equation.
@@ -42,7 +41,7 @@ class Text_CAPTCHA_Driver_Equation extends Text_CAPTCHA
      * @access protected
      * @var int
      */
-    var $_min = 1;
+    protected $_min = 1;
 
     /**
      * Maximum number to use in an equation.
@@ -50,7 +49,7 @@ class Text_CAPTCHA_Driver_Equation extends Text_CAPTCHA
      * @access protected
      * @var int
      */
-    var $_max = 10;
+    protected $_max = 10;
 
     /**
      * Whether numbers shall be converted to text
@@ -58,7 +57,7 @@ class Text_CAPTCHA_Driver_Equation extends Text_CAPTCHA
      * @access protected
      * @var bool
      */
-    var $_numbersToText = false;
+    protected $_numbersToText = false;
 
     /**
      * Complexity of the generated equations.
@@ -68,7 +67,7 @@ class Text_CAPTCHA_Driver_Equation extends Text_CAPTCHA
      * @access protected
      * @var int
      */
-    var $_severity = 1;
+    protected $_severity = 1;
 
     /**
      * Last error
@@ -76,7 +75,7 @@ class Text_CAPTCHA_Driver_Equation extends Text_CAPTCHA
      * @access protected
      * @var PEAR_Error
      */
-    var $_error = null;
+    protected $_error = null;
 
 
     /**
@@ -87,7 +86,7 @@ class Text_CAPTCHA_Driver_Equation extends Text_CAPTCHA
      * @access public
      * @return true on success, PEAR_Error on error.
      */
-    function init($options = array()) 
+    public function init($options = array()) 
     {
         if (isset($options['min'])) {
             $this->_min = (int)$options['min'];
@@ -111,7 +110,6 @@ class Text_CAPTCHA_Driver_Equation extends Text_CAPTCHA
         }
 
         if ($this->_numbersToText) {
-            include_once 'Numbers/Words.php';
             if (!class_exists('Numbers_Words')) {
                 $this->_error = PEAR::raiseError('Number_Words package required', true);
                 return $this->_error;
@@ -130,7 +128,7 @@ class Text_CAPTCHA_Driver_Equation extends Text_CAPTCHA
      * @access protected
      * @return mixed    true on success, PEAR_Error on error
      */
-    function _createPhrase()
+    protected function _createPhrase()
     {
         switch ($this->_severity) {
             case 1:
@@ -158,7 +156,7 @@ class Text_CAPTCHA_Driver_Equation extends Text_CAPTCHA
      * @access protected
      * @return array    Array with equation and solution
      */
-    function _createSimpleEquation()
+    protected function _createSimpleEquation()
     {
         $one = rand($this->_min, $this->_max);
         $two = rand($this->_min, $this->_max);
@@ -180,7 +178,7 @@ class Text_CAPTCHA_Driver_Equation extends Text_CAPTCHA
      * @access protected
      * @return array    Array with equation and solution
      */
-    function _solveSimpleEquation($one, $two, $operator)
+    protected function _solveSimpleEquation($one, $two, $operator)
     {
         $equation = sprintf($operator, $one, $two);
         $code = '$solution=' . $equation . ';';
@@ -202,7 +200,7 @@ class Text_CAPTCHA_Driver_Equation extends Text_CAPTCHA
      * @access  public
      * @return  string   secret phrase
      */
-    function getPhrase()
+    public function getPhrase()
     {
         return $this->_phrase;
     }
@@ -214,7 +212,7 @@ class Text_CAPTCHA_Driver_Equation extends Text_CAPTCHA
      * @access protected
      * @return PEAR_Error
      */
-    function _createCAPTCHA() 
+    protected function _createCAPTCHA() 
     {
         //is already done in _createPhrase();
     }
@@ -225,7 +223,7 @@ class Text_CAPTCHA_Driver_Equation extends Text_CAPTCHA
      * @access public
      * @return string
      */
-    function getCAPTCHA() 
+    public function getCAPTCHA() 
     {
         return $this->_equation;
     }

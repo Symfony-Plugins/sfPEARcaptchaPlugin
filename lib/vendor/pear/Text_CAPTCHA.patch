@@ -1,0 +1,956 @@
+Index: Text/CAPTCHA/Driver/Figlet.php
+===================================================================
+--- Text/CAPTCHA/Driver/Figlet.php	(wersja 33076)
++++ Text/CAPTCHA/Driver/Figlet.php	(kopia robocza)
+@@ -1,11 +1,5 @@
+ <?php
+ /**
+- * Require Figlet class for rendering the text.
+- */
+-require_once 'Text/CAPTCHA.php';
+-require_once 'Text/Figlet.php';
+-
+-/**
+  * Text_CAPTCHA_Driver_Figlet - Text_CAPTCHA driver Figlet based CAPTCHAs
+  *
+  * @author  Aaron Wormus <wormus@php.net>
+@@ -22,7 +16,7 @@
+      * @access private
+      * @var resource
+      */
+-    var $_fig;
++    private $_fig;
+ 
+     /**
+      * Width of CAPTCHA
+@@ -30,7 +24,7 @@
+      * @access private
+      * @var int
+      */
+-    var $_width;
++    private $_width;
+ 
+     /**
+      * Figlet output string
+@@ -38,7 +32,7 @@
+      * @access private
+      * @var string
+      */
+-    var $_output_string;
++    private $_output_string;
+ 
+      /**
+      * Figlet font options
+@@ -46,7 +40,7 @@
+      * @access private
+      * @var array
+      */
+-    var $_fonts = array();
++    private $_fonts = array();
+ 
+     /**
+      * Figlet font
+@@ -54,7 +48,7 @@
+      * @access private
+      * @var string
+      */
+-    var $_font;
++    private $_font;
+    
+     /**
+      * Figlet font
+@@ -62,7 +56,7 @@
+      * @access private
+      * @var array
+      */
+-    var $_style = array();
++    private $_style = array();
+     
+     /**
+      * Output Format
+@@ -70,7 +64,7 @@
+      * @access private
+      * @var string
+      */
+-    var $_output;
++    private $_output;
+ 
+     /**
+      * Last error
+@@ -78,7 +72,7 @@
+      * @access protected
+      * @var PEAR_Error
+      */
+-    var $_error = null;
++    protected $_error = null;
+ 
+     /**
+      * init function
+@@ -89,7 +83,7 @@
+      * @access public
+      * @return mixed true upon success, PEAR error otherwise
+      */
+-    function init($options = array())
++    public function init($options = array())
+     {
+         if (is_array($options)) {
+             if (!empty($options['output'])) {
+@@ -118,23 +112,19 @@
+             }
+         }
+         
+-        if (!isset($options['options']) || empty($options['options']) || !is_array($options['options'])) {
+-            die;
+-        } else {
+-            if (isset($options['options']['style']) && !empty($options['options']['style']) && is_array($options['options']['style'])) {
+-                $this->_style = $options['options']['style'];
+-            }
+-            
+-            if (!isset($this->_style['padding']) || empty($this->_style['padding'])) {
+-                $this->_style['padding'] = '5px';    
+-            }
+-            
+-            if (isset($options['options']['font_file']) && !empty($options['options']['font_file'])) {
+-                if (is_array($options['options']['font_file'])) {
+-                    $this->_font = $options['options']['font_file'][array_rand($options['options']['font_file'])];
+-                } else {
+-                    $this->_font = $options['options']['font_file'];
+-                }
++		if (isset($options['options']['style']) && !empty($options['options']['style']) && is_array($options['options']['style'])) {
++            $this->_style = $options['options']['style'];
++        }
++        
++        if (!isset($this->_style['padding']) || empty($this->_style['padding'])) {
++            $this->_style['padding'] = '5px';    
++        }
++        
++        if (isset($options['options']['font_file']) && !empty($options['options']['font_file'])) {
++            if (is_array($options['options']['font_file'])) {
++                $this->_font = $options['options']['font_file'][array_rand($options['options']['font_file'])];
++            } else {
++                $this->_font = $options['options']['font_file'];
+             }
+         }
+     }
+@@ -149,7 +139,7 @@
+      * @access private
+      * @return void
+      */
+-    function _createPhrase($options = array())
++    protected function _createPhrase($options = array())
+     {
+         if (!is_array($options) || count($options) === 0) {
+             $this->_phrase = Text_Password::create($this->_length);
+@@ -170,7 +160,7 @@
+      * @access private
+      * @return void PEAR_Error on error
+      */
+-    function _createCAPTCHA()
++    protected function _createCAPTCHA()
+     {
+         $this->_fig = new Text_Figlet();
+         
+@@ -190,7 +180,7 @@
+      * @access public
+      * @return mixed Formatted captcha or PEAR error
+      */
+-    function getCAPTCHA()
++    public function getCAPTCHA()
+     {
+         $retval = $this->_createCAPTCHA();
+         if (PEAR::isError($retval)) {
+@@ -218,7 +208,7 @@
+      * @access public
+      * @return mixed HTML Figlet image or PEAR error
+      */
+-    function getCAPTCHAAsHTML()
++    private function getCAPTCHAAsHTML()
+     {
+         $retval = $this->_createCAPTCHA();
+         if (PEAR::isError($retval)) {
+@@ -254,7 +244,7 @@
+      * @access public
+      * @return mixed JavaScript string or PEAR error
+      */
+-    function getCAPTCHAAsJavascript()
++    private function getCAPTCHAAsJavascript()
+     {
+         $data = $this->getCAPTCHAAsHTML();
+         if (PEAR::isError($data)) {
+Index: Text/CAPTCHA/Driver/Word.php
+===================================================================
+--- Text/CAPTCHA/Driver/Word.php	(wersja 33076)
++++ Text/CAPTCHA/Driver/Word.php	(kopia robocza)
+@@ -9,14 +9,6 @@
+  * @license BSD License
+  */
+ 
+-/**
+- *
+- * Require Numbers_Words class for generating the text.
+- *
+- */
+-require_once 'Text/CAPTCHA.php';
+-require_once 'Numbers/Words.php';
+-
+ class Text_CAPTCHA_Driver_Word extends Text_CAPTCHA
+ {
+ 
+@@ -27,7 +19,7 @@
+      * 
+      * @access private
+      */
+-    var $_length;
++    private $_length;
+ 
+     /**
+      * Numbers_Words mode
+@@ -36,7 +28,7 @@
+      * 
+      * @access private
+      */
+-    var $_mode;
++    private $_mode;
+ 
+     /**
+      * Locale
+@@ -45,7 +37,7 @@
+      * 
+      * @access private
+      */
+-    var $_locale;
++    private $_locale;
+ 
+     /**
+      * init function
+@@ -60,7 +52,7 @@
+      *
+      * @access public
+      */
+-    function init($options = array()) 
++    public function init($options = array()) 
+     {
+         if (isset($options['length']) && is_int($options['length'])) {
+             $this->_length = $options['length'];
+@@ -91,12 +83,24 @@
+      *
+      * @access  private
+      */
+-    function _createPhrase()
++    protected function _createPhrase()
+     {
+-        $this->_phrase = (string)Text_Password::create($this->_length, 'unpronounceable', 'numeric');
++        $this->_phrase = (string)Text_Password::create($this->_length, Text_Password::PASSWORD_TYPE_UNPRONOUNCEABLE, 'numeric');
+     }
+-
++	
+     /**
++     * Creates the captcha. This method is a placeholder,
++     *  since the equation is created in _createPhrase()
++     *
++     * @access protected
++     * @return PEAR_Error
++     */
++    protected function _createCAPTCHA() 
++    {
++        //is already done in _createPhrase();
++    }
++
++	/**
+      * Return CAPTCHA as a string
+      *
+      * This method returns the CAPTCHA as string
+@@ -104,7 +108,7 @@
+      * @access  public
+      * @return  text        string
+      */
+-    function getCAPTCHA()
++    public function getCAPTCHA()
+     {
+         $res = ''; 
+         if ($this->_mode == 'single') {
+Index: Text/CAPTCHA/Driver/Image.php
+===================================================================
+--- Text/CAPTCHA/Driver/Image.php	(wersja 33076)
++++ Text/CAPTCHA/Driver/Image.php	(kopia robocza)
+@@ -1,11 +1,5 @@
+ <?php
+ /**
+- * Require Image_Text class for generating the text.
+- */
+-require_once 'Text/CAPTCHA.php';
+-require_once 'Image/Text.php';
+-
+-/**
+  * Text_CAPTCHA_Driver_Image - Text_CAPTCHA driver graphical CAPTCHAs
+  *
+  * Class to create a graphical Turing test 
+@@ -25,7 +19,7 @@
+      * @access private
+      * @var resource
+      */
+-    var $_im;
++    private $_im;
+ 
+     /**
+      * Image_Text object
+@@ -33,7 +27,7 @@
+      * @access private
+      * @var resource
+      */
+-    var $_imt;
++    private $_imt;
+ 
+     /**
+      * Width of CAPTCHA
+@@ -41,7 +35,7 @@
+      * @access private
+      * @var int
+      */
+-    var $_width;
++    private $_width;
+ 
+     /**
+      * Height of CAPTCHA
+@@ -49,7 +43,7 @@
+      * @access private
+      * @var int
+      */
+-    var $_height;
++    private $_height;
+ 
+     /**
+      * CAPTCHA output format
+@@ -57,7 +51,7 @@
+      * @access private
+      * @var string
+      */
+-    var $_output;
++    private $_output;
+ 
+     /**
+      * Further options (here: for Image_Text)
+@@ -65,7 +59,7 @@
+      * @access private
+      * @var array
+      */
+-    var $_imageOptions = array(
++    private $_imageOptions = array(
+         'font_size'        => 24,
+         'font_path'        => './',
+         'font_file'        => 'COUR.TTF',
+@@ -80,7 +74,7 @@
+      * @access private
+      * @var boolean
+      */
+-    var $_created = false;
++    private $_created = false;
+ 
+     /**
+      * Last error
+@@ -88,7 +82,7 @@
+      * @access protected
+      * @var PEAR_Error
+      */
+-    var $_error = null;
++    private $_error = null;
+ 
+     /**
+      * init function
+@@ -100,7 +94,7 @@
+      * @access public
+      * @return mixed true upon success, PEAR error otherwise
+      */
+-    function init($options = array())
++    public function init($options = array())
+     {
+         if (!is_array($options)) {
+             // Compatibility mode ... in future versions, these two
+@@ -162,7 +156,7 @@
+      * @access private
+      * @return void
+      */
+-    function _createPhrase($options = array())
++    protected function _createPhrase($options = array())
+     {
+         $len = intval(min(8, $this->_width / 25));
+         if (!is_array($options) || count($options) === 0) {
+@@ -185,7 +179,7 @@
+      * @access  private
+      * @return  void   PEAR_Error on error
+      */
+-    function _createCAPTCHA()
++    protected function _createCAPTCHA()
+     {
+         if ($this->_error) {
+             return $this->_error;
+@@ -263,7 +257,7 @@
+      * @access  public
+      * @return  mixed        image resource or PEAR error
+      */
+-    function getCAPTCHA()
++    public function getCAPTCHA()
+     {
+         $retval = $this->_createCAPTCHA();
+         if (PEAR::isError($retval)) {
+@@ -299,7 +293,7 @@
+      * @access  public
+      * @return  mixed        image contents or PEAR error
+      */
+-    function getCAPTCHAAsPNG()
++    private function getCAPTCHAAsPNG()
+     {
+         $retval = $this->_createCAPTCHA();
+         if (PEAR::isError($retval)) {
+@@ -326,7 +320,7 @@
+      * @access  public
+      * @return  mixed        image contents or PEAR error
+      */
+-    function getCAPTCHAAsJPEG()
++    private function getCAPTCHAAsJPEG()
+     {
+         $retval = $this->_createCAPTCHA();
+         if (PEAR::isError($retval)) {
+@@ -353,7 +347,7 @@
+      * @access  public
+      * @return  mixed        image contents or PEAR error
+      */
+-    function getCAPTCHAAsGIF()
++    private function getCAPTCHAAsGIF()
+     {
+         $retval = $this->_createCAPTCHA();
+         if (PEAR::isError($retval)) {
+@@ -377,7 +371,7 @@
+      *
+      * @return void
+      */
+-    function __wakeup()
++    public function __wakeup()
+     {
+         $this->_created = false;
+     } 
+Index: Text/CAPTCHA/Driver/Numeral.php
+===================================================================
+--- Text/CAPTCHA/Driver/Numeral.php	(wersja 33076)
++++ Text/CAPTCHA/Driver/Numeral.php	(kopia robocza)
+@@ -39,7 +39,7 @@
+ // | Author: David Coallier <davidc@agoraproduction.com>                  |
+ // +----------------------------------------------------------------------+
+ //
+-require_once 'Text/CAPTCHA.php';
++
+ /**
+  * Class used for numeral captchas
+  * 
+@@ -65,7 +65,7 @@
+      * @access private
+      * @var    integer $_minValue The minimum range value
+      */
+-    var $_minValue = 1;
++    private $_minValue = 1;
+     
+     /**
+      * Maximum range value
+@@ -76,7 +76,7 @@
+      * @access private
+      * @var    integer $_maxValue The maximum value of the number range
+      */
+-    var $_maxValue = 50;
++    private $_maxValue = 50;
+     
+     /**
+      * Operators
+@@ -88,7 +88,7 @@
+      * @access private
+      * @var    array $_operators The operations for the captcha
+      */
+-    var $_operators = array('-', '+');
++    private $_operators = array('-', '+');
+     
+     /**
+      * Operator to use
+@@ -100,7 +100,7 @@
+      * @access private
+      * @var    string $_operator The operation's operator
+      */
+-    var $_operator = '';
++    private $_operator = '';
+     
+     /**
+      * Mathematical Operation
+@@ -111,7 +111,7 @@
+      * @access private
+      * @var    string $_operation The math operation
+      */
+-    var $_operation = '';
++    private $_operation = '';
+     
+     /**
+      * First number of the operation
+@@ -123,7 +123,7 @@
+      * @access private
+      * @var    integer $_firstNumber The first number of the operation
+      */
+-    var $_firstNumber = '';
++    private $_firstNumber = '';
+     
+     /**
+      * Second Number of the operation
+@@ -135,10 +135,10 @@
+      * @access private
+      * @var    integer $_secondNumber The second number of the operation      
+      */ 
+-    var $_secondNumber = '';
++    private $_secondNumber = '';
+     // }}}
+     // {{{ Constructor
+-    function init($options = array())
++    public function init($options = array())
+     {
+         if (isset($options['minValue'])) {
+             $this->_minValue = (int)$options['minValue'];
+@@ -160,7 +160,7 @@
+      * @access private
+      * @return void
+      */
+-    function _createCAPTCHA()
++    protected function _createCAPTCHA()
+     { 
+         $this->_generateFirstNumber();
+         $this->_generateSecondNumber();
+@@ -168,24 +168,6 @@
+         $this->_generateOperation();
+     }
+     // }}}
+-    // {{{ private function _setRangeMinimum
+-    /**
+-     * Set Range Minimum value
+-     * 
+-     * This function give the developer the ability
+-     * to set the range minimum value so the operations
+-     * can be bigger, smaller, etc.
+-     *
+-     * @param  integer $minValue The minimum value
+-     * 
+-     * @access private
+-     * @return void
+-     */
+-    function _setRangeMinimum($minValue = 1) 
+-    {
+-        $this->minValue = (int)$minValue;
+-    }
+-    // }}}
+     // {{{ private function _generateFirstNumber
+     /**
+      * Sets the first number
+@@ -198,7 +180,7 @@
+      * @return void
+      * @see    $this->_firstNumber, $this->_generateNumber
+      */
+-    function _generateFirstNumber()
++    private function _generateFirstNumber()
+     {
+         $this->_setFirstNumber($this->_generateNumber());
+     }
+@@ -214,7 +196,7 @@
+      * @return void
+      * @see    $this->_secondNumber, $this->_generateNumber()
+      */
+-    function _generateSecondNumber()
++    private function _generateSecondNumber()
+     {
+         $this->_setSecondNumber($this->_generateNumber());
+     }
+@@ -231,7 +213,7 @@
+      * @return void
+      * @see    $this->_operators, $this->_operator
+      */
+-    function _generateOperator()
++    private function _generateOperator()
+     {
+         $this->_operator = $this->_operators[array_rand($this->_operators)];
+     }
+@@ -250,7 +232,7 @@
+      * @return void
+      * @see    $this->_phrase
+      */
+-    function _setPhrase($phraseValue)
++    private function _setPhrase($phraseValue)
+     {   
+         $this->_phrase = $phraseValue;
+     }
+@@ -267,7 +249,7 @@
+      * @access private
+      * @return void
+      */
+-    function _setFirstNumber($value) 
++    private function _setFirstNumber($value) 
+     {
+         $this->_firstNumber = (int)$value;
+     }
+@@ -284,7 +266,7 @@
+      * @access private
+      * @return void
+      */
+-    function _setSecondNumber($value)
++    private function _setSecondNumber($value)
+     {
+         $this->_secondNumber = (int)$value;
+     }
+@@ -300,7 +282,7 @@
+      * @return void
+      * @see    $this->_operation
+      */
+-    function _setOperation()
++    private function _setOperation()
+     {
+         $this->_operation = $this->_getFirstNumber() . ' ' .
+                             $this->_operator . ' ' .
+@@ -318,7 +300,7 @@
+      * @access private
+      * @return integer Random value between _minValue and _maxValue
+      */
+-    function _generateNumber()
++    private function _generateNumber()
+     {
+         return mt_rand($this->_minValue, $this->_maxValue);
+     }
+@@ -335,7 +317,7 @@
+      * @return void
+      * @see    $this->_firstNumber, $this->_secondNumber, $this->_setAnswer()
+      */
+-    function _doAdd()
++    private function _doAdd()
+     {
+         $phrase = $this->_getFirstNumber() + $this->_getSecondNumber();
+         $this->_setPhrase($phrase);
+@@ -356,7 +338,7 @@
+      * @return void
+      * @see    $this->_firstNumber, $this->_secondNumber, $this->_setAnswer()
+      */
+-    function _doSubstract()
++    private function _doSubstract()
+     {
+         $first  = $this->_getFirstNumber();
+         $second = $this->_getSecondNumber();
+@@ -387,7 +369,7 @@
+      * @return void
+      * @see    $this->_setOperation(), $this->_operator
+      */
+-    function _generateOperation()
++    private function _generateOperation()
+     {
+         $this->_setOperation();
+                            
+@@ -414,7 +396,7 @@
+      * @access public
+      * @return integer $this->_firstNumber The firstNumber
+      */
+-    function _getFirstNumber()
++    public function _getFirstNumber()
+     {
+         return $this->_firstNumber;
+     }
+@@ -428,7 +410,7 @@
+      * @access public
+      * @return integer $this->_secondNumber The second number
+      */
+-    function _getSecondNumber()
++    public function _getSecondNumber()
+     {
+         return $this->_secondNumber;
+     }
+@@ -443,7 +425,7 @@
+      * @access public
+      * @return string The operation String
+      */
+-    function getCAPTCHA()
++    public function getCAPTCHA()
+     {
+         return $this->_operation;
+     }
+Index: Text/CAPTCHA/Driver/Equation.php
+===================================================================
+--- Text/CAPTCHA/Driver/Equation.php	(wersja 33076)
++++ Text/CAPTCHA/Driver/Equation.php	(kopia robocza)
+@@ -7,7 +7,6 @@
+  *  @author  Christian Wenz <wenz@php.net>
+  *  @license BSD License
+  */
+-require_once 'Text/CAPTCHA.php';
+ 
+ class Text_CAPTCHA_Driver_Equation extends Text_CAPTCHA
+ {
+@@ -20,7 +19,7 @@
+      * @access protected
+      * @var array
+      */
+-    var $_operators = array(
++    protected $_operators = array(
+         '%s * %s',
+         '%s + %s',
+         '%s - %s',
+@@ -34,7 +33,7 @@
+      * @access protected
+      * @var string
+      */
+-    var $_equation = null;
++    protected $_equation = null;
+ 
+     /**
+      * Minimal number to use in an equation.
+@@ -42,7 +41,7 @@
+      * @access protected
+      * @var int
+      */
+-    var $_min = 1;
++    protected $_min = 1;
+ 
+     /**
+      * Maximum number to use in an equation.
+@@ -50,7 +49,7 @@
+      * @access protected
+      * @var int
+      */
+-    var $_max = 10;
++    protected $_max = 10;
+ 
+     /**
+      * Whether numbers shall be converted to text
+@@ -58,7 +57,7 @@
+      * @access protected
+      * @var bool
+      */
+-    var $_numbersToText = false;
++    protected $_numbersToText = false;
+ 
+     /**
+      * Complexity of the generated equations.
+@@ -68,7 +67,7 @@
+      * @access protected
+      * @var int
+      */
+-    var $_severity = 1;
++    protected $_severity = 1;
+ 
+     /**
+      * Last error
+@@ -76,7 +75,7 @@
+      * @access protected
+      * @var PEAR_Error
+      */
+-    var $_error = null;
++    protected $_error = null;
+ 
+ 
+     /**
+@@ -87,7 +86,7 @@
+      * @access public
+      * @return true on success, PEAR_Error on error.
+      */
+-    function init($options = array()) 
++    public function init($options = array()) 
+     {
+         if (isset($options['min'])) {
+             $this->_min = (int)$options['min'];
+@@ -111,7 +110,6 @@
+         }
+ 
+         if ($this->_numbersToText) {
+-            include_once 'Numbers/Words.php';
+             if (!class_exists('Numbers_Words')) {
+                 $this->_error = PEAR::raiseError('Number_Words package required', true);
+                 return $this->_error;
+@@ -130,7 +128,7 @@
+      * @access protected
+      * @return mixed    true on success, PEAR_Error on error
+      */
+-    function _createPhrase()
++    protected function _createPhrase()
+     {
+         switch ($this->_severity) {
+             case 1:
+@@ -158,7 +156,7 @@
+      * @access protected
+      * @return array    Array with equation and solution
+      */
+-    function _createSimpleEquation()
++    protected function _createSimpleEquation()
+     {
+         $one = rand($this->_min, $this->_max);
+         $two = rand($this->_min, $this->_max);
+@@ -180,7 +178,7 @@
+      * @access protected
+      * @return array    Array with equation and solution
+      */
+-    function _solveSimpleEquation($one, $two, $operator)
++    protected function _solveSimpleEquation($one, $two, $operator)
+     {
+         $equation = sprintf($operator, $one, $two);
+         $code = '$solution=' . $equation . ';';
+@@ -202,7 +200,7 @@
+      * @access  public
+      * @return  string   secret phrase
+      */
+-    function getPhrase()
++    public function getPhrase()
+     {
+         return $this->_phrase;
+     }
+@@ -214,7 +212,7 @@
+      * @access protected
+      * @return PEAR_Error
+      */
+-    function _createCAPTCHA() 
++    protected function _createCAPTCHA() 
+     {
+         //is already done in _createPhrase();
+     }
+@@ -225,7 +223,7 @@
+      * @access public
+      * @return string
+      */
+-    function getCAPTCHA() 
++    public function getCAPTCHA() 
+     {
+         return $this->_equation;
+     }
+Index: Text/CAPTCHA.php
+===================================================================
+--- Text/CAPTCHA.php	(wersja 33076)
++++ Text/CAPTCHA.php	(kopia robocza)
+@@ -14,20 +14,6 @@
+ 
+ 
+ /**
+- *
+- * Require PEAR class for error handling.
+- *
+- */
+-require_once 'PEAR.php';
+-
+-/**
+- *
+- * Require Text_Password class for generating the phrase.
+- *
+- */
+-require_once 'Text/Password.php';
+-
+-/**
+  * Text_CAPTCHA - creates a CAPTCHA for Turing tests
+  *
+  * Class to create a Turing test for websites by
+@@ -129,7 +115,7 @@
+     ?>
+ */
+  
+-class Text_CAPTCHA 
++abstract class Text_CAPTCHA 
+ {
+ 
+     /**
+@@ -138,7 +124,7 @@
+      * @access private
+      * @var string
+      */
+-    var $_version = '0.4.2';
++    private $_version = '0.4.2';
+ 
+     /**
+      * Phrase
+@@ -146,29 +132,27 @@
+      * @access private
+      * @var string
+      */
+-    var $_phrase;
++    protected $_phrase;
+ 
+     /**
+      * Create a new Text_CAPTCHA object
+      *
+      * @param string $driver name of driver class to initialize
+      *
+-     * @return mixed a newly created Text_CAPTCHA object, or a PEAR
++     * @return Text_CAPTCHA a newly created Text_CAPTCHA object, or a PEAR
+      * error object on error
+      *
+      * @see PEAR::isError()
+      */
+-    function &factory($driver)
++    public static function factory($driver)
+     {
+         if ($driver == '') {
+             return PEAR::raiseError('No CAPTCHA type specified ... aborting. You must call ::factory() with one parameter, the CAPTCHA type.', true);
+         }
+         $driver = basename($driver);
+-        include_once "Text/CAPTCHA/Driver/$driver.php";
+-
+         $classname = "Text_CAPTCHA_Driver_$driver";
+-        $obj = new $classname;
+-        return $obj;
++
++		return new $classname;
+     }
+ 
+     /**
+@@ -181,7 +165,7 @@
+      * @access private
+      * @return void
+      */
+-    function _createPhrase($options = array())
++    protected function _createPhrase($options = array())
+     {
+         $len = 8;
+         if (!is_array($options) || count($options) === 0) {
+@@ -203,7 +187,7 @@
+      * @access public
+      * @return phrase secret phrase
+      */
+-    function getPhrase()
++    public function getPhrase()
+     {
+         return $this->_phrase;
+     }
+@@ -219,7 +203,7 @@
+      * @access  public
+      * @return void 
+      */
+-    function setPhrase($phrase = null)
++    public function setPhrase($phrase = null)
+     {
+         if (!empty($phrase)) {
+             $this->_phrase = $phrase;
+@@ -235,10 +219,7 @@
+      * @access private
+      * @return PEAR_Error
+      */
+-    function init() 
+-    {
+-        return PEAR::raiseError('CAPTCHA type not selected', true);
+-    }
++    abstract public function init();
+ 
+     /**
+      * Place holder for the real _createCAPTCHA() method
+@@ -247,10 +228,7 @@
+      * @access private
+      * @return PEAR_Error
+      */
+-    function _createCAPTCHA() 
+-    {
+-        return PEAR::raiseError('CAPTCHA type not selected', true);
+-    }
++    abstract protected function _createCAPTCHA();
+ 
+     /**
+      * Place holder for the real getCAPTCHA() method
+@@ -260,8 +238,5 @@
+      * @access private
+      * @return PEAR_Error
+      */
+-    function getCAPTCHA() 
+-    {
+-        return PEAR::raiseError('CAPTCHA type not selected', true);
+-    }
++    abstract public function getCAPTCHA();
+ }

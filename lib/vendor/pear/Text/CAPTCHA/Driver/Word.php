@@ -9,14 +9,6 @@
  * @license BSD License
  */
 
-/**
- *
- * Require Numbers_Words class for generating the text.
- *
- */
-require_once 'Text/CAPTCHA.php';
-require_once 'Numbers/Words.php';
-
 class Text_CAPTCHA_Driver_Word extends Text_CAPTCHA
 {
 
@@ -27,7 +19,7 @@ class Text_CAPTCHA_Driver_Word extends Text_CAPTCHA
      * 
      * @access private
      */
-    var $_length;
+    private $_length;
 
     /**
      * Numbers_Words mode
@@ -36,7 +28,7 @@ class Text_CAPTCHA_Driver_Word extends Text_CAPTCHA
      * 
      * @access private
      */
-    var $_mode;
+    private $_mode;
 
     /**
      * Locale
@@ -45,7 +37,7 @@ class Text_CAPTCHA_Driver_Word extends Text_CAPTCHA
      * 
      * @access private
      */
-    var $_locale;
+    private $_locale;
 
     /**
      * init function
@@ -60,7 +52,7 @@ class Text_CAPTCHA_Driver_Word extends Text_CAPTCHA
      *
      * @access public
      */
-    function init($options = array()) 
+    public function init($options = array()) 
     {
         if (isset($options['length']) && is_int($options['length'])) {
             $this->_length = $options['length'];
@@ -91,12 +83,24 @@ class Text_CAPTCHA_Driver_Word extends Text_CAPTCHA
      *
      * @access  private
      */
-    function _createPhrase()
+    protected function _createPhrase()
     {
-        $this->_phrase = (string)Text_Password::create($this->_length, 'unpronounceable', 'numeric');
+        $this->_phrase = (string)Text_Password::create($this->_length, Text_Password::PASSWORD_TYPE_UNPRONOUNCEABLE, 'numeric');
+    }
+	
+    /**
+     * Creates the captcha. This method is a placeholder,
+     *  since the equation is created in _createPhrase()
+     *
+     * @access protected
+     * @return PEAR_Error
+     */
+    protected function _createCAPTCHA() 
+    {
+        //is already done in _createPhrase();
     }
 
-    /**
+	/**
      * Return CAPTCHA as a string
      *
      * This method returns the CAPTCHA as string
@@ -104,7 +108,7 @@ class Text_CAPTCHA_Driver_Word extends Text_CAPTCHA
      * @access  public
      * @return  text        string
      */
-    function getCAPTCHA()
+    public function getCAPTCHA()
     {
         $res = ''; 
         if ($this->_mode == 'single') {

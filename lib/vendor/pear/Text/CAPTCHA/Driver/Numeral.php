@@ -39,7 +39,7 @@
 // | Author: David Coallier <davidc@agoraproduction.com>                  |
 // +----------------------------------------------------------------------+
 //
-require_once 'Text/CAPTCHA.php';
+
 /**
  * Class used for numeral captchas
  * 
@@ -65,7 +65,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @access private
      * @var    integer $_minValue The minimum range value
      */
-    var $_minValue = 1;
+    private $_minValue = 1;
     
     /**
      * Maximum range value
@@ -76,7 +76,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @access private
      * @var    integer $_maxValue The maximum value of the number range
      */
-    var $_maxValue = 50;
+    private $_maxValue = 50;
     
     /**
      * Operators
@@ -88,7 +88,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @access private
      * @var    array $_operators The operations for the captcha
      */
-    var $_operators = array('-', '+');
+    private $_operators = array('-', '+');
     
     /**
      * Operator to use
@@ -100,7 +100,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @access private
      * @var    string $_operator The operation's operator
      */
-    var $_operator = '';
+    private $_operator = '';
     
     /**
      * Mathematical Operation
@@ -111,7 +111,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @access private
      * @var    string $_operation The math operation
      */
-    var $_operation = '';
+    private $_operation = '';
     
     /**
      * First number of the operation
@@ -123,7 +123,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @access private
      * @var    integer $_firstNumber The first number of the operation
      */
-    var $_firstNumber = '';
+    private $_firstNumber = '';
     
     /**
      * Second Number of the operation
@@ -135,10 +135,10 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @access private
      * @var    integer $_secondNumber The second number of the operation      
      */ 
-    var $_secondNumber = '';
+    private $_secondNumber = '';
     // }}}
     // {{{ Constructor
-    function init($options = array())
+    public function init($options = array())
     {
         if (isset($options['minValue'])) {
             $this->_minValue = (int)$options['minValue'];
@@ -160,30 +160,12 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @access private
      * @return void
      */
-    function _createCAPTCHA()
+    protected function _createCAPTCHA()
     { 
         $this->_generateFirstNumber();
         $this->_generateSecondNumber();
         $this->_generateOperator();
         $this->_generateOperation();
-    }
-    // }}}
-    // {{{ private function _setRangeMinimum
-    /**
-     * Set Range Minimum value
-     * 
-     * This function give the developer the ability
-     * to set the range minimum value so the operations
-     * can be bigger, smaller, etc.
-     *
-     * @param  integer $minValue The minimum value
-     * 
-     * @access private
-     * @return void
-     */
-    function _setRangeMinimum($minValue = 1) 
-    {
-        $this->minValue = (int)$minValue;
     }
     // }}}
     // {{{ private function _generateFirstNumber
@@ -198,7 +180,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @return void
      * @see    $this->_firstNumber, $this->_generateNumber
      */
-    function _generateFirstNumber()
+    private function _generateFirstNumber()
     {
         $this->_setFirstNumber($this->_generateNumber());
     }
@@ -214,7 +196,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @return void
      * @see    $this->_secondNumber, $this->_generateNumber()
      */
-    function _generateSecondNumber()
+    private function _generateSecondNumber()
     {
         $this->_setSecondNumber($this->_generateNumber());
     }
@@ -231,7 +213,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @return void
      * @see    $this->_operators, $this->_operator
      */
-    function _generateOperator()
+    private function _generateOperator()
     {
         $this->_operator = $this->_operators[array_rand($this->_operators)];
     }
@@ -250,7 +232,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @return void
      * @see    $this->_phrase
      */
-    function _setPhrase($phraseValue)
+    private function _setPhrase($phraseValue)
     {   
         $this->_phrase = $phraseValue;
     }
@@ -267,7 +249,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @access private
      * @return void
      */
-    function _setFirstNumber($value) 
+    private function _setFirstNumber($value) 
     {
         $this->_firstNumber = (int)$value;
     }
@@ -284,7 +266,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @access private
      * @return void
      */
-    function _setSecondNumber($value)
+    private function _setSecondNumber($value)
     {
         $this->_secondNumber = (int)$value;
     }
@@ -300,7 +282,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @return void
      * @see    $this->_operation
      */
-    function _setOperation()
+    private function _setOperation()
     {
         $this->_operation = $this->_getFirstNumber() . ' ' .
                             $this->_operator . ' ' .
@@ -318,7 +300,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @access private
      * @return integer Random value between _minValue and _maxValue
      */
-    function _generateNumber()
+    private function _generateNumber()
     {
         return mt_rand($this->_minValue, $this->_maxValue);
     }
@@ -335,7 +317,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @return void
      * @see    $this->_firstNumber, $this->_secondNumber, $this->_setAnswer()
      */
-    function _doAdd()
+    private function _doAdd()
     {
         $phrase = $this->_getFirstNumber() + $this->_getSecondNumber();
         $this->_setPhrase($phrase);
@@ -356,7 +338,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @return void
      * @see    $this->_firstNumber, $this->_secondNumber, $this->_setAnswer()
      */
-    function _doSubstract()
+    private function _doSubstract()
     {
         $first  = $this->_getFirstNumber();
         $second = $this->_getSecondNumber();
@@ -387,7 +369,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @return void
      * @see    $this->_setOperation(), $this->_operator
      */
-    function _generateOperation()
+    private function _generateOperation()
     {
         $this->_setOperation();
                            
@@ -414,7 +396,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @access public
      * @return integer $this->_firstNumber The firstNumber
      */
-    function _getFirstNumber()
+    public function _getFirstNumber()
     {
         return $this->_firstNumber;
     }
@@ -428,7 +410,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @access public
      * @return integer $this->_secondNumber The second number
      */
-    function _getSecondNumber()
+    public function _getSecondNumber()
     {
         return $this->_secondNumber;
     }
@@ -443,7 +425,7 @@ class Text_CAPTCHA_Driver_Numeral extends Text_CAPTCHA
      * @access public
      * @return string The operation String
      */
-    function getCAPTCHA()
+    public function getCAPTCHA()
     {
         return $this->_operation;
     }

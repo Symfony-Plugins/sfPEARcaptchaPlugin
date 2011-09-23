@@ -14,20 +14,6 @@
 
 
 /**
- *
- * Require PEAR class for error handling.
- *
- */
-require_once 'PEAR.php';
-
-/**
- *
- * Require Text_Password class for generating the phrase.
- *
- */
-require_once 'Text/Password.php';
-
-/**
  * Text_CAPTCHA - creates a CAPTCHA for Turing tests
  *
  * Class to create a Turing test for websites by
@@ -129,7 +115,7 @@ require_once 'Text/Password.php';
     ?>
 */
  
-class Text_CAPTCHA 
+abstract class Text_CAPTCHA 
 {
 
     /**
@@ -138,7 +124,7 @@ class Text_CAPTCHA
      * @access private
      * @var string
      */
-    var $_version = '0.4.2';
+    private $_version = '0.4.2';
 
     /**
      * Phrase
@@ -146,29 +132,27 @@ class Text_CAPTCHA
      * @access private
      * @var string
      */
-    var $_phrase;
+    protected $_phrase;
 
     /**
      * Create a new Text_CAPTCHA object
      *
      * @param string $driver name of driver class to initialize
      *
-     * @return mixed a newly created Text_CAPTCHA object, or a PEAR
+     * @return Text_CAPTCHA a newly created Text_CAPTCHA object, or a PEAR
      * error object on error
      *
      * @see PEAR::isError()
      */
-    function &factory($driver)
+    public static function factory($driver)
     {
         if ($driver == '') {
             return PEAR::raiseError('No CAPTCHA type specified ... aborting. You must call ::factory() with one parameter, the CAPTCHA type.', true);
         }
         $driver = basename($driver);
-        include_once "Text/CAPTCHA/Driver/$driver.php";
-
         $classname = "Text_CAPTCHA_Driver_$driver";
-        $obj = new $classname;
-        return $obj;
+
+		return new $classname;
     }
 
     /**
@@ -181,7 +165,7 @@ class Text_CAPTCHA
      * @access private
      * @return void
      */
-    function _createPhrase($options = array())
+    protected function _createPhrase($options = array())
     {
         $len = 8;
         if (!is_array($options) || count($options) === 0) {
@@ -203,7 +187,7 @@ class Text_CAPTCHA
      * @access public
      * @return phrase secret phrase
      */
-    function getPhrase()
+    public function getPhrase()
     {
         return $this->_phrase;
     }
@@ -219,7 +203,7 @@ class Text_CAPTCHA
      * @access  public
      * @return void 
      */
-    function setPhrase($phrase = null)
+    public function setPhrase($phrase = null)
     {
         if (!empty($phrase)) {
             $this->_phrase = $phrase;
@@ -235,10 +219,7 @@ class Text_CAPTCHA
      * @access private
      * @return PEAR_Error
      */
-    function init() 
-    {
-        return PEAR::raiseError('CAPTCHA type not selected', true);
-    }
+    abstract public function init();
 
     /**
      * Place holder for the real _createCAPTCHA() method
@@ -247,10 +228,7 @@ class Text_CAPTCHA
      * @access private
      * @return PEAR_Error
      */
-    function _createCAPTCHA() 
-    {
-        return PEAR::raiseError('CAPTCHA type not selected', true);
-    }
+    abstract protected function _createCAPTCHA();
 
     /**
      * Place holder for the real getCAPTCHA() method
@@ -260,8 +238,5 @@ class Text_CAPTCHA
      * @access private
      * @return PEAR_Error
      */
-    function getCAPTCHA() 
-    {
-        return PEAR::raiseError('CAPTCHA type not selected', true);
-    }
+    abstract public function getCAPTCHA();
 }
