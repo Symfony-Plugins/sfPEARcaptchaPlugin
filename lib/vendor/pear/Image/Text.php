@@ -59,7 +59,7 @@
  *
  * -------- End example --------
  *
- * PHP versions 4 and 5
+ * PHP versions 5
  *
  * LICENSE: This source file is subject to version 3.0 of the PHP license
  * that is available through the world-wide-web at the following URI:
@@ -76,11 +76,6 @@
  * @link       http://pear.php.net/package/Net_FTP2
  * @since      File available since Release 0.0.1
  */
-
-/**
- * Require PEAR file for error handling.
- */
-require_once 'PEAR.php';
 
 /**
  * Regex to match HTML style hex triples.
@@ -200,8 +195,7 @@ class Image_Text {
      * @var array
      * @see Image_Text::Image_Text(), Image_Text::set()
      */
-
-    var $options = array(
+    private $options = array(
             // orientation
             'x'                 => 0,
             'y'                 => 0,
@@ -253,8 +247,7 @@ class Image_Text {
      * @var array
      * @access private
      */
-
-    var $_reInits = array('width', 'height', 'canvas', 'angle', 'font_file', 'font_path', 'font_size');
+    private $_reInits = array('width', 'height', 'canvas', 'angle', 'font_file', 'font_path', 'font_size');
 
     /**
      * The text you want to render.
@@ -262,8 +255,7 @@ class Image_Text {
      * @access private
      * @var string
      */
-
-    var $_text;
+    private $_text;
 
     /**
      * Resource ID of the image canvas.
@@ -271,8 +263,7 @@ class Image_Text {
      * @access private
      * @var ressource
      */
-
-    var $_img;
+    private $_img;
 
     /**
      * Tokens (each word).
@@ -280,8 +271,7 @@ class Image_Text {
      * @access private
      * @var array
      */
-
-    var $_tokens = array();
+    private $_tokens = array();
 
     /**
      * Fullpath to the font.
@@ -289,8 +279,7 @@ class Image_Text {
      * @access private
      * @var string
      */
-
-    var $_font;
+    private $_font;
 
     /**
      * Contains the bbox of each rendered lines.
@@ -298,8 +287,7 @@ class Image_Text {
      * @access private
      * @var array
      */
-
-    var $bbox = array();
+    private $bbox = array();
 
     /**
      * Defines in which mode the canvas has be set.
@@ -307,8 +295,7 @@ class Image_Text {
      * @access private
      * @var array
      */
-
-    var $_mode = '';
+    private $_mode = '';
 
     /**
      * Color indeces returned by imagecolorallocatealpha.
@@ -316,8 +303,7 @@ class Image_Text {
      * @access public
      * @var array
      */
-
-    var $colors = array();
+    private $colors = array();
 
     /**
      * Width and height of the (rendered) text.
@@ -325,8 +311,7 @@ class Image_Text {
      * @access private
      * @var array
      */
-
-    var $_realTextSize = array('width' => false, 'height' => false);
+    private $_realTextSize = array('width' => false, 'height' => false);
 
     /**
      * Measurized lines.
@@ -334,8 +319,7 @@ class Image_Text {
      * @access private
      * @var array
      */
-
-    var $_lines = false;
+    private $_lines = false;
 
     /**
      * Fontsize for which the last measuring process was done.
@@ -343,8 +327,7 @@ class Image_Text {
      * @access private
      * @var array
      */
-
-    var $_measurizedSize = false;
+    private $_measurizedSize = false;
 
     /**
      * Is the text object initialized?
@@ -352,8 +335,7 @@ class Image_Text {
      * @access private
      * @var bool
      */
-
-    var $_init = false;
+    private $_init = false;
 
     /**
      * Constructor
@@ -368,34 +350,12 @@ class Image_Text {
      * @access public
      * @see Image_Text::set(), Image_Text::construct(), Image_Text::init()
      */
-
-    function Image_Text($text, $options = null)
+    public function __construct($text, $options = null)
     {
         $this->set('text', $text);
         if (!empty($options)) {
             $this->options = array_merge($this->options, $options);
         }
-    }
-
-    /**
-     * Construct and initialize an Image_Text in one step.
-     * This method is called statically and creates plus initializes an Image_Text object.
-     * Beware: You will have to recall init() if you set an option afterwards manually.
-     *
-     * @param   string  $text       Text to print.
-     * @param   array   $options    Options.
-     * @access public
-     * @static
-     * @see Image_Text::set(), Image_Text::Image_Text(), Image_Text::init()
-     */
-
-    function &construct ( $text, $options ) {
-        $itext = new Image_Text($text, $options);
-        $res = $itext->init();
-        if (PEAR::isError($res)) {
-            return $res;
-        }
-        return $itext;
     }
 
     /**
@@ -412,8 +372,7 @@ class Image_Text {
      * @access public
      * @see Image_Text::Image_Text()
      */
-
-    function set($option, $value=null)
+    public function set($option, $value=null)
     {
         $reInits = array_flip($this->_reInits);
         if (!is_array($option)) {
@@ -467,8 +426,7 @@ class Image_Text {
      * @access  public
      * @see Image_Text::setColor(), Image_Text::set()
      */
-
-    function setColors($colors)
+    public function setColors($colors)
     {
         $i = 0;
         if (is_array($colors) &&
@@ -503,8 +461,7 @@ class Image_Text {
      * @access  public
      * @see Image_Text::setColors(), Image_Text::set()
      */
-
-    function setColor($color, $id=0)
+    public function setColor($color, $id=0)
     {
         if(is_array($color)) {
             if (isset($color['r']) && isset($color['g']) && isset($color['b'])) {
@@ -557,8 +514,7 @@ class Image_Text {
      * @return  bool  True on success, otherwise PEAR::Error.
      * @see Image_Text::set()
      */
-
-    function init()
+    public function init()
     {
         // Does the fontfile exist and is readable?
         // todo: with some versions of the GD-library it's also possible to leave font_path empty, add strip ".ttf" from
@@ -700,8 +656,7 @@ class Image_Text {
      * @return int              Fontsize measured or PEAR::Error.
      * @see Image_Text::measurize()
      */
-
-    function autoMeasurize($start=false, $end=false)
+    public function autoMeasurize($start=false, $end=false)
     {
         if (!$this->_init) {
             return PEAR::raiseError('Not initialized. Call ->init() first!');
@@ -745,8 +700,7 @@ class Image_Text {
      * @return array         Array of measured lines or PEAR::Error.
      * @see Image_Text::autoMeasurize()
      */
-
-    function measurize($force=false)
+    public function measurize($force=false)
     {
         if (!$this->_init) {
             return PEAR::raiseError('Not initialized. Call ->init() first!');
@@ -910,8 +864,7 @@ class Image_Text {
      * @param  bool     $force  Optional, initially false, set true to silence measurize errors.
      * @return bool             True on success, otherwise PEAR::Error.
      */
-
-    function render($force=false)
+    public function render($force=false)
     {
         if (!$this->_init) {
             return PEAR::raiseError('Not initialized. Call ->init() first!');
@@ -1045,8 +998,7 @@ class Image_Text {
      * @access public
      * @return resource Used image resource
      */
-
-    function &getImg()
+    public function getImg()
     {
         return $this->_img;
     }
@@ -1064,8 +1016,7 @@ class Image_Text {
      * @access public
      * @see Image_Text::save()
      */
-
-    function display($save=false, $free=false)
+    public function display($save=false, $free=false)
     {
         if (!headers_sent()) {
             header("Content-type: " .image_type_to_mime_type($this->options['image_type']));
@@ -1116,8 +1067,7 @@ class Image_Text {
      * @return  bool                True on success, otherwise PEAR::Error.
      * @see Image_Text::display()
      */
-
-    function save($dest_file=false)
+    private function save($dest_file=false)
     {
         if (!$dest_file) {
             $dest_file = $this->options['dest_file'];
@@ -1157,8 +1107,7 @@ class Image_Text {
      * @access private
      * @return array    Array of x/y coordinates.
      */
-
-    function _getOffset()
+    private function _getOffset()
     {
         // Presaving data
         $width = $this->options['width'];
@@ -1220,7 +1169,7 @@ class Image_Text {
      * @param   mixed  $id           Array of colors.
      * @access private
      */
-    function _convertString2RGB($scolor)
+    public function _convertString2RGB($scolor)
     {
         if (preg_match(IMAGE_TEXT_REGEX_HTMLCOLOR, $scolor, $matches)) {
             return array(
@@ -1238,7 +1187,7 @@ class Image_Text {
      *
      * @access private
      */
-    function _processText()
+    private function _processText()
     {
         if (!isset($this->_text)) {
             return false;
@@ -1265,5 +1214,3 @@ class Image_Text {
         array_pop($this->_tokens);
     }
 }
-
-
