@@ -1,0 +1,3 @@
+all:
+  sf_pear_captcha_plugin:
+    hash_callable: md5

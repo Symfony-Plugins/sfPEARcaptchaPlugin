@@ -1,0 +1,3 @@
+captcha_image:
+  url:    /image_captcha/:hash
+  params: { module: sfPEARcapcha, action: captcha }
