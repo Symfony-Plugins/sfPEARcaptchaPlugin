@@ -1,9 +1,11 @@
 <?php
 
 /**
- * Description of sfWidgetFormCaptchaImage
+ * sfWidgetFormCaptchaImage represents an image captcha widget.
  *
- * @author Tomasz Jakub Rup
+ * @package sfPEARcaptchaPlugin
+ * @subpackage widget
+ * @author Tomasz Jakub Rup <tomasz.rup@gmail.com>
  */
 class sfWidgetFormCaptchaImage extends sfWidgetFormInputText {
 
@@ -15,12 +17,12 @@ class sfWidgetFormCaptchaImage extends sfWidgetFormInputText {
 	 *  - width:            Width of CAPTCHA.
 	 *  - height:           Height of CAPTCHA.
 	 *  - output:           CAPTCHA output format: 'resource', 'png', 'jpg', 'jpeg', 'gif'
-	 *  - font_size:
-	 *  - font_file:
-	 *  - text_color:
-	 *  - lines_color:
-	 *  - background_color:
-	 *  - antialias:
+	 *  - font_size:        Font size.
+	 *  - font_file:        Font file name. The file must be located in the directory sfConfig::get('sf_data_dir') . '/font' or you must specify the full path.
+	 *  - text_color:       Captcha color.
+	 *  - lines_color:      Lines color.
+	 *  - background_color: Background color.
+	 *  - antialias:        Antialiasing on/off.
 	 *
 	 * @param array  $options     An array of options
 	 * @param array  $attributes  An array of default HTML attributes
@@ -29,7 +31,7 @@ class sfWidgetFormCaptchaImage extends sfWidgetFormInputText {
 	 */
 	public function __construct($options = array(), $attributes = array()) {
 		$this->addRequiredOption('font_file');
-		
+
 		$this->addOption('width', 200);
 		$this->addOption('height', 80);
 		$this->addOption('output', 'resource');
@@ -56,14 +58,19 @@ class sfWidgetFormCaptchaImage extends sfWidgetFormInputText {
 	 */
 	public function render($name, $value = null, $attributes = array(), $errors = array()) {
 		sfContext::getInstance()->getConfiguration()->loadHelpers('Url');
-		
+
+		$fontPath = realpath($this->getOption('font_file'));
+		if ($fontPath === false) {
+			$fontPath = sfConfig::get('sf_data_dir') . '/font';
+		}
+
 		$options = array(
 			'width' => $this->getOption('width'),
 			'height' => $this->getOption('height'),
 			'output' => $this->getOption('output'),
 			'imageOptions' => array(
 				'font_size' => $this->getOption('font_size'),
-				'font_path' => realpath($this->getOption('font_file')),
+				'font_path' => $fontPath,
 				'font_file' => basename($this->getOption('font_file')),
 				'text_color' => $this->getOption('text_color'),
 				'lines_color' => $this->getOption('lines_color'),
@@ -73,13 +80,18 @@ class sfWidgetFormCaptchaImage extends sfWidgetFormInputText {
 		);
 		$captcha = Text_CAPTCHA::factory('Image');
 		$captcha->init($options);
-		
+
+		@session_start();
 		sfContext::getInstance()->getStorage()->write('captcha/options', $options);
 		sfContext::getInstance()->getStorage()->write('captcha/phrase', $captcha->getPhrase());
-		
-		$attributes = array_merge($attributes, array('src' => url_for('captcha_image', array('hash' => sfPEARcaptchaUtil::getHash($options, $captcha->getPhrase())))));
 
-		return $this->renderTag('img', array_merge($attributes, array('id' => $this->generateId($name) . '_captcha', 'class' => 'captcha'))) . parent::render($name, $value, $attributes, $errors);
+		$imgAttributes = array_merge($attributes, array(
+			'id' => $this->generateId($name) . '_captcha',
+			'class' => 'captcha',
+			'src' => url_for('captcha_image', array('hash' => sfPEARcaptchaUtil::getHash($options, $captcha->getPhrase())))
+				));
+
+		return $this->renderTag('img', $imgAttributes) . parent::render($name, $value, $attributes, $errors);
 	}
 
 }
