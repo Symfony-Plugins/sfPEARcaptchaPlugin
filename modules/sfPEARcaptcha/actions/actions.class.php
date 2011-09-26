@@ -23,7 +23,6 @@ class sfPEARcaptchaActions extends sfActions {
 		if ($options['output'] == 'resource') {
 			$this->getResponse()->setContentType('image/png');
 			imagepng($captcha->getCAPTCHA());
-			// todo
 		} else {
 			$this->getResponse()->setContentType('image/' . $options['output']);
 			$this->getResponse()->setContent($captcha->getCAPTCHA());
