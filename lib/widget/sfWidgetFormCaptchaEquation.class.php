@@ -1,9 +1,11 @@
 <?php
 
 /**
- * Description of sfWidgetFormCaptchaEquation
+ * sfWidgetFormCaptchaImage represents an equation captcha widget.
  *
- * @author Tomasz Jakub Rup
+ * @package sfPEARcaptchaPlugin
+ * @subpackage widget
+ * @author Tomasz Jakub Rup <tomasz.rup@gmail.com>
  */
 class sfWidgetFormCaptchaEquation extends sfWidgetFormInputText {
 

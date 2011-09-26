@@ -1,9 +1,11 @@
 <?php
 
 /**
- * Description of sfWidgetFormCaptchaFiglet
+ * sfWidgetFormCaptchaImage represents an figlet captcha widget.
  *
- * @author Tomasz Jakub Rup
+ * @package sfPEARcaptchaPlugin
+ * @subpackage widget
+ * @author Tomasz Jakub Rup <tomasz.rup@gmail.com>
  */
 class sfWidgetFormCaptchaFiglet extends sfWidgetFormInputText {
 

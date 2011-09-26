@@ -1,9 +1,11 @@
 <?php
 
 /**
- * Description of sfWidgetFormCaptchaNumeral
+ * sfWidgetFormCaptchaImage represents an numeral captcha widget.
  *
- * @author Tomasz Jakub Rup
+ * @package sfPEARcaptchaPlugin
+ * @subpackage widget
+ * @author Tomasz Jakub Rup <tomasz.rup@gmail.com>
  */
 class sfWidgetFormCaptchaNumeral extends sfWidgetFormInputText {
 
