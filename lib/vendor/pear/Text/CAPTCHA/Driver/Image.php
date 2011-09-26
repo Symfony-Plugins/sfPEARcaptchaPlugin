@@ -222,7 +222,7 @@ class Text_CAPTCHA_Driver_Image extends Text_CAPTCHA
             return $this->_error;
         }
         $this->_imt->render();
-        $this->_im =& $this->_imt->getImg(); 
+        $this->_im = $this->_imt->getImg(); 
         
         if (isset($this->_imageOptions['antialias']) && $this->_imageOptions['antialias'] === true && function_exists('imageantialias')) {
             imageantialias($this->_im, true);

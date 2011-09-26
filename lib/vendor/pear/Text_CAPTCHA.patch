@@ -384,6 +384,15 @@ Index: Text/CAPTCHA/Driver/Image.php
      {
          if ($this->_error) {
              return $this->_error;
+@@ -222,7 +222,7 @@
+             return $this->_error;
+         }
+         $this->_imt->render();
+-        $this->_im =& $this->_imt->getImg(); 
++        $this->_im = $this->_imt->getImg(); 
+         
+         if (isset($this->_imageOptions['antialias']) && $this->_imageOptions['antialias'] === true && function_exists('imageantialias')) {
+             imageantialias($this->_im, true);
 @@ -263,7 +257,7 @@
       * @access  public
       * @return  mixed        image resource or PEAR error
