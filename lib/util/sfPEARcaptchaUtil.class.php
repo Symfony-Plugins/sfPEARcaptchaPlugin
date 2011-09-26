@@ -3,7 +3,9 @@
 /**
  * sfPEARcaptcha Utils
  *
- * @author Tomasz Jakub Rup
+ * @package sfPEARcaptchaPlugin
+ * @subpackage validator
+ * @author Tomasz Jakub Rup <tomasz.rup@gmail.com>
  */
 class sfPEARcaptchaUtil {
 

@@ -1,9 +1,11 @@
 <?php
 
 /**
- * Description of sfValidatorCaptcha
+ * sfValidatorCaptcha validates a captcha.
  *
- * @author Tomasz Jakub Rup
+ * @package sfPEARcaptchaPlugin
+ * @subpackage validator
+ * @author Tomasz Jakub Rup <tomasz.rup@gmail.com>
  */
 class sfValidatorCaptcha extends sfValidatorBase {
 
