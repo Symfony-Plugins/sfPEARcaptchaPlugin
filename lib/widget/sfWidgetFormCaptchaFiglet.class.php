@@ -46,6 +46,36 @@ class sfWidgetFormCaptchaFiglet extends sfWidgetFormInputText {
 	 * @see sfWidgetFormInputText
 	 */
 	public function render($name, $value = null, $attributes = array(), $errors = array()) {
+		return $this->renderCaptcha($name, $value, $attributes, $errors) . $this->renderInputField($name, $value, $attributes, $errors);
+	}
+	
+	/**
+	 * Renders the input field for widget.
+	 *
+	 * @param  string $name        The element name
+	 * @param  string $value       The this widget is checked if value is not null
+	 * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes
+	 * @param  array  $errors      An array of errors for the field
+	 *
+	 * @return string An HTML tag string
+	 *
+	 * @see sfWidgetFormInputText
+	 */
+	public function renderInputField($name, $value = null, $attributes = array(), $errors = array()) {
+		return parent::render($name, $value, $attributes, $errors);
+	}
+	
+	/**
+	 * Renders the captcha for widget.
+	 *
+	 * @param  string $name        The element name
+	 * @param  string $value       The this widget is checked if value is not null
+	 * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes
+	 * @param  array  $errors      An array of errors for the field
+	 *
+	 * @return string An HTML tag string
+	 */
+	public function renderCaptcha($name, $value = null, $attributes = array(), $errors = array()) {
 		$captcha = Text_CAPTCHA::factory('Figlet');
 		$captcha->init(array(
 			'output' => $this->getOption('output'),
@@ -56,7 +86,7 @@ class sfWidgetFormCaptchaFiglet extends sfWidgetFormInputText {
 
 		sfContext::getInstance()->getStorage()->write('captcha/phrase', $captcha->getPhrase());
 
-		return $this->renderContentTag('div', $captcha->getCAPTCHA(), array_merge($attributes, array('id' => $this->generateId($name) . '_captcha', 'class' => 'captcha'))) . parent::render($name, $value, $attributes, $errors);
+		return $this->renderContentTag('div', $captcha->getCAPTCHA(), array_merge($attributes, array('id' => $this->generateId($name) . '_captcha', 'class' => 'captcha')));
 	}
 
 }

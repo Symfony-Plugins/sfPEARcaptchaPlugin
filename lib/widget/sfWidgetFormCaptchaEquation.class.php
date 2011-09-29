@@ -48,6 +48,36 @@ class sfWidgetFormCaptchaEquation extends sfWidgetFormInputText {
 	 * @see sfWidgetFormInputText
 	 */
 	public function render($name, $value = null, $attributes = array(), $errors = array()) {
+		return $this->renderCaptcha($name, $value, $attributes, $errors) . $this->renderInputField($name, $value, $attributes, $errors);
+	}
+
+	/**
+	 * Renders the input field for widget.
+	 *
+	 * @param  string $name        The element name
+	 * @param  string $value       The this widget is checked if value is not null
+	 * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes
+	 * @param  array  $errors      An array of errors for the field
+	 *
+	 * @return string An HTML tag string
+	 *
+	 * @see sfWidgetFormInputText
+	 */
+	public function renderInputField($name, $value = null, $attributes = array(), $errors = array()) {
+		return parent::render($name, $value, $attributes, $errors);
+	}
+	
+	/**
+	 * Renders the captcha for widget.
+	 *
+	 * @param  string $name        The element name
+	 * @param  string $value       The this widget is checked if value is not null
+	 * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes
+	 * @param  array  $errors      An array of errors for the field
+	 *
+	 * @return string An HTML tag string
+	 */
+	public function renderCaptcha($name, $value = null, $attributes = array(), $errors = array()) {
 		sfContext::getInstance()->getConfiguration()->loadHelpers('I18N');
 		
 		$captcha = Text_CAPTCHA::factory('Equation');
@@ -62,7 +92,7 @@ class sfWidgetFormCaptchaEquation extends sfWidgetFormInputText {
 
 		$template = str_replace('%%captcha%%', $captcha->getCAPTCHA(), __($this->getOption('template')));
 
-		return $this->renderContentTag('label', $template, array_merge($attributes, array('for' => $this->generateId($name)))) . parent::render($name, $value, $attributes, $errors);
+		return $this->renderContentTag('label', $template, array_merge($attributes, array('for' => $this->generateId($name))));
 	}
-
+	
 }
