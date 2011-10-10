@@ -197,7 +197,7 @@ class Math_BigInteger {
      * @return Math_BigInteger
      * @access public
      */
-    public function __constructor($x = 0, $base = 10)
+    public function __construct($x = 0, $base = 10)
     {
         if ( null === self::$mode ) {
             switch (true) {

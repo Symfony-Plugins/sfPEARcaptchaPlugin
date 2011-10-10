@@ -255,7 +255,7 @@ Index: Math/BigInteger.php
       * @access public
       */
 -    function Math_BigInteger($x = 0, $base = 10)
-+    public function __constructor($x = 0, $base = 10)
++    public function __construct($x = 0, $base = 10)
      {
 -        if ( !defined('MATH_BIGINTEGER_MODE') ) {
 +        if ( null === self::$mode ) {
